@@ -33,7 +33,7 @@
                                 </td>
                                 <td class="block">
                                     <div class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'block', params: {number: block.number}}">{{ block.header.number}}</router-link>
+                                        <router-link :to="{name: 'block', params: {number: block.number}}">{{ block.number}}</router-link>
                                     </div>
                                 </td>
                                 <td>

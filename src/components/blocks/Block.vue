@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
                     <div class="card-header-title">
-                        <h5>Block # <span class="fit">{{block.header.number}}</span></h5>
+                        <h5>Block # <span class="fit">{{block.number}}</span></h5>
                     </div>
                     <div class="card-header-icon">
                         <h3><i class="fa fa-cube card-title text-orange"/></h3>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{name: 'block', params: {number: block.header.number - 1}}">{{block.header.parentHash}}</router-link>
+                                <router-link :to="{name: 'block', params: {number: block.number - 1}}">{{block.parentHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -46,7 +46,7 @@
                             <dt>State Root</dt>
                         </div>
                         <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.header.stateRoot}}</dd>
+                            <dd class="mb-1">{{block.stateRoot}}</dd>
                         </div>
                     </dl>
                     <hr/>
@@ -55,7 +55,7 @@
                             <dt>Extrinsics Root</dt>
                         </div>
                         <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.header.extrinsicsRoot}}</dd>
+                            <dd class="mb-1">{{block.extrinsicsRoot}}</dd>
                         </div>
                     </dl>
                     <hr/>

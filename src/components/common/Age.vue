@@ -7,7 +7,7 @@
 
     export default {
         name: "Age",
-        props: {timestamp: Number},
+        props: ["timestamp"],
         data() {
             return {
                 age: ''
@@ -15,7 +15,8 @@
         },
         mounted() {
             setInterval(() => {
-                let age  = fromNow(this.timestamp);
+
+                let age  = fromNow(Number(this.timestamp));
                 this.age = age === 'now' ? 'now' : age + ' ago';
             }, 1000);
         }

@@ -1,4 +1,4 @@
-# borlaug-explorer
+# be-web
 
 Block explorer for Borlaug blockchain
 
