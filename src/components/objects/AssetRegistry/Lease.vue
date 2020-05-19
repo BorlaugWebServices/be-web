@@ -16,7 +16,7 @@
                         <dt>Lease Id</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.lease_id}}</dd>
+                        <dd class="mb-1">{{lease.id}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -25,7 +25,7 @@
                         <dt>Contract Number</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.contract_number}}</dd>
+                        <dd class="mb-1">{{lease.contractNumber}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -93,7 +93,7 @@
                         <dt>Effective From</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{toDateString(lease.effective_ts) | date}}</dd>
+                        <dd class="mb-1">{{lease.effectiveTs | date}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -102,7 +102,7 @@
                         <dt>Effective To</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{toDateString(lease.expiry_ts) | date}}</dd>
+                        <dd class="mb-1">{{lease.expiryTs | date}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -121,6 +121,24 @@
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">{{lease.allocations[0].asset_id}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Asset Name</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">{{lease.asset.number}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Asset Origin</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">{{lease.asset.origin}}, {{lease.asset.country}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -165,7 +183,7 @@
                                     {{activity.hash}}
                                 </router-link>
                             </td>
-                            <td>{{toDateString(activity.timestamp.toString()) | timestamp}}</td>
+                            <td>{{activity.timestamp.toString() | timestamp}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -200,7 +218,6 @@
         },
         mounted() {
             this.show = !this.hideChainDetails;
-            console.log(this.show);
             this.init();
         },
         methods: {

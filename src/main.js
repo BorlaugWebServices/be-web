@@ -40,27 +40,25 @@ Vue.filter('count', function(value) {
 });
 Vue.filter('fromNow', function(dateString) {
     if(!dateString) return '';
-    return moment.unix(dateString).fromNow()
+    if(dateString.length > 10) {
+        dateString = dateString.substr(0,10);
+    }
+    return moment.unix(dateString).fromNow();
 });
 Vue.filter('date', function(dateString) {
     if(!dateString) return '';
-    return moment(Date.parse(dateString)).format("MMMM Do YYYY");
+    if(dateString.length > 10) {
+        dateString = dateString.substr(0,10);
+    }
+    return moment.unix(dateString).format("MMMM Do YYYY");
 });
 Vue.filter('timestamp', function(dateString) {
+
     if(!dateString) return '';
-    return moment(Date.parse(dateString)).format("MMMM Do YYYY, h:mm:ss a");
-});
-Vue.filter('long', function(dateString) {
-    if(!dateString) return '';
-    return moment(Date.parse(dateString)).format("MMM Do, h:mm a");
-});
-Vue.filter('medium', function(dateString) {
-    if(!dateString) return '';
-    return moment(Date.parse(dateString)).format("MMM Do YYYY");
-});
-Vue.filter('timehms', function(dateString) {
-    if(!dateString) return '';
-    return moment(Date.parse(dateString)).format("MMM Do, h:mm a").split(',')[1];
+    if(dateString.length > 10) {
+        dateString = dateString.substr(0,10);
+    }
+    return moment.unix(dateString).format("MMMM Do YYYY, h:mm:ss a");
 });
 Vue.filter('capitalize', function(value) {
     if(!value) return '';

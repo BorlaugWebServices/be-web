@@ -17,7 +17,7 @@
                             <dt>Timestamp</dt>
                         </div>
                         <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{new Date(block.timestamp) | timestamp}}</dd>
+                            <dd class="mb-1">{{block.timestamp.toString() | timestamp}}</dd>
                         </div>
                     </dl>
                     <hr/>

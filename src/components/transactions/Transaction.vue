@@ -26,7 +26,7 @@
                             <dt>Timestamp</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{new Date(transaction.timestamp) | timestamp}}</dd>
+                            <dd class="mb-1">{{transaction.timestamp.toString() | timestamp}}</dd>
                         </div>
                     </dl>
                     <hr/>
