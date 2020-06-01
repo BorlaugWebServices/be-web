@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="m-b-10">Last Synced Block Time: <strong>{{latestBlockTime | timestamp}}</strong></div>
+                        <div class="m-b-10">Last Synced Block Time: <strong>{{latestBlockTime.toString() | timestamp}}</strong></div>
                         <router-link :to="{name: 'blocks'}" class="btn btn-orange btn-block text-white font-weight-bold">View All Blocks</router-link>
                     </div>
                 </div>
@@ -258,7 +258,7 @@
                     this.blocks.pop();
                 }
                 this.blocks.unshift(arg.block);
-                this.latestBlockTime = arg.latestBlockTime;
+                this.latestBlockTime = arg.block.timestamp;
             }
         }
     }
