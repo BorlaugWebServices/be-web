@@ -1,8 +1,8 @@
 FROM node:11.6.0
 
-COPY . /home/explorer
+COPY . /home/be-web
 
-WORKDIR "/home/explorer"
+WORKDIR "/home/be-web"
 
 RUN npm install --silent
 RUN npm run build

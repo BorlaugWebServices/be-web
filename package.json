@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "start": "./bin/web.js",
-        "serve": "vue-cli-service serve --mode development",
-        "production": "vue-cli-service build --mode production",
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build",
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
