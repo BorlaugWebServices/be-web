@@ -1,6 +1,6 @@
 {
     "name": "be-web",
-    "version": "0.1.0",
+    "version": "2020-06",
     "private": true,
     "scripts": {
         "start": "./bin/web.js",
