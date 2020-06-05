@@ -1,0 +1,247 @@
+header {
+    margin-bottom: 25px;
+    background: #fff;
+}
+
+body {
+    background: #eeeeee;
+}
+
+.hash {
+    max-width: 130px;
+    display: inline-block !important;
+    vertical-align: bottom;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.from {
+    max-width: 200px;
+    display: inline-block !important;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*******************
+Text
+*******************/
+
+.text-cyan {
+    color: #00BCD4 !important;
+}
+
+.text-indigo {
+    color: #303F9F !important;
+}
+
+.text-teal {
+    color: #00796B !important;
+}
+
+.text-brown {
+    color: #795548 !important;
+}
+
+.text-orange {
+    color: #FB8C00 !important;
+}
+
+.text-purple {
+    color: #E040FB !important;
+}
+
+.text-deep-purple {
+    color: #512DA8 !important;
+}
+
+.text-light-green {
+    color: #8BC34A !important;
+}
+
+.text-dark-green {
+    color: #388E3C !important;
+}
+
+.ribbon-green {
+    position: absolute;
+    top: -6.1px;
+    right: 10px;
+}
+
+.ribbon-green:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 9px solid #36bea6;
+}
+
+.ribbon-green span {
+    position: relative;
+    display: block;
+    text-align: center;
+    background: #36bea6;
+    font-size: 14px;
+    line-height: 0;
+    padding: 12px 8px 8px;
+    border-top-right-radius: 8px;
+    width: 80px;
+    color: white;
+    font-weight: bold;
+}
+
+.ribbon-green span:before, .ribbon-green span:after {
+    position: absolute;
+    content: "";
+}
+
+.ribbon-green span:before {
+    height: 6px;
+    width: 6px;
+    left: -6px;
+    top: 0;
+    background: #36bea6;
+}
+
+.ribbon-green span:after {
+    height: 6px;
+    width: 8px;
+    left: -8px;
+    top: 0;
+    border-radius: 8px 8px 0 0;
+    background: #37a08c;
+}
+
+.ribbon-yellow {
+    position: absolute;
+    top: -6.1px;
+    right: 10px;
+}
+
+.ribbon-yellow:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 9px solid #efd43a;
+}
+
+.ribbon-yellow span {
+    position: relative;
+    display: block;
+    text-align: center;
+    background: #efd43a;
+    font-size: 14px;
+    line-height: 0;
+    padding: 12px 8px 8px;
+    border-top-right-radius: 8px;
+    width: 80px;
+    color: white;
+    font-weight: bold;
+}
+
+.ribbon-yellow span:before, .ribbon-yellow span:after {
+    position: absolute;
+    content: "";
+}
+
+.ribbon-yellow span:before {
+    height: 6px;
+    width: 6px;
+    left: -6px;
+    top: 0;
+    background: #efd43a;
+}
+
+.ribbon-yellow span:after {
+    height: 6px;
+    width: 8px;
+    left: -8px;
+    top: 0;
+    border-radius: 8px 8px 0 0;
+    background: #e2be25;
+}
+
+.ribbon-red {
+    position: absolute;
+    top: -6.1px;
+    right: 10px;
+}
+
+.ribbon-red:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 9px solid #d63a06d1;
+}
+
+.ribbon-red span {
+    position: relative;
+    display: block;
+    text-align: center;
+    background: #d63a06d1;
+    font-size: 14px;
+    line-height: 0;
+    padding: 12px 8px 8px;
+    border-top-right-radius: 8px;
+    width: 80px;
+    color: white;
+    font-weight: bold;
+}
+
+.ribbon-red span:before, .ribbon-red span:after {
+    position: absolute;
+    content: "";
+}
+
+.ribbon-red span:before {
+    height: 6px;
+    width: 6px;
+    left: -6px;
+    top: 0;
+    background: #d63a06d1;
+}
+
+.ribbon-red span:after {
+    height: 6px;
+    width: 8px;
+    left: -8px;
+    top: 0;
+    border-radius: 8px 8px 0 0;
+    background: #9a2d09;
+}
+
+.card-header-title {
+    align-items: center;
+    display: flex;
+    flex-grow: 1;
+    padding: .75rem;
+}
+
+.card-header-icon {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: .75rem;
+}
+
+.fit {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mm-5-0-5-0 {
+    margin: -5px 0 -5px 0;
+}
