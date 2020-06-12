@@ -2,7 +2,7 @@
     <div>
         <div class="row m-b-20">
             <div class="col-5 align-self-center">
-                <h3 class="page-title"><i class="fas fa-calendar-check"></i> Events</h3>
+                <h3 class="page-title"><i class="fas fa-book"></i> Logs</h3>
             </div>
             <div class="col-7 align-self-center">
                 <div class="d-flex no-block justify-content-end align-items-center">
@@ -15,7 +15,7 @@
 
 <script>
     export default {
-        name: "EventsLayout"
+        name: "LogsLayout"
     }
 </script>
 

@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
                     <div class="card-header-title">
-                        <h5>Event <span class="fit">{{eventid}}</span></h5>
+                        <h5>Log <span class="fit">{{logid}}</span></h5>
                     </div>
                     <div class="card-header-icon">
                         <h3><i class="fas fa-file-alt card-title text-orange"/></h3>
@@ -17,61 +17,35 @@
                             <dt>Block</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <router-link :to="{name: 'block', params: {number: event.blockNumber}}">{{event.blockNumber}}</router-link>
-                        </div>
-                    </dl>
-                    <hr style="height: 1px"/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Referenced Extrinsic</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.extrinsicid}}</dd>
+                            <router-link :to="{name: 'block', params: {number: log.blockNumber}}">{{log.blockNumber}}</router-link>
                         </div>
                     </dl>
                     <hr/>
                     <dl class="row mb-0">
                         <div class="col-sm-2 text-sm-right">
-                            <dt>Event Index</dt>
+                            <dt>Log Index</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.index}}</dd>
+                            <dd class="mb-1">{{log.index}}</dd>
                         </div>
                     </dl>
                     <hr/>
                     <dl class="row mb-0">
                         <div class="col-sm-2 text-sm-right">
-                            <dt>Event Name</dt>
+                            <dt>Type</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.meta.name}}</dd>
+                            <dd class="mb-1">{{type}}</dd>
                         </div>
                     </dl>
                     <hr/>
                     <dl class="row mb-0">
                         <div class="col-sm-2 text-sm-right">
-                            <dt>Description</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.meta.documentation.join(' ')}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row m-b-10">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Parameters:</dt>
+                            <dt>Data</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
                             <dd class="mb-1">
-                                <table class="table table-bordered">
-                                    <tr v-for="i in event.meta.args.length">
-                                        <td>{{event.meta.args[i-1]}}</td>
-                                        <td>
-                                            <vue-json-pretty :data="event.event.data[i-1]" :path="'res'">
-                                            </vue-json-pretty>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <vue-json-pretty :data="log.log[type]" :path="'res'"></vue-json-pretty>
                             </dd>
                         </div>
                     </dl>
@@ -84,10 +58,10 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching event, please wait <img class="ml-2" src="../../assets/images/ajax-loader.gif">
+                        Fetching log, please wait <img class="ml-2" src="../../assets/images/ajax-loader.gif">
                     </h4>
                     <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Event "{{eventid}}" not found
+                        Log "{{logid}}" not found
                     </h4>
                 </div>
             </div>
@@ -100,25 +74,27 @@
     import VueJsonPretty from 'vue-json-pretty';
 
     export default {
-        name: "Lease",
-        props: ["eventid"],
+        name: "Log",
+        props: ["logid"],
         components: {VueJsonPretty},
         data() {
             return {
-                event: null,
+                log: null,
+                type: null,
                 flag: 'SEARCHING'
             };
         },
         mounted() {
-           this.getEvent();
+            this.getLog();
         },
         methods: {
-            async getEvent() {
+            async getLog() {
                 try {
                     EventBus.$emit('show');
-                    let reply  = await this.$http.get(`/events/${this.eventid}`);
-                    this.event = reply.data;
-                    if(this.event) {
+                    let reply = await this.$http.get(`/logs/${this.logid}`);
+                    this.log  = reply.data;
+                    if(this.log) {
+                        this.type = Object.keys(this.log.log)[0];
                         this.flag = 'SUCCESS';
                     } else {
                         this.flag = 'FAILURE';
@@ -128,7 +104,6 @@
                 } finally {
                     EventBus.$emit('hide');
                 }
-
             }
         }
     }

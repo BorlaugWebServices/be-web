@@ -1,5 +1,5 @@
 <template>
-    <div v-if="lease">
+    <div v-if="flag === 'SUCCESS'">
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
@@ -194,9 +194,18 @@
             </div>
         </div>
     </div>
-    <div class="card" v-else>
-        <div class="card-body">
-            <h3 class="text-center text-muted">Lease not found</h3>
+    <div class="row" v-else>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                        Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                    </h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
+                        Lease "{{leaseid}}" not found
+                    </h4>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -213,7 +222,8 @@
             return {
                 lease: null,
                 activities: [],
-                show: true,
+                show: false,
+                flag: 'SEARCHING'
             }
         },
         mounted() {
@@ -231,8 +241,13 @@
                         EventBus.$emit('show');
                         let reply  = await this.$http.get(`/leases/${this.leaseid}`);
                         this.lease = reply.data;
+                        if(this.lease) {
+                            this.flag = 'SUCCESS';
+                        } else {
+                            this.flag = 'FAILURE';
+                        }
                     } catch(e) {
-
+                        this.flag = 'FAILURE';
                     } finally {
                         EventBus.$emit('hide');
                     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="row" v-if="show">
+    <div class="row" v-if="flag === 'SUCCESS'">
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
@@ -179,7 +179,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-muted">No such transaction</h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                        Searching transaction, please wait <img class="ml-2" alt="" src="../../assets/images/ajax-loader.gif">
+                    </h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
+                        Transaction "{{hash}}" not found
+                    </h4>
                 </div>
             </div>
         </div>
@@ -201,7 +206,7 @@
             return {
                 transaction: null,
                 leaseid: null,
-                show: false
+                flag: 'SEARCHING'
             };
         },
         mounted() {
@@ -214,7 +219,7 @@
                     let reply        = await this.$http.get(`/transactions/${this.hash}`);
                     this.transaction = reply.data;
                     if(this.transaction) {
-                        this.show = true;
+                        this.flag = 'SUCCESS';
                         if(this.transaction.events.length > 0) {
                             let events = _.filter(this.transaction.events, (ev) => {
                                 return ev.meta.name === 'LeaseCreated'
@@ -223,10 +228,11 @@
                                 this.leaseid = events[0].event.data[0];
                             }
                         }
-                        console.log(this.leaseid);
+                    } else {
+                        this.flag = 'FAILURE';
                     }
                 } catch(e) {
-
+                    this.flag = 'FAILURE';
                 } finally {
                     EventBus.$emit('hide');
                 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="row" v-if="show">
+    <div class="row" v-if="flag === 'SUCCESS'">
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
@@ -107,7 +107,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div aria-labelledby="transactions-tab" class="tab-pane fade show active" id="transactions" role="tabpanel">
-                            <div v-if="block.transactions.length > 0" class="table-responsive blocks">
+                            <div class="table-responsive blocks" v-if="block.transactions.length > 0">
                                 <table class="table v-middle">
                                     <thead>
                                     <tr class="border-0">
@@ -161,7 +161,7 @@
                             </div>
                         </div>
                         <div aria-labelledby="inherents-tab" class="tab-pane fade" id="inherents" role="tabpanel">
-                            <div v-if="block.inherents.length > 0" class="table-responsive blocks">
+                            <div class="table-responsive blocks" v-if="block.inherents.length > 0">
                                 <table class="table v-middle">
                                     <thead>
                                     <tr class="border-0">
@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <div aria-labelledby="events-tab" class="tab-pane fade" id="events" role="tabpanel">
-                            <div v-if="block.events.length > 0" class="table-responsive blocks">
+                            <div class="table-responsive blocks" v-if="block.events.length > 0">
                                 <table class="table v-middle">
                                     <thead>
                                     <tr class="border-0">
@@ -248,7 +248,7 @@
                             </div>
                         </div>
                         <div aria-labelledby="logs-tab" class="tab-pane fade" id="logs" role="tabpanel">
-                            <div v-if="block.logs.length > 0" class="table-responsive blocks">
+                            <div class="table-responsive blocks" v-if="block.logs.length > 0">
                                 <table class="table v-middle">
                                     <thead>
                                     <tr class="border-0">
@@ -265,11 +265,11 @@
                                         </td>
                                         <td class="block">
                                             <div class="d-flex no-block align-items-center">
-                                                <a href="javascript:void(0);">{{ block.number + '-' + index }}</a>
+                                                <router-link :to="{ name: 'log', params: { logid: log.id}}">{{ block.number + '-' + index }}</router-link>
                                             </div>
                                         </td>
                                         <td>
-                                            {{getLogType(log)}}
+                                            {{getLogType(log.log)}}
                                         </td>
                                         <td class="text-right">
                                             <a class="btn btn-sm btn-orange text-white" href="javascript:void(0);">
@@ -293,7 +293,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-muted">No such block</h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                        Fetching block, please wait <img class="ml-2" alt="" src="../../assets/images/ajax-loader.gif">
+                    </h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
+                        Block "{{number}}" not found
+                    </h4>
                 </div>
             </div>
         </div>
@@ -311,7 +316,7 @@
         data() {
             return {
                 block: {},
-                show: false
+                flag: 'SEARCHING'
             };
         },
         watch: {
@@ -329,10 +334,12 @@
                     let reply  = await this.$http.get(`/blocks/${this.number}`);
                     this.block = reply.data;
                     if(this.block) {
-                        this.show = true;
+                        this.flag = 'SUCCESS';
+                    } else {
+                        this.flag = 'FAILURE';
                     }
                 } catch(e) {
-
+                    this.flag = 'FAILURE';
                 } finally {
                     EventBus.$emit('hide');
                 }

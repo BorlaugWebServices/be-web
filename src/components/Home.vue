@@ -106,9 +106,9 @@
                             </h3>
                         </div>
                     </div>
-                    <div class="card-body" v-if="searchResult && searchResult.blocks.length === 0
-                    && searchResult.txns.length === 0
-                    && searchResult.leases.length === 0">
+                    <div class="card-body" v-if="searchResult && searchResult.blocks.length === 0 && searchResult.txns.length === 0
+                    && searchResult.leases.length === 0 && searchResult.inherents.length === 0
+                    && searchResult.events.length === 0 && searchResult.logs.length === 0">
                         <h3 class="text-muted text-center">Nothing found</h3>
                     </div>
                     <div class="card-body m-t-0 p-0" v-else>
@@ -151,6 +151,39 @@
                                         </router-link>
                                     </td>
                                 </tr>
+                                <tr v-for="inherent in searchResult.inherents">
+                                    <td>
+                                        <router-link :to="{ name : 'inherent' , params: { inherentid: inherent.id }}">
+                                            <h4>Inherent: {{inherent.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{inherent.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{inherent.timestamp}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="event in searchResult.events">
+                                    <td>
+                                        <router-link :to="{ name : 'event' , params: { eventid: event.id }}">
+                                            <h4>Event: {{event.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{event.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{event.timestamp}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="log in searchResult.logs">
+                                    <td>
+                                        <router-link :to="{ name : 'log' , params: { logid: log.id }}">
+                                            <h4>Log: {{log.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{log.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{log.timestamp}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -176,11 +209,11 @@
                 searchResult: null,
                 socket: null,
                 latestBlockTime: '',
-                lastSyncedblock: null
+                lastSyncedBlock: null
             };
         },
         watch: {
-            lastSyncedblock: function(nv, ov) {
+            lastSyncedBlock: function(nv, ov) {
                 if(nv !== ov) {
                     if(ov) {
                         if(ov.block.hash !== nv.block.hash) {
@@ -249,7 +282,7 @@
             async getLatestBlocks() {
                 this.socket.on('block updated', (data) => {
                     //console.log("New Block Number : ", data.block.blockNumber);
-                    this.lastSyncedblock = data;
+                    this.lastSyncedBlock = data;
                 })
             },
             pushBlock(arg) {
