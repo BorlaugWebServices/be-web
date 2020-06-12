@@ -85,6 +85,18 @@ export default new VueRouter({
                     ]
                 },
                 {
+                    path: 'logs',
+                    component: resolve => require(["@/components/logs/LogsLayout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":logid",
+                            name: "log",
+                            props: true,
+                            component: resolve => require(["@/components/logs/Log.vue"], resolve),
+                        }
+                    ]
+                },
+                {
                     path: 'lease',
                     component: resolve => require(["@/components/objects/AssetRegistry/Layout.vue"], resolve),
                     children: [

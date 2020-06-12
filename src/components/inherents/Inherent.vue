@@ -1,5 +1,5 @@
 <template>
-    <div class="row" v-if="show">
+    <div class="row" v-if="flag === 'SUCCESS'">
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
@@ -20,13 +20,13 @@
                             <router-link :to="{name: 'block', params: {number: extrinsic.blockNumber}}">{{extrinsic.blockNumber}}</router-link>
                         </div>
                     </dl>
-                    <hr style="height: 1px"/>
+                    <hr/>
                     <dl class="row mb-0">
                         <div class="col-sm-2 text-sm-right">
                             <dt>Timestamp</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{new Date(extrinsic.timestamp) | timestamp}}</dd>
+                            <dd class="mb-1">{{extrinsic.timestamp.toString() | timestamp}}</dd>
                         </div>
                     </dl>
                     <hr/>
@@ -85,7 +85,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-muted">No such inherent</h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                        Fetching inherent, please wait <img class="ml-2" src="../../assets/images/ajax-loader.gif">
+                    </h4>
+                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
+                        Inherent "{{inherentid}}" not found
+                    </h4>
                 </div>
             </div>
         </div>
@@ -103,7 +108,7 @@
         data() {
             return {
                 extrinsic: null,
-                show: false
+                flag: 'SEARCHING'
             };
         },
         mounted() {
@@ -116,10 +121,12 @@
                     let reply      = await this.$http.get(`/inherents/${this.inherentid}`);
                     this.extrinsic = reply.data;
                     if(this.extrinsic) {
-                        this.show = true;
+                        this.flag = 'SUCCESS';
+                    } else{
+                        this.flag = 'FAILURE';
                     }
                 } catch(e) {
-
+                    this.flag = 'FAILURE';
                 } finally {
                     EventBus.$emit('hide');
                 }
