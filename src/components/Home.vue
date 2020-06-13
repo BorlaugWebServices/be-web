@@ -128,9 +128,10 @@
                                 </tr>
                                 <tr v-for="txn in searchResult.txns">
                                     <td>
-                                        <router-link :to="{ name : 'transaction' , params: { number: txn.hash }}">
+                                        <router-link :to="{ name : 'transaction' , params: { hash: txn.hash }}">
                                             <h4>Transaction: {{txn.hash}}</h4>
                                             <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{txn.blockNumber}} |
                                                 <span class="font-weight-bold">Module :</span> {{txn.method.section}} |
                                                 <span class="font-weight-bold">Method :</span> {{txn.method.method}} |
                                                 <span class="font-weight-bold">Signer :</span> {{txn.signer}}
