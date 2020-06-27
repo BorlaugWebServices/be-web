@@ -107,6 +107,18 @@ export default new VueRouter({
                             component: resolve => require(["@/components/objects/AssetRegistry/Lease.vue"], resolve),
                         }
                     ]
+                },
+                {
+                    path: 'identity',
+                    component: resolve => require(["@/components/objects/Identity/Layout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":did",
+                            name: "identity",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Identity/Identity.vue"], resolve),
+                        }
+                    ]
                 }
             ]
         }

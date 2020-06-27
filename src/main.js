@@ -78,7 +78,7 @@ Vue.filter('did', function (didString) {
     if (!didString) {
         return '';
     }
-    return 'did:bws:' + didString.substring(2, didString.length - 2);
+    return 'did:bws:' + didString.substring(2, didString.length);
 });
 
 
