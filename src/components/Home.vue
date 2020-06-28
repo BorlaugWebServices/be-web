@@ -60,7 +60,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <age :timestamp="block.timestamp"/>
+                                        <age v-if="block.timestamp" :timestamp="block.timestamp"/>
                                     </td>
                                     <td>
                                         {{block.transactions.length}}
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="m-b-10">Last Synced Block Time: <strong>{{latestBlockTime.toString() | timestamp}}</strong></div>
+                        <div class="m-b-10">Last Synced Block Time: <strong v-if="latestBlockTime">{{latestBlockTime.toString() | timestamp}}</strong></div>
                         <router-link :to="{name: 'blocks'}" class="btn btn-orange btn-block text-white font-weight-bold">View All Blocks</router-link>
                     </div>
                 </div>
