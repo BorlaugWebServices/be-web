@@ -15,8 +15,15 @@
                     <div class="col-sm-2 text-sm-right">
                         <dt>DID</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{identity.did | did}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
+                        <dd class="ml-2 float-left">{{identity.did | did}}</dd>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-else>
+                        <router-link :to="{name: 'identity', params : { did: did }}">
+                            <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
+                            <dd class="ml-2 float-left">{{identity.did | did}}</dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -83,9 +90,20 @@
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <vue-json-pretty :data="identity.properties" :path="'res'">
-                            </vue-json-pretty>
+                            <!--                            <vue-json-pretty :data="identity.properties" :path="'res'">-->
+                            <!--                            </vue-json-pretty>-->
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="p-2 font-bold">Name</th>
+                                    <th class="p-2 font-bold">Fact</th>
+                                </tr>
+                                <tr v-for="prop in identity.properties" >
+                                    <td class="p-2">{{prop.name}}</td>
+                                    <td class="p-2"> {{prop.fact}}</td>
+                                </tr>
+                            </table>
                         </dd>
+
                     </div>
                 </dl>
             </div>
@@ -151,13 +169,12 @@
 <script>
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
-    import VueJSONPretty from "vue-json-pretty";
     import VueJsonPretty from "vue-json-pretty";
 
     export default {
         name: "Identity",
         props: ["did", "hideChainDetails"],
-        components: {Blockie,VueJsonPretty},
+        components: {Blockie, VueJsonPretty},
         data() {
             return {
                 identity: null,
@@ -179,7 +196,7 @@
                 if(this.did !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply  = await this.$http.get(`/identities/${this.did}`);
+                        let reply     = await this.$http.get(`/identities/${this.did}`);
                         this.identity = reply.data;
                         if(this.identity) {
                             this.flag = 'SUCCESS';

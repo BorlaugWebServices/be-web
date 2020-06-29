@@ -69,10 +69,14 @@
                         <dt>Lessor</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            <Blockie :address="lease.lessor.id" class="mm-5-0-5-0"/>
-                            <span class="m-l-5 align-middle"> {{lease.lessor.id | did}}</span>
-                        </dd>
+<!--                        <dd class="mb-1">-->
+<!--                            <Blockie :address="lease.lessor.id" class="mm-5-0-5-0"/>-->
+<!--                            <span class="m-l-5 align-middle"> {{lease.lessor.id | did}}</span>-->
+<!--                        </dd>-->
+                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessor.id) }}">
+                            <Blockie :address="lease.lessor.id" class="mm-5-0-5-0 float-left"/>
+                            <dd class="ml-2 float-left">{{lease.lessor.id | did}}</dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -81,10 +85,14 @@
                         <dt>Lessee</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            <Blockie :address="lease.lessee.id" class="mm-5-0-5-0"/>
-                            <span class="m-l-5 align-middle"> {{lease.lessee.id | did}}</span>
-                        </dd>
+<!--                        <dd class="mb-1">-->
+<!--                            <Blockie :address="lease.lessee.id" class="mm-5-0-5-0"/>-->
+<!--                            <span class="m-l-5 align-middle"> {{lease.lessee.id | did}}</span>-->
+<!--                        </dd>-->
+                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessee.id) }}">
+                            <Blockie :address="lease.lessee.id" class="mm-5-0-5-0 float-left"/>
+                            <dd class="ml-2 float-left">{{lease.lessee.id | did}}</dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -270,6 +278,9 @@
                 let d       = new Date(0);
                 d.setSeconds(seconds);
                 return d;
+            },
+            getDid(did){
+                return this.$options.filters.did(did);
             }
         }
     }
