@@ -3,29 +3,27 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Lease</h4>
+                    <h4>Identity</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
 
             <div class="card-body mg-b-20 p-t-0">
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lease Id</dt>
+                        <dt>DID</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.id}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
+                        <dd class="ml-2 float-left">{{identity.did | did}}</dd>
                     </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Contract Number</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.contractNumber}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-else>
+                        <router-link :to="{name: 'identity', params : { did: did }}">
+                            <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
+                            <dd class="ml-2 float-left">{{identity.did | did}}</dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -36,7 +34,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">{{lease.blockNumber}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: identity.blockNumber}}">{{identity.blockNumber}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -47,7 +45,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">{{lease.blockHash}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: identity.blockNumber}}">{{identity.blockHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -58,7 +56,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction', params: {hash: lease.extrinsicHash}}">{{lease.extrinsicHash}}</router-link>
+                                <router-link :to="{ name : 'transaction', params: {hash: identity.extrinsicHash}}">{{identity.extrinsicHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -66,96 +64,43 @@
                 </template>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lessor</dt>
+                        <dt>Subject</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-<!--                        <dd class="mb-1">-->
-<!--                            <Blockie :address="lease.lessor.id" class="mm-5-0-5-0"/>-->
-<!--                            <span class="m-l-5 align-middle"> {{lease.lessor.id | did}}</span>-->
-<!--                        </dd>-->
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessor.id) }}">
-                            <Blockie :address="lease.lessor.id" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{lease.lessor.id | did}}</dd>
-                        </router-link>
+                        <dd class="mb-1">
+                            {{identity.subject}}
+                        </dd>
                     </div>
                 </dl>
                 <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lessee</dt>
+                        <dt>Controller</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-<!--                        <dd class="mb-1">-->
-<!--                            <Blockie :address="lease.lessee.id" class="mm-5-0-5-0"/>-->
-<!--                            <span class="m-l-5 align-middle"> {{lease.lessee.id | did}}</span>-->
-<!--                        </dd>-->
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessee.id) }}">
-                            <Blockie :address="lease.lessee.id" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{lease.lessee.id | did}}</dd>
-                        </router-link>
+                        <dd class="mb-1">
+                            {{identity.controller}}
+                        </dd>
                     </div>
                 </dl>
                 <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Effective From</dt>
+                        <dt>Properties</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.effectiveTs | date}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective To</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.expiryTs | date}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Registry ID</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.allocations[0].registry_id}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Asset ID</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.allocations[0].asset_id}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Asset Name</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.asset.number}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Asset Origin</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.asset.origin}}, {{lease.asset.country}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Allocation</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.allocations[0].allocated_shares}}%</dd>
+                        <dd class="mb-1">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="p-2 font-bold">Name</th>
+                                    <th class="p-2 font-bold">Fact</th>
+                                </tr>
+                                <tr v-for="prop in identity.properties" >
+                                    <td class="p-2">{{prop.name}}</td>
+                                    <td class="p-2"> {{prop.fact}}</td>
+                                </tr>
+                            </table>
+                        </dd>
                     </div>
                 </dl>
             </div>
@@ -164,10 +109,10 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Lease Activities</h4>
+                    <h4>Identity Activities</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
 
@@ -207,10 +152,10 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                        Fetching identity, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
                     <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Lease "{{leaseid}}" not found
+                        Identity "{{did}}" not found
                     </h4>
                 </div>
             </div>
@@ -221,14 +166,15 @@
 <script>
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
+    import VueJsonPretty from "vue-json-pretty";
 
     export default {
-        name: "Lease",
-        props: ["leaseid", "hideChainDetails"],
-        components: {Blockie},
+        name: "Identity",
+        props: ["did", "hideChainDetails"],
+        components: {Blockie, VueJsonPretty},
         data() {
             return {
-                lease: null,
+                identity: null,
                 activities: [],
                 show: false,
                 flag: 'SEARCHING'
@@ -240,16 +186,16 @@
         },
         methods: {
             async init() {
-                await this.getLease();
-                await this.getLeaseActivities();
+                await this.getIdentity();
+                await this.getIdentityActivities();
             },
-            async getLease() {
-                if(this.leaseid !== null) {
+            async getIdentity() {
+                if(this.did !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply  = await this.$http.get(`/leases/${this.leaseid}`);
-                        this.lease = reply.data;
-                        if(this.lease) {
+                        let reply     = await this.$http.get(`/identities/${this.did}`);
+                        this.identity = reply.data;
+                        if(this.identity) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
@@ -261,10 +207,10 @@
                     }
                 }
             },
-            async getLeaseActivities() {
-                if(this.lease) {
+            async getIdentityActivities() {
+                if(this.identity) {
                     try {
-                        let reply       = await this.$http.get(`/leases/${this.leaseid}/activities`);
+                        let reply       = await this.$http.get(`/identities/${this.did}/activities`);
                         this.activities = reply.data;
                     } catch(e) {
 
@@ -278,9 +224,6 @@
                 let d       = new Date(0);
                 d.setSeconds(seconds);
                 return d;
-            },
-            getDid(did){
-                return this.$options.filters.did(did);
             }
         }
     }

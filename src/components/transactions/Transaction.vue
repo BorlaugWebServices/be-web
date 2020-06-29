@@ -174,6 +174,9 @@
         <div class="col-12" v-if="transaction && transaction.method.section === 'assetRegistry' && transaction.method.method === 'newLease'">
             <Lease :leaseid="leaseid" :hide-chain-details="true"/>
         </div>
+        <div class="col-12" v-if="transaction && transaction.method.section === 'identity' && transaction.method.method === 'registerDidFor'">
+            <Identity :did="did" :hide-chain-details="true"/>
+        </div>
     </div>
     <div class="row" v-else>
         <div class="col-12">
@@ -195,17 +198,19 @@
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
     import Lease from "../objects/AssetRegistry/Lease";
+    import Identity from "../objects/Identity/Identity";
     import Blockie from "../common/Blockie";
     import _ from "lodash";
 
     export default {
         name: "Transaction",
         props: ["hash"],
-        components: {Lease, VueJsonPretty, Blockie},
+        components: {Lease, VueJsonPretty, Blockie, Identity},
         data() {
             return {
                 transaction: null,
                 leaseid: null,
+                did: null,
                 flag: 'SEARCHING'
             };
         },
@@ -227,11 +232,18 @@
                             if(events.length > 0) {
                                 this.leaseid = events[0].event.data[0];
                             }
+                            events = _.filter(this.transaction.events, (ev) => {
+                                return ev.meta.name === 'Registered'
+                            });
+                            if(events.length > 0) {
+                                this.did = this.$options.filters.did(events[0].event.data[2].id);
+                            }
                         }
                     } else {
                         this.flag = 'FAILURE';
                     }
                 } catch(e) {
+                    console.error(e);
                     this.flag = 'FAILURE';
                 } finally {
                     EventBus.$emit('hide');

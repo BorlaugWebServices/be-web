@@ -37,7 +37,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <age :timestamp="block.timestamp"/>
+                                    <age v-if="block.timestamp" :timestamp="block.timestamp"/>
                                 </td>
                                 <td>
                                     {{block.transactions.length}}
@@ -129,7 +129,7 @@
                 this.getRecentBlocks(pageNum);
             },
             setPageCount() {
-                this.pageCount = this.total <= 50 ? 1 : Math.ceil(this.total / 50);
+                this.pageCount = this.total <= 10 ? 1 : Math.ceil(this.total / 10);
             }
         }
     }
