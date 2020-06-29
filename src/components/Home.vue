@@ -7,7 +7,7 @@
                         <h4 class="card-title text-dark m-b-20">Explore Blocks, Transactions and Addresses</h4>
                         <div class="input-group">
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus="" class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
-                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease Id" type="text" v-model="searchCriteria">
+                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease / DID" type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
                                     <i class="fa fa-search d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Clear</span>
@@ -108,7 +108,8 @@
                     </div>
                     <div class="card-body" v-if="searchResult && searchResult.blocks.length === 0 && searchResult.txns.length === 0
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
-                    && searchResult.events.length === 0 && searchResult.logs.length === 0">
+                    && searchResult.events.length === 0 && searchResult.logs.length === 0
+                    && searchResult.identities.length === 0">
                         <h3 class="text-muted text-center">Nothing found</h3>
                     </div>
                     <div class="card-body m-t-0 p-0" v-else>
@@ -148,6 +149,17 @@
                                                 <span class="font-weight-bold">Contract No :</span> {{lease.contract_number}} |
                                                 <span class="font-weight-bold">Registry Id :</span> {{lease.allocations[0].registry_id}} |
                                                 <span class="font-weight-bold">Asset Id :</span> {{lease.allocations[0].asset_id}} |
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="identity in searchResult.identities">
+                                    <td>
+                                        <router-link :to="{ name : 'identity' , params: { did: getDid(identity.did) }}">
+                                            <h4>{{identity.did | did}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{identity.blockNumber}} |
+                                                <span class="font-weight-bold">Tx Hash :</span> {{identity.extrinsicHash}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -293,6 +305,9 @@
                 }
                 this.blocks.unshift(arg.block);
                 this.latestBlockTime = arg.block.timestamp;
+            },
+            getDid(did){
+                return this.$options.filters.did(did);
             }
         }
     }

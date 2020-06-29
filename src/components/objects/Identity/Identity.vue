@@ -6,7 +6,7 @@
                     <h4>Identity</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
 
@@ -90,8 +90,6 @@
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <!--                            <vue-json-pretty :data="identity.properties" :path="'res'">-->
-                            <!--                            </vue-json-pretty>-->
                             <table class="table table-bordered">
                                 <tr>
                                     <th class="p-2 font-bold">Name</th>
@@ -103,7 +101,6 @@
                                 </tr>
                             </table>
                         </dd>
-
                     </div>
                 </dl>
             </div>
@@ -115,7 +112,7 @@
                     <h4>Identity Activities</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
 
