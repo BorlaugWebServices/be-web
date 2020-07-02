@@ -4,7 +4,11 @@
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
                     <div class="card-header-title">
-                        <h5>Transaction <span class="fit">{{hash}}</span></h5>
+                        <h5>
+                            <i class="fas fa fa-check-circle text-success" v-if="success"/>
+                            <i class="fas fa fa-exclamation-circle text-danger" v-else/>
+                            <span class="ml-2">Transaction <span class="fit font-weight-normal">{{hash}}</span></span>
+                        </h5>
                     </div>
                     <div class="card-header-icon">
                         <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
@@ -45,6 +49,22 @@
                         </div>
                         <div class="col-sm-10 text-sm-left">
                             <dd class="mb-1">{{transaction.hash}}</dd>
+                        </div>
+                    </dl>
+                    <hr/>
+                    <dl class="row mb-0">
+                        <div class="col-sm-2 text-sm-right">
+                            <dt>Status</dt>
+                        </div>
+                        <div class="col-sm-10 text-sm-left">
+                            <dd class="mb-1">
+                                <span class="badge badge-pill badge-success font-bold" v-if="success">
+                                    <i class="fa fa-check-circle"/> SUCCESS
+                                </span>
+                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                    <i class="fas fa-exclamation-circle"></i> FAILED
+                            </span>
+                            </dd>
                         </div>
                     </dl>
                     <hr/>
@@ -174,7 +194,7 @@
         <div class="col-12" v-if="transaction && transaction.method.section === 'assetRegistry' && transaction.method.method === 'newLease'">
             <Lease :leaseid="leaseid" :hide-chain-details="true"/>
         </div>
-        <div class="col-12" v-if="transaction && transaction.method.section === 'identity' && transaction.method.method === 'registerDidFor'">
+        <div class="col-12" v-if="transaction && transaction.method.section === 'identity' && ['registerDidFor','registerDid'].includes(transaction.method.method)">
             <Identity :did="did" :hide-chain-details="true"/>
         </div>
     </div>
@@ -206,12 +226,18 @@
         name: "Transaction",
         props: ["hash"],
         components: {Lease, VueJsonPretty, Blockie, Identity},
+        watch: {
+            "hash": async function(nv, ov) {
+                await this.getTransaction();
+            }
+        },
         data() {
             return {
                 transaction: null,
                 leaseid: null,
                 did: null,
-                flag: 'SEARCHING'
+                flag: 'SEARCHING',
+                success: false
             };
         },
         mounted() {
@@ -221,8 +247,12 @@
             async getTransaction() {
                 try {
                     EventBus.$emit('show');
-                    let reply        = await this.$http.get(`/transactions/${this.hash}`);
-                    this.transaction = reply.data;
+                    let reply         = await this.$http.get(`/transactions/${this.hash}`);
+                    this.transaction  = reply.data;
+                    let successEvents = _.filter(this.transaction.events, (event) => {
+                        return event.meta.name === "ExtrinsicSuccess";
+                    });
+                    this.success      = successEvents.length > 0;
                     if(this.transaction) {
                         this.flag = 'SUCCESS';
                         if(this.transaction.events.length > 0) {
