@@ -178,7 +178,7 @@
                         <tr>
                             <th class="border-top-0 font-weight-bold">#</th>
                             <th class="border-top-0 font-weight-bold">Activity</th>
-                            <th class="border-top-0 font-weight-bold">Tx</th>
+                            <th class="border-top-0 font-weight-bold">Transaction Hash</th>
                             <th class="border-top-0 font-weight-bold">Timestamp</th>
                         </tr>
                         </thead>
@@ -187,8 +187,9 @@
                             <td>{{i+1 }}</td>
                             <td>{{activity.method.method}}</td>
                             <td>
-                                <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}">
-                                    {{activity.hash}}
+                                <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
+                                             :title="activity.hash">
+                                    {{activity.hash | truncate(32, '')}}
                                 </router-link>
                             </td>
                             <td>{{activity.timestamp.toString() | timestamp}}</td>
@@ -219,6 +220,7 @@
 </template>
 
 <script>
+    import _ from "lodash";
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
 
@@ -265,7 +267,7 @@
                 if(this.lease) {
                     try {
                         let reply       = await this.$http.get(`/leases/${this.leaseid}/activities`);
-                        this.activities = reply.data;
+                        this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
                     } catch(e) {
 
                     } finally {

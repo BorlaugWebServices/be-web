@@ -112,11 +112,11 @@
                                     <thead>
                                     <tr class="border-0">
                                         <th class="border-0"></th>
-                                        <th class="border-0 font-weight-bold">Transaction Hash</th>
+                                        <th class="border-0 font-weight-bold">Hash</th>
                                         <th class="border-0 font-weight-bold">From</th>
                                         <th class="border-0 font-weight-bold">Module</th>
                                         <th class="border-0 font-weight-bold">Call</th>
-                                        <th class="border-0 font-weight-bold text-center">Signed</th>
+                                        <th class="border-0 font-weight-bold text-center">Status</th>
                                         <th class="border-0"></th>
                                     </tr>
                                     </thead>
@@ -144,8 +144,12 @@
                                             {{tx.method.method}}
                                         </td>
                                         <td class="text-center">
-                                            <i class="far fa-check-circle text-success" v-if="tx.isSigned"/>
-                                            <i class="far fa-times-circle text-danger" v-if="!tx.isSigned"/>
+                                            <span class="badge badge-pill badge-success font-bold" v-if="isTransactionSuccess(tx)">
+                                                <i class="fa fa-check-circle"/> SUCCESS
+                                            </span>
+                                            <span class="badge badge-pill badge-danger font-bold" v-else>
+                                                <i class="fas fa-exclamation-circle"></i> FAILED
+                                            </span>
                                         </td>
                                         <td class="text-right">
                                             <router-link :to="{ name: 'transaction', params: {hash: tx.hash}}" class="btn btn-sm btn-orange text-white">
@@ -306,6 +310,7 @@
 </template>
 
 <script>
+    import _ from "lodash";
     import EventBus from "../../event-bus";
     import Blockie from "../common/Blockie";
 
@@ -346,6 +351,13 @@
             },
             getLogType(log) {
                 return Object.keys(log)[0];
+            },
+            isTransactionSuccess(tx){
+                let successEvent = _.filter(this.block.events, (event) => {
+                    return tx.events.includes(event.id) && event.meta.name === "ExtrinsicSuccess";
+                });
+
+                return successEvent.length > 0;
             }
         }
     }
