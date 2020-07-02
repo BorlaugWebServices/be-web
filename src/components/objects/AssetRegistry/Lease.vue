@@ -179,6 +179,7 @@
                             <th class="border-top-0 font-weight-bold">#</th>
                             <th class="border-top-0 font-weight-bold">Activity</th>
                             <th class="border-top-0 font-weight-bold">Transaction Hash</th>
+                            <th class="border-top-0 font-weight-bold">Status</th>
                             <th class="border-top-0 font-weight-bold">Timestamp</th>
                         </tr>
                         </thead>
@@ -191,6 +192,14 @@
                                              :title="activity.hash">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>
+                            </td>
+                            <td>
+                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">
+                                    <i class="fa fa-check-circle"/> SUCCESS
+                                </span>
+                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                    <i class="fas fa-exclamation-circle"></i> FAILED
+                                </span>
                             </td>
                             <td>{{activity.timestamp.toString() | timestamp}}</td>
                         </tr>

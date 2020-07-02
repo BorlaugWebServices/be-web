@@ -63,7 +63,7 @@
                                 </span>
                                 <span class="badge badge-pill badge-danger font-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
-                            </span>
+                                </span>
                             </dd>
                         </div>
                     </dl>
