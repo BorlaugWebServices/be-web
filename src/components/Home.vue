@@ -142,8 +142,8 @@
                                 </tr>
                                 <tr v-for="lease in searchResult.leases">
                                     <td>
-                                        <router-link :to="{ name : 'lease' , params: { leaseid: lease.lease_id }}">
-                                            <h4>Lease: {{lease.lease_id}}</h4>
+                                        <router-link :to="{ name : 'lease' , params: { leaseid: lease.id }}">
+                                            <h4>Lease: {{lease.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{lease.blockNumber}} |
                                                 <span class="font-weight-bold">Contract No :</span> {{lease.contract_number}} |
