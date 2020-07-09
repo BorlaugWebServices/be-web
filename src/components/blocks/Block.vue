@@ -354,7 +354,7 @@
             },
             isTransactionSuccess(tx){
                 let successEvent = _.filter(this.block.events, (event) => {
-                    return tx.events.includes(event.id) && event.meta.name === "ExtrinsicSuccess";
+                    return event.extrinsicid === tx.id && event.meta.name === "ExtrinsicSuccess";
                 });
 
                 return successEvent.length > 0;
