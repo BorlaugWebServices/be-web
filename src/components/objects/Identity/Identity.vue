@@ -251,6 +251,11 @@
                 claimIndex: 0
             }
         },
+        watch : {
+            $route(to, from) {
+                this.init();
+            }
+        },
         mounted() {
             this.show = !this.hideChainDetails;
             this.init();
