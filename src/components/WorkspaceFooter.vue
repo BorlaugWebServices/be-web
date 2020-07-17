@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12 col-md">
                 <div class="m-b-20"><img src="../assets/images/logo-orange.png" alt="" height="30"></div>
-                <small class="d-block mb-3 text-muted">&copy; 2017-2019</small>
+                <small class="d-block mb-3 text-muted">&copy; 2017-2020</small>
             </div>
             <div class="col-6 col-md">
                 <h5>About Us</h5>
