@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="row" v-if="!searchCriteria">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="card ">
                     <div class="card-header row m-b-0 p-b-0">
                         <div class="col-md-6 card-title">
@@ -43,9 +43,9 @@
                                     <th class="border-0 font-weight-bold">Number</th>
                                     <th class="border-0 font-weight-bold">Age</th>
                                     <th class="border-0 font-weight-bold">Transactions</th>
-                                    <th class="border-0 font-weight-bold">Inherents</th>
+<!--                                    <th class="border-0 font-weight-bold">Inherents</th>-->
                                     <th class="border-0 font-weight-bold">Events</th>
-                                    <th class="border-0 font-weight-bold">Logs</th>
+<!--                                    <th class="border-0 font-weight-bold">Logs</th>-->
                                     <th class="border-0"></th>
                                 </tr>
                                 </thead>
@@ -54,7 +54,7 @@
                                     <td>
                                         <i class="fa fa-cube"></i>
                                     </td>
-                                    <td class="block">
+                                    <td>
                                         <div class="d-flex no-block align-items-center">
                                             <router-link :to="{name: 'block', params: {number: block.number}}">{{ block.number}}</router-link>
                                         </div>
@@ -65,15 +65,15 @@
                                     <td>
                                         {{block.transactions.length}}
                                     </td>
-                                    <td>
-                                        {{block.inherents.length}}
-                                    </td>
+<!--                                    <td>-->
+<!--                                        {{block.inherents.length}}-->
+<!--                                    </td>-->
                                     <td>
                                         {{block.events.length}}
                                     </td>
-                                    <td>
-                                        {{block.logs.length}}
-                                    </td>
+<!--                                    <td>-->
+<!--                                        {{block.logs.length}}-->
+<!--                                    </td>-->
                                     <td class="text-right">
                                         <router-link :to="{name: 'block', params: {number: block.number}}" class="btn btn-sm btn-orange text-white">
                                             Details
@@ -84,9 +84,73 @@
                             </table>
                         </div>
                     </div>
+
                     <div class="card-footer">
                         <div class="m-b-10">Last Synced Block Time: <strong v-if="latestBlockTime">{{latestBlockTime.toString() | timestamp}}</strong></div>
                         <router-link :to="{name: 'blocks'}" class="btn btn-orange btn-block text-white font-weight-bold">View All Blocks</router-link>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="card-header row m-b-0 p-b-0">
+                        <div class="col-md-6 card-title">
+                            <h3>Latest Transactions</h3>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h3>
+                                <a href="javascript:void(0);">
+                                    <i class="fas fa-file-signature card-title text-orange"/>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="card-body m-t-0 p-0">
+                        <div class="table-responsive blocks">
+                            <table class="table v-middle">
+                                <thead>
+                                <tr class="border-0">
+                                    <th class="border-0"></th>
+                                    <th class="border-0 font-weight-bold">Hash</th>
+                                    <th class="border-0 font-weight-bold">Block</th>
+                                    <th class="border-0 font-weight-bold">Method</th>
+                                    <th class="border-0"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(tx, index) in transactions">
+                                    <td>
+                                        <i class="fas fa-file-signature"></i>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex no-block align-items-center" :title="tx.hash">
+                                            <router-link :to="{name: 'transaction', params: {hash: tx.hash}}">{{ tx.hash | truncate(8,'...')}}</router-link>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex no-block align-items-center">
+                                            <router-link :to="{name: 'block', params: {number: tx.blockNumber}}">{{ tx.blockNumber}}</router-link>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{tx.method.method}}
+                                    </td>
+                                    <td class="text-right">
+                                        <router-link :to="{name: 'transaction', params: {hash: tx.hash}}" class="btn btn-sm btn-orange text-white">
+                                            Details
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="m-b-10">Last Synced Transaction Time: <strong v-if="latestTxnTime">{{latestTxnTime.toString() | timestamp}}</strong></div>
+                        <a href="javascript:void(0);" class="btn btn-orange btn-block text-white font-weight-bold">View All Transaction</a>
                     </div>
                 </div>
             </div>
@@ -218,11 +282,14 @@
         data() {
             return {
                 blocks: [],
+                transactions: [],
                 searchCriteria: null,
                 searchResult: null,
                 socket: null,
                 latestBlockTime: '',
-                lastSyncedBlock: null
+                lastSyncedBlock: null,
+                latestTxnTime: '',
+                lastSyncedTxn: null
             };
         },
         watch: {
@@ -234,6 +301,17 @@
                         }
                     } else {
                         this.pushBlock(nv);
+                    }
+                }
+            },
+            lastSyncedTxn: function(nv, ov) {
+                if(nv !== ov) {
+                    if(ov) {
+                        if(ov.hash !== nv.hash) {
+                            this.pushTxn(nv);
+                        }
+                    } else {
+                        this.pushTxn(nv);
                     }
                 }
             },
@@ -265,12 +343,14 @@
         methods: {
             async init() {
                 await this.getRecentBlocks();
+                await this.getRecentTxns();
 
                 this.socket = await io(process.env.VUE_APP_API_URL);
 
                 this.socket.on('connect', () => {
                     //console.log("Socket connection established");
                     this.getLatestBlocks();
+                    this.getLatestTxns();
                 });
             },
             async getRecentBlocks() {
@@ -278,6 +358,17 @@
                     EventBus.$emit('show');
                     let reply   = await this.$http.get("/blocks");
                     this.blocks = reply.data.slice;
+                } catch(e) {
+
+                } finally {
+                    EventBus.$emit('hide');
+                }
+            },
+            async getRecentTxns() {
+                try {
+                    EventBus.$emit('show');
+                    let reply   = await this.$http.get("/transactions");
+                    this.transactions = reply.data.slice;
                 } catch(e) {
 
                 } finally {
@@ -298,6 +389,12 @@
                     this.lastSyncedBlock = data;
                 })
             },
+            getLatestTxns() {
+                this.socket.on('txn updated', (data) => {
+                    //console.log("New Block Number : ", data.block.blockNumber);
+                    this.lastSyncedTxn= data;
+                })
+            },
             pushBlock(arg) {
                 // console.log("New Block Number : ", JSON.stringify(arg));
                 if(this.blocks.length > 9) {
@@ -305,6 +402,14 @@
                 }
                 this.blocks.unshift(arg.block);
                 this.latestBlockTime = arg.block.timestamp;
+            },
+            pushTxn(txn) {
+                // console.log("New Txn : ", JSON.stringify(txn));
+                if(this.transactions.length > 9) {
+                    this.transaction.pop();
+                }
+                this.transactions.unshift(txn);
+                this.latestTxnTime = txn.timestamp;
             },
             getDid(did){
                 return this.$options.filters.did(did);
