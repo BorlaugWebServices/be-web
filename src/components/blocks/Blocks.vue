@@ -125,7 +125,6 @@
                 }
             },
             pageHandler(pageNum) {
-                console.log(pageNum);
                 this.getRecentBlocks(pageNum);
             },
             setPageCount() {
