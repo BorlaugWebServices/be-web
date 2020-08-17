@@ -53,6 +53,11 @@ export default new VueRouter({
                     component: resolve => require(["@/components/transactions/TransactionsLayout.vue"], resolve),
                     children: [
                         {
+                            path: "",
+                            name: "transactions",
+                            component: resolve => require(["@/components/transactions/Transactions.vue"], resolve)
+                        },
+                        {
                             path: ":hash",
                             name: "transaction",
                             props: true,

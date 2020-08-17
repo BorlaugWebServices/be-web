@@ -150,7 +150,7 @@
 
                     <div class="card-footer">
                         <div class="m-b-10">Last Synced Transaction Time: <strong v-if="latestTxnTime">{{latestTxnTime.toString() | timestamp}}</strong></div>
-                        <a href="javascript:void(0);" class="btn btn-orange btn-block text-white font-weight-bold">View All Transaction</a>
+                        <router-link :to="{name: 'transactions'}" class="btn btn-orange btn-block text-white font-weight-bold">View All Transaction</router-link>
                     </div>
                 </div>
             </div>
