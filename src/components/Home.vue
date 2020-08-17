@@ -358,6 +358,9 @@
                     EventBus.$emit('show');
                     let reply   = await this.$http.get("/blocks");
                     this.blocks = reply.data.slice;
+                    if(this.blocks.length > 0){
+                        this.latestBlockTime = this.blocks[0].timestamp;
+                    }
                 } catch(e) {
 
                 } finally {
@@ -369,6 +372,9 @@
                     EventBus.$emit('show');
                     let reply   = await this.$http.get("/transactions");
                     this.transactions = reply.data.slice;
+                    if(this.transactions.length > 0){
+                        this.latestTxnTime = this.transactions[0].timestamp;
+                    }
                 } catch(e) {
 
                 } finally {
