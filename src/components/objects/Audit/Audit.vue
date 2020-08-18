@@ -15,7 +15,7 @@
                     <div class="col-sm-2 text-sm-right">
                         <dt>Audit Id</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left"  v-if="show">
+                    <div class="col-sm-9 text-sm-left" v-if="show">
                         <dd class="mb-1">{{audit.id}}</dd>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-else>
@@ -65,7 +65,10 @@
                         <dt>Audit Creator</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{audit.audit_creator}}</dd>
+                        <dd class="mb-1">
+                            <Blockie :address="audit.audit_creator" class="mm-5-0-5-0"/>
+                            <span :title="audit.audit_creator" class="m-l-5 align-middle">{{ audit.audit_creator }}</span>
+                        </dd>
                     </div>
                 </dl>
                 <hr/>
@@ -74,7 +77,10 @@
                         <dt>Auditor</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{audit.auditor}}</dd>
+                        <dd class="mb-1">
+                            <Blockie :address="audit.auditor" class="mm-5-0-5-0"/>
+                            <span :title="audit.auditor" class="m-l-5 align-middle">{{ audit.auditor }}</span>
+                        </dd>
                     </div>
                 </dl>
             </div>
