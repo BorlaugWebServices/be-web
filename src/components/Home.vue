@@ -217,6 +217,18 @@
                                         </router-link>
                                     </td>
                                 </tr>
+                                <tr v-for="audit in searchResult.audits">
+                                    <td>
+                                        <router-link :to="{ name : 'audit' , params: { auditid: audit.id }}">
+                                            <h4>Audit: {{audit.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{audit.blockNumber}} |
+                                                <span class="font-weight-bold">Creator :</span> {{audit.audit_creator}} |
+                                                <span class="font-weight-bold">Auditor :</span> {{audit.auditor}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
                                 <tr v-for="identity in searchResult.identities">
                                     <td>
                                         <router-link :to="{ name : 'identity' , params: { did: getDid(identity.did) }}">
@@ -412,7 +424,7 @@
             pushTxn(txn) {
                 // console.log("New Txn : ", JSON.stringify(txn));
                 if(this.transactions.length > 9) {
-                    this.transaction.pop();
+                    this.transactions.pop();
                 }
                 this.transactions.unshift(txn);
                 this.latestTxnTime = txn.timestamp;
