@@ -197,6 +197,9 @@
         <div class="col-12" v-if="transaction && transaction.method.section === 'identity' && ['registerDidFor','registerDid'].includes(transaction.method.method)">
             <Identity :did="did" :hide-chain-details="true"/>
         </div>
+        <div class="col-12" v-if="transaction && transaction.method.section === 'audits' && transaction.method.method === 'createAudit'">
+            <Audit :auditid="auditid" :hide-chain-details="true"/>
+        </div>
     </div>
     <div class="row" v-else>
         <div class="col-12">
@@ -219,13 +222,14 @@
     import VueJsonPretty from 'vue-json-pretty';
     import Lease from "../objects/AssetRegistry/Lease";
     import Identity from "../objects/Identity/Identity";
+    import Audit from "../objects/Audit/Audit";
     import Blockie from "../common/Blockie";
     import _ from "lodash";
 
     export default {
         name: "Transaction",
         props: ["hash"],
-        components: {Lease, VueJsonPretty, Blockie, Identity},
+        components: {Audit, Lease, VueJsonPretty, Blockie, Identity},
         watch: {
             "hash": async function(nv, ov) {
                 await this.getTransaction();
@@ -236,6 +240,7 @@
                 transaction: null,
                 leaseid: null,
                 did: null,
+                auditid: null,
                 flag: 'SEARCHING',
                 success: false
             };
@@ -268,6 +273,13 @@
                             if(events.length > 0) {
                                 this.did = this.$options.filters.did(events[0].event.data[2].id);
                             }
+                            events = _.filter(this.transaction.events, (ev) => {
+                                return ev.meta.name === 'AuditCreated'
+                            });
+                            if(events.length > 0) {
+                                this.auditid = events[0].event.data[1];
+                            }
+                            console.log(this.auditid)
                         }
                     } else {
                         this.flag = 'FAILURE';

@@ -6,7 +6,7 @@
                     <h4>Audit</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
+                    <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
                 </div>
             </div>
 
@@ -15,8 +15,13 @@
                     <div class="col-sm-2 text-sm-right">
                         <dt>Audit Id</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
+                    <div class="col-sm-9 text-sm-left"  v-if="show">
                         <dd class="mb-1">{{audit.id}}</dd>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-else>
+                        <router-link :to="{name: 'audit', params : { auditid: audit.id }}">
+                            <dd class="mb-1">{{audit.id}}</dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -55,7 +60,6 @@
                     </dl>
                     <hr/>
                 </template>
-                <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
                         <dt>Audit Creator</dt>
