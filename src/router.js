@@ -124,6 +124,18 @@ export default new VueRouter({
                             component: resolve => require(["@/components/objects/Identity/Identity.vue"], resolve),
                         }
                     ]
+                },
+                {
+                    path: 'audit',
+                    component: resolve => require(["@/components/objects/Audit/Layout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":auditid",
+                            name: "audit",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Audit/Audit.vue"], resolve),
+                        }
+                    ]
                 }
             ]
         }
