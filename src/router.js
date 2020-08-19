@@ -136,7 +136,14 @@ export default new VueRouter({
                             component: resolve => require(["@/components/objects/Audit/Audit.vue"], resolve),
                         }
                     ]
-                }
+                },
+                {
+                    path: "404",
+                    name: "404",
+                    props: { isPage: true },
+                    component: resolve => require(["@/components/common/NotFound.vue"], resolve)
+                },
+                { path: '*', redirect: '/404' }
             ]
         }
     ]

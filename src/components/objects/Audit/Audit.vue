@@ -144,9 +144,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching audit, paudit wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Audit "{{auditid}}" not found
-                    </h4>
+                    <NotFound module="Audit" :module-id="auditid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -157,11 +155,12 @@
     import _ from "lodash";
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
+    import NotFound from "../../common/NotFound";
 
     export default {
         name: "Audit",
         props: ["auditid", "hideChainDetails"],
-        components: {Blockie},
+        components: {Blockie, NotFound},
         data() {
             return {
                 audit: null,

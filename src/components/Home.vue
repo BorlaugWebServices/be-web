@@ -7,7 +7,7 @@
                         <h4 class="card-title text-dark m-b-20">Explore Blocks, Transactions and Addresses</h4>
                         <div class="input-group">
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus="" class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
-                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease / DID" type="text" v-model="searchCriteria">
+                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease / DID / Audit" type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
                                     <i class="fa fa-search d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Clear</span>
@@ -43,9 +43,9 @@
                                     <th class="border-0 font-weight-bold">Number</th>
                                     <th class="border-0 font-weight-bold">Age</th>
                                     <th class="border-0 font-weight-bold">Transactions</th>
-<!--                                    <th class="border-0 font-weight-bold">Inherents</th>-->
+                                    <!--                                    <th class="border-0 font-weight-bold">Inherents</th>-->
                                     <th class="border-0 font-weight-bold">Events</th>
-<!--                                    <th class="border-0 font-weight-bold">Logs</th>-->
+                                    <!--                                    <th class="border-0 font-weight-bold">Logs</th>-->
                                     <th class="border-0"></th>
                                 </tr>
                                 </thead>
@@ -65,15 +65,15 @@
                                     <td>
                                         {{block.transactions.length}}
                                     </td>
-<!--                                    <td>-->
-<!--                                        {{block.inherents.length}}-->
-<!--                                    </td>-->
+                                    <!--                                    <td>-->
+                                    <!--                                        {{block.inherents.length}}-->
+                                    <!--                                    </td>-->
                                     <td>
                                         {{block.events.length}}
                                     </td>
-<!--                                    <td>-->
-<!--                                        {{block.logs.length}}-->
-<!--                                    </td>-->
+                                    <!--                                    <td>-->
+                                    <!--                                        {{block.logs.length}}-->
+                                    <!--                                    </td>-->
                                     <td class="text-right">
                                         <router-link :to="{name: 'block', params: {number: block.number}}" class="btn btn-sm btn-orange text-white">
                                             Details
@@ -174,7 +174,15 @@
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
                     && searchResult.events.length === 0 && searchResult.logs.length === 0
                     && searchResult.identities.length === 0">
-                        <h3 class="text-muted text-center">Nothing found</h3>
+                        <div class="row justify-content-center">
+                            <div class="col-md-12 text-center text-muted">
+                                <span class="display-1 d-block">
+                                    <i class="fa fa-exclamation-triangle"/>
+                                </span>
+                                <div class="mb-4 lead">Nothing found.</div>
+                                <a href="javascript:void(0);" class="font-weight-bold text-orange" @click="clear"> Clear</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body m-t-0 p-0" v-else>
                         <div class="table-responsive blocks">
@@ -339,7 +347,7 @@
         },
         mounted() {
             window.onbeforeunload = function(event) {
-                console.log("Disconnecting socket on page refresh or close");
+                // console.log("Disconnecting socket on page refresh or close");
                 if(this.socket) {
                     this.socket.disconnect();
                 }
@@ -347,50 +355,47 @@
             this.init();
         },
         destroyed() {
-            console.log("Disconnecting socket on destroy");
+            // console.log("Disconnecting socket on destroy");
             if(this.socket) {
                 this.socket.disconnect();
             }
         },
         methods: {
             async init() {
-                await this.getRecentBlocks();
-                await this.getRecentTxns();
-
-                this.socket = await io(process.env.VUE_APP_API_URL);
-
-                this.socket.on('connect', () => {
-                    //console.log("Socket connection established");
-                    this.getLatestBlocks();
-                    this.getLatestTxns();
-                });
-            },
-            async getRecentBlocks() {
                 try {
                     EventBus.$emit('show');
-                    let reply   = await this.$http.get("/blocks");
-                    this.blocks = reply.data.slice;
-                    if(this.blocks.length > 0){
-                        this.latestBlockTime = this.blocks[0].timestamp;
-                    }
+                    await Promise.all([
+                        this.getRecentBlocks(),
+                        this.getRecentTxns()
+                    ])
+                    // await this.getRecentBlocks();
+                    // await this.getRecentTxns();
+
+                    this.socket = await io(process.env.VUE_APP_API_URL);
+
+                    this.socket.on('connect', () => {
+                        //console.log("Socket connection established");
+                        this.getLatestBlocks();
+                        this.getLatestTxns();
+                    });
                 } catch(e) {
 
                 } finally {
                     EventBus.$emit('hide');
                 }
             },
+            async getRecentBlocks() {
+                let reply   = await this.$http.get("/blocks");
+                this.blocks = reply.data.slice;
+                if(this.blocks.length > 0) {
+                    this.latestBlockTime = this.blocks[0].timestamp;
+                }
+            },
             async getRecentTxns() {
-                try {
-                    EventBus.$emit('show');
-                    let reply   = await this.$http.get("/transactions");
-                    this.transactions = reply.data.slice;
-                    if(this.transactions.length > 0){
-                        this.latestTxnTime = this.transactions[0].timestamp;
-                    }
-                } catch(e) {
-
-                } finally {
-                    EventBus.$emit('hide');
+                let reply         = await this.$http.get("/transactions");
+                this.transactions = reply.data.slice;
+                if(this.transactions.length > 0) {
+                    this.latestTxnTime = this.transactions[0].timestamp;
                 }
             },
             async search() {
@@ -410,7 +415,7 @@
             getLatestTxns() {
                 this.socket.on('txn updated', (data) => {
                     //console.log("New Block Number : ", data.block.blockNumber);
-                    this.lastSyncedTxn= data;
+                    this.lastSyncedTxn = data;
                 })
             },
             pushBlock(arg) {
@@ -429,7 +434,7 @@
                 this.transactions.unshift(txn);
                 this.latestTxnTime = txn.timestamp;
             },
-            getDid(did){
+            getDid(did) {
                 return this.$options.filters.did(did);
             }
         }

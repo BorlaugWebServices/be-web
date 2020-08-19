@@ -208,9 +208,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Searching transaction, please wait <img class="ml-2" alt="" src="../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Transaction "{{hash}}" not found
-                    </h4>
+                    <NotFound module="Transaction" :module-id="hash" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -224,12 +222,13 @@
     import Identity from "../objects/Identity/Identity";
     import Audit from "../objects/Audit/Audit";
     import Blockie from "../common/Blockie";
+    import NotFound from "../common/NotFound";
     import _ from "lodash";
 
     export default {
         name: "Transaction",
         props: ["hash"],
-        components: {Audit, Lease, VueJsonPretty, Blockie, Identity},
+        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound},
         watch: {
             "hash": async function(nv, ov) {
                 await this.getTransaction();

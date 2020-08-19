@@ -219,9 +219,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Lease "{{leaseid}}" not found
-                    </h4>
+                    <NotFound module="Lease" :module-id="leaseid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -232,11 +230,12 @@
     import _ from "lodash";
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
+    import NotFound from "../../common/NotFound";
 
     export default {
         name: "Lease",
         props: ["leaseid", "hideChainDetails"],
-        components: {Blockie},
+        components: {Blockie, NotFound},
         data() {
             return {
                 lease: null,

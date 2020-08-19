@@ -88,9 +88,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching inherent, please wait <img class="ml-2" src="../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Inherent "{{inherentid}}" not found
-                    </h4>
+                    <NotFound module="Inherent" :module-id="inherentid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -100,11 +98,12 @@
 <script>
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
+    import NotFound from "../common/NotFound";
 
     export default {
         name: "Inherent",
         props: ["inherentid"],
-        components: {VueJsonPretty},
+        components: {VueJsonPretty, NotFound},
         data() {
             return {
                 extrinsic: null,
@@ -122,7 +121,7 @@
                     this.extrinsic = reply.data;
                     if(this.extrinsic) {
                         this.flag = 'SUCCESS';
-                    } else{
+                    } else {
                         this.flag = 'FAILURE';
                     }
                 } catch(e) {

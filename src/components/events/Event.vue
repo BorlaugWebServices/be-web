@@ -86,9 +86,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching event, please wait <img class="ml-2" src="../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Event "{{eventid}}" not found
-                    </h4>
+                    <NotFound module="Event" :module-id="eventid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -98,11 +96,13 @@
 <script>
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
+    import NotFound from "../common/NotFound";
 
     export default {
         name: "Lease",
         props: ["eventid"],
-        components: {VueJsonPretty},
+
+        components: {VueJsonPretty, NotFound},
         data() {
             return {
                 event: null,
@@ -110,7 +110,7 @@
             };
         },
         mounted() {
-           this.getEvent();
+            this.getEvent();
         },
         methods: {
             async getEvent() {

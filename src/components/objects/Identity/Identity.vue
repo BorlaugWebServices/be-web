@@ -223,9 +223,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching identity, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Identity "{{did}}" not found
-                    </h4>
+                    <NotFound module="Identity" :module-id="did" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -237,11 +235,12 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
     import VueJsonPretty from "vue-json-pretty";
+    import NotFound from "../../common/NotFound";
 
     export default {
         name: "Identity",
         props: ["did", "hideChainDetails"],
-        components: {Blockie, VueJsonPretty},
+        components: {Blockie, VueJsonPretty, NotFound},
         data() {
             return {
                 identity: null,

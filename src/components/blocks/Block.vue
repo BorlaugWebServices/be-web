@@ -300,9 +300,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching block, please wait <img class="ml-2" alt="" src="../../assets/images/ajax-loader.gif">
                     </h4>
-                    <h4 class="card-title text-muted" v-if="flag === 'FAILURE'">
-                        Block "{{number}}" not found
-                    </h4>
+                    <NotFound module="Block" :module-id="number" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -313,11 +311,12 @@
     import _ from "lodash";
     import EventBus from "../../event-bus";
     import Blockie from "../common/Blockie";
+    import NotFound from "../common/NotFound";
 
     export default {
         name: "Block",
         props: ["number"],
-        components: {Blockie},
+        components: {Blockie, NotFound},
         data() {
             return {
                 block: {},
