@@ -138,6 +138,18 @@ export default new VueRouter({
                     ]
                 },
                 {
+                    path: 'Provenance',
+                    component: resolve => require(["@/components/objects/Provenance/Layout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":sequenceid",
+                            name: "audit",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Provenance/Sequence.vue"], resolve),
+                        }
+                    ]
+                },
+                {
                     path: "404",
                     name: "404",
                     props: { isPage: true },
