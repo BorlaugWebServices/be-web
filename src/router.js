@@ -138,12 +138,12 @@ export default new VueRouter({
                     ]
                 },
                 {
-                    path: 'Provenance',
+                    path: 'provenance',
                     component: resolve => require(["@/components/objects/Provenance/Layout.vue"], resolve),
                     children: [
                         {
                             path: ":sequenceid",
-                            name: "audit",
+                            name: "sequence",
                             props: true,
                             component: resolve => require(["@/components/objects/Provenance/Sequence.vue"], resolve),
                         }
