@@ -7,7 +7,7 @@
                         <h4 class="card-title text-dark m-b-20">Explore Blocks, Transactions and Addresses</h4>
                         <div class="input-group">
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus="" class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
-                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease / DID / Audit" type="text" v-model="searchCriteria">
+                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance" type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
                                     <i class="fa fa-search d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Clear</span>
@@ -173,7 +173,7 @@
                     <div class="card-body" v-if="searchResult && searchResult.blocks.length === 0 && searchResult.txns.length === 0
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
                     && searchResult.events.length === 0 && searchResult.logs.length === 0
-                    && searchResult.identities.length === 0">
+                    && searchResult.identities.length === 0 && searchResult.sequences.length === 0">
                         <div class="row justify-content-center">
                             <div class="col-md-12 text-center text-muted">
                                 <span class="display-1 d-block">
@@ -277,6 +277,19 @@
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{log.blockNumber}} |
                                                 <span class="font-weight-bold">Timestamp :</span> {{log.timestamp}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="sequence in searchResult.sequences">
+                                    <td>
+                                        <router-link :to="{ name : 'sequence' , params: { sequenceid: sequence.id }}">
+                                            <h4>Sequence: {{sequence.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Registry :</span> {{sequence.registry}} |
+                                                <span class="font-weight-bold">Template :</span> {{sequence.template}} |
+                                                <span class="font-weight-bold">Block :</span> {{sequence.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{sequence.timestamp}}
                                             </small>
                                         </router-link>
                                     </td>

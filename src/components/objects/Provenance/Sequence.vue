@@ -120,8 +120,8 @@
                                     <a data-toggle="collapse" :href="'#step'+index" aria-expanded="true"
                                        :class="{ 'collapsed': !shouldExpand(index) }" :aria-controls="'step'+index">
                                         {{step.name}}
-                                        <span class="badge badge-pill badge-success font-bold ml-2" v-if="step.status === 'COMPLETE'">
-                                            <i class="fa fa-clipboard-check"/> Complete
+                                        <span class="badge badge-pill badge-success font-bold ml-2" v-if="step.status === 'ATTESTED'">
+                                            <i class="fa fa-certificate"/> Attested
                                         </span>
                                         <span class="badge badge-pill badge-warning font-bold ml-2" v-if="step.status === 'IN_PROGRESS'">
                                             <i class="fa fa-spinner fa-spin"/> In Progress
@@ -134,7 +134,7 @@
 
                                 <div :id="'step'+index" data-parent="#accordion" class="collapse" :class="{ 'show': shouldExpand(index) }" role="tabpanel">
                                     <div class="card-body border-top">
-                                        <template v-if="step.status === 'COMPLETE'">
+                                        <template v-if="step.status === 'ATTESTED'">
                                             <h5 class="mt-2">Attestations</h5>
                                             <table class="table table-bordered mb-0">
                                                 <tr>
@@ -146,16 +146,16 @@
                                                     <td class="p-2">{{getFactValue(att.fact)}}</td>
                                                 </tr>
                                             </table>
-                                            <h5 class="mt-2">Attested By</h5>
-                                            <router-link :to="{name: 'identity', params : { did: getDid(step.attested_by.id) }}">
+                                            <h5 class="mt-2">Attested By {{step.attestor.short_name}}</h5>
+                                            <router-link :to="{name: 'identity', params : { did: getDid(step.attestor.did.id) }}">
                                                 <Blockie :address="step.attested_by.id" class="mm-5-0-5-0 float-left"/>
-                                                <dd class="ml-2 float-left" v-if="isMobile">{{step.attested_by.id | did | truncate(25, '...')}}</dd>
-                                                <dd class="ml-2 float-left" v-else>{{step.attested_by.id | did }}</dd>
+                                                <dd class="ml-2 float-left" v-if="isMobile">{{step.attestor.did.id | did | truncate(25, '...')}}</dd>
+                                                <dd class="ml-2 float-left" v-else>{{step.attestor.did.id | did }}</dd>
                                             </router-link>
                                             <div class="clearfix"></div>
                                         </template>
                                         <template v-if="step.status === 'IN_PROGRESS'">
-                                            <h5 class="text-muted mt-3 mb-0">This step is still in progress</h5>
+                                            <h5 class="text-muted mt-3 mb-0">This step is in progress</h5>
                                         </template>
                                         <template v-if="step.status === 'PENDING'">
                                             <h5 class="text-muted mt-3 mb-0">This step is pending</h5>
@@ -172,7 +172,7 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Audit Activities</h4>
+                    <h4>Sequence Activities</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
@@ -227,7 +227,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching sequence, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound module="Audit" :module-id="auditid" v-if="flag === 'FAILURE'"/>
+                    <NotFound module="Sequnece" :module-id="sequenceid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -314,7 +314,7 @@
             returns true if index of last OPEN status, else returns true if index is 0, otherwise false
              */
             shouldExpand(index) {
-                let i = _.findLastIndex(this.sequence.steps, ['status', 'COMPLETE']);
+                let i = _.findLastIndex(this.sequence.steps, ['status', 'ATTESTED']);
 
                 if(i !== -1) {
                     return i === index;
