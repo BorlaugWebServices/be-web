@@ -133,7 +133,7 @@
                                 </div><!-- card-header -->
 
                                 <div :id="'step'+index" data-parent="#accordion" class="collapse" :class="{ 'show': shouldExpand(index) }" role="tabpanel">
-                                    <div class="card-body border-top">
+                                    <div class="card-body border bg-white">
                                         <template v-if="step.status === 'ATTESTED'">
                                             <h5 class="mt-2">Attestations</h5>
                                             <table class="table table-bordered mb-0">

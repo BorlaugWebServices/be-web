@@ -15,7 +15,7 @@
                     </div>
                 </div>
 
-                <div class="card-body m-t-0 p-0">
+                <div class="card-body m-t-0">
                     <dl class="row mb-0">
                         <div class="col-sm-2 text-sm-right">
                             <dt>Block</dt>
@@ -200,6 +200,9 @@
         <div class="col-12" v-if="transaction && transaction.method.section === 'audits' && transaction.method.method === 'createAudit'">
             <Audit :auditid="auditid" :hide-chain-details="true"/>
         </div>
+        <div class="col-12" v-if="transaction && transaction.method.section === 'provenance' && transaction.method.method === 'createSequence'">
+            <Sequence :sequenceid="auditid" :hide-chain-details="true"/>
+        </div>
     </div>
     <div class="row" v-else>
         <div class="col-12">
@@ -221,6 +224,7 @@
     import Lease from "../objects/AssetRegistry/Lease";
     import Identity from "../objects/Identity/Identity";
     import Audit from "../objects/Audit/Audit";
+    import Sequence from "../objects/Provenance/Sequence";
     import Blockie from "../common/Blockie";
     import NotFound from "../common/NotFound";
     import _ from "lodash";
@@ -228,7 +232,7 @@
     export default {
         name: "Transaction",
         props: ["hash"],
-        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound},
+        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Sequence},
         watch: {
             "hash": async function(nv, ov) {
                 await this.getTransaction();
@@ -240,6 +244,7 @@
                 leaseid: null,
                 did: null,
                 auditid: null,
+                sequenceid: null,
                 flag: 'SEARCHING',
                 success: false
             };
@@ -278,7 +283,12 @@
                             if(events.length > 0) {
                                 this.auditid = events[0].event.data[1];
                             }
-                            console.log(this.auditid)
+                            events = _.filter(this.transaction.events, (ev) => {
+                                return ev.meta.name === 'SequenceCreated'
+                            });
+                            if(events.length > 0) {
+                                this.auditid = events[0].event.data[1];
+                            }
                         }
                     } else {
                         this.flag = 'FAILURE';
