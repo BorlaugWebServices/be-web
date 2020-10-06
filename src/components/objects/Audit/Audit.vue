@@ -142,7 +142,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching audit, paudit wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                        Fetching audit, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
                     <NotFound module="Audit" :module-id="auditid" v-if="flag === 'FAILURE'"/>
                 </div>
