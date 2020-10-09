@@ -201,7 +201,7 @@
             <Audit :auditid="auditid" :hide-chain-details="true"/>
         </div>
         <div class="col-12" v-if="transaction && transaction.method.section === 'provenance' && transaction.method.method === 'createSequence'">
-            <Sequence :sequenceid="auditid" :hide-chain-details="true"/>
+            <Process :processid="processid" :hide-chain-details="true"/>
         </div>
     </div>
     <div class="row" v-else>
@@ -224,7 +224,7 @@
     import Lease from "../objects/AssetRegistry/Lease";
     import Identity from "../objects/Identity/Identity";
     import Audit from "../objects/Audit/Audit";
-    import Sequence from "../objects/Provenance/Sequence";
+    import Process from "../objects/Provenance/Process";
     import Blockie from "../common/Blockie";
     import NotFound from "../common/NotFound";
     import _ from "lodash";
@@ -232,7 +232,7 @@
     export default {
         name: "Transaction",
         props: ["hash"],
-        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Sequence},
+        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process},
         watch: {
             "hash": async function(nv, ov) {
                 await this.getTransaction();
@@ -244,7 +244,7 @@
                 leaseid: null,
                 did: null,
                 auditid: null,
-                sequenceid: null,
+                processid: null,
                 flag: 'SEARCHING',
                 success: false
             };
@@ -287,7 +287,7 @@
                                 return ev.meta.name === 'SequenceCreated'
                             });
                             if(events.length > 0) {
-                                this.auditid = events[0].event.data[1];
+                                this.processid = events[0].event.data[2];
                             }
                         }
                     } else {
