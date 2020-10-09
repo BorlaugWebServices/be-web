@@ -13,13 +13,13 @@
             <div class="card-body mg-b-20 p-t-0">
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Sequence Id</dt>
+                        <dt>Process Id</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
                         <dd class="mb-1">{{sequence.id}}</dd>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-else>
-                        <router-link :to="{name: 'sequence', params : { sequenceid: sequence.id }}">
+                        <router-link :to="{name: 'sequence', params : { processid: sequence.id }}">
                             <dd class="mb-1">{{sequence.id}}</dd>
                         </router-link>
                     </div>
@@ -27,7 +27,7 @@
                 <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Sequence Name</dt>
+                        <dt>Process Name</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">{{sequence.name}}</dd>
@@ -80,7 +80,7 @@
                 </template>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt class="mb-1">Sequence Creator</dt>
+                        <dt class="mb-1">Process Creator</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <router-link :to="{name: 'identity', params : { did: getDid(sequence.sequence_creator) }}">
@@ -102,7 +102,7 @@
                 <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Template Id</dt>
+                        <dt>Process Definition Id</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">{{sequence.template}}</dd>
@@ -172,7 +172,7 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Sequence Activities</h4>
+                    <h4>Process Activities</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
@@ -227,7 +227,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching sequence, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound module="Sequnece" :module-id="sequenceid" v-if="flag === 'FAILURE'"/>
+                    <NotFound module="Sequnece" :module-id="processid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -242,8 +242,8 @@
     import NotFound from "../../common/NotFound";
 
     export default {
-        name: "Sequence",
-        props: ["sequenceid", "hideChainDetails"],
+        name: "Process",
+        props: ["processid", "hideChainDetails"],
         components: {Blockie, NotFound},
         data() {
             return {
@@ -275,7 +275,7 @@
                 if(this.auditid !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply     = await this.$http.get(`/sequences/${this.sequenceid}`);
+                        let reply     = await this.$http.get(`/sequences/${this.processid}`);
                         this.sequence = reply.data;
                         if(this.sequence) {
                             this.flag = 'SUCCESS';
@@ -292,7 +292,7 @@
             async getProvenaceActivities() {
                 if(this.sequence) {
                     try {
-                        let reply       = await this.$http.get(`/sequences/${this.sequenceid}/activities`);
+                        let reply       = await this.$http.get(`/sequences/${this.processid}/activities`);
                         this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
                     } catch(e) {
 
