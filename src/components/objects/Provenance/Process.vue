@@ -19,7 +19,7 @@
                         <dd class="mb-1">{{sequence.id}}</dd>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-else>
-                        <router-link :to="{name: 'sequence', params : { processid: sequence.id }}">
+                        <router-link :to="{name: 'process', params : { processid: sequence.id }}">
                             <dd class="mb-1">{{sequence.id}}</dd>
                         </router-link>
                     </div>
