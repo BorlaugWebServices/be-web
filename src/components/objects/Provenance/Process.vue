@@ -143,7 +143,7 @@
                                                 </tr>
                                                 <tr v-for="att in step.attributes">
                                                     <td class="p-2">{{att.name}}</td>
-                                                    <td class="p-2">{{getFactValue(att.fact)}}</td>
+                                                    <td class="p-2">{{att.fact | fact}}</td>
                                                 </tr>
                                             </table>
                                             <h5 class="mt-2">Attested By {{step.attestor.short_name}}</h5>
@@ -321,13 +321,6 @@
                 } else {
                     return index === 0;
                 }
-            },
-            getFactValue(fact) {
-                let value = null;
-                Object.keys(fact).forEach(key => {
-                    value = fact[key];
-                });
-                return value;
             }
         }
     }

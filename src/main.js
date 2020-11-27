@@ -18,8 +18,8 @@ import "./assets/css/custom.css"
 
 Vue.config.productionTip = false;
 
-Vue.prototype.$API_URL    = process.env.VUE_APP_API_URL;
-Vue.prototype.SITE_URI    = process.env.VUE_APP_SITE_URI;
+Vue.prototype.$API_URL = process.env.VUE_APP_API_URL;
+Vue.prototype.SITE_URI = process.env.VUE_APP_SITE_URI;
 
 Vue.use(VueAxios, axios.create({
     baseURL: Vue.prototype.$API_URL,
@@ -41,14 +41,14 @@ Vue.filter('count', function(value) {
 Vue.filter('fromNow', function(dateString) {
     if(!dateString) return '';
     if(dateString.length > 10) {
-        dateString = dateString.substr(0,10);
+        dateString = dateString.substr(0, 10);
     }
     return moment.unix(dateString).fromNow();
 });
 Vue.filter('date', function(dateString) {
     if(!dateString) return '';
     if(dateString.length > 10) {
-        dateString = dateString.substr(0,10);
+        dateString = dateString.substr(0, 10);
     }
     return moment.unix(dateString).format("MMMM Do YYYY");
 });
@@ -56,7 +56,7 @@ Vue.filter('timestamp', function(dateString) {
 
     if(!dateString) return '';
     if(dateString.length > 10) {
-        dateString = dateString.substr(0,10);
+        dateString = dateString.substr(0, 10);
     }
     return moment.unix(dateString).format("MMMM Do YYYY, h:mm:ss a");
 });
@@ -74,13 +74,37 @@ Vue.filter('truncate', function(text, length, suffix) {
     if(text.length <= length) return text;
     return text.substring(0, length) + suffix;
 });
-Vue.filter('did', function (didString) {
-    if (!didString) {
+Vue.filter('did', function(didString) {
+    if(!didString) {
         return '';
     }
     return 'did:bws:' + didString.substring(2, didString.length);
 });
+Vue.filter('fact', function(fact) {
+    if(!fact) return '';
 
+    if(fact.Bool) {
+        return fact.Bool
+    } else if(fact.Text) {
+        return fact.Text
+    } else if(fact.U8) {
+        return fact.U8
+    } else if(fact.U16) {
+        return fact.U16
+    } else if(fact.U32) {
+        return fact.U32
+    } else if(fact.U128) {
+        return fact.U128
+    } else if(fact.Date) {
+        let a = fact.Date;
+        let d=  new Date(Number(a[0].replace(',', '')), Number(a[1])-1, Number(a[2]));
+        return moment(d).format("MMMM Do YYYY");
+    } else if(fact.Iso8601) {
+        return fact.Date
+    } else {
+        return "";
+    }
+});
 
 Vue.axios.interceptors.request.use((config) => {
     let token                    = localStorage.getItem("token");
