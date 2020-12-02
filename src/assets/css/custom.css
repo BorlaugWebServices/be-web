@@ -282,3 +282,17 @@ Text
     background-color: #f4f5f8;
     transition: none;
 }
+
+.word-break {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+}
+
+.adjust-40 {
+    width: calc(100% - 40px);
+}
+
+.adjust-500 {
+    width: calc(100% - 500px);
+}

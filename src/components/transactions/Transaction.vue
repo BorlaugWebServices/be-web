@@ -3,11 +3,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
-                        <h5>
+                    <div class="card-header-title adjust-500">
+                        <h5 class="">
                             <i class="fas fa fa-check-circle text-success" v-if="success"/>
                             <i class="fas fa fa-exclamation-circle text-danger" v-else/>
-                            <span class="ml-2">Transaction <span class="fit font-weight-normal">{{hash}}</span></span>
+                            <span class="ml-2">Transaction <span class="font-weight-normal word-break">{{hash}}</span></span>
                         </h5>
                     </div>
                     <div class="card-header-icon">
@@ -101,8 +101,12 @@
                         </div>
                         <div class="col-sm-10 text-sm-left">
                             <dd class="mb-1">
-                                <Blockie :address="transaction.signer" class="mm-5-0-5-0"/>
-                                <span :title="transaction.signer" class="m-l-5 align-middle">{{ transaction.signer }}</span>
+                                <div class="float-left mr-2" :class="isMobile?'pt-2':''">
+                                    <Blockie :address="transaction.signer" class="mm-5-0-5-0"/>
+                                </div>
+                                <div class="float-left adjust-40">
+                                    <span :title="transaction.signer" class="align-middle word-break">{{ transaction.signer }}</span>
+                                </div>
                             </dd>
                         </div>
                     </dl>
@@ -219,6 +223,7 @@
 </template>
 
 <script>
+    import {isMobile} from 'mobile-device-detect';
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
     import Lease from "../objects/AssetRegistry/Lease";
@@ -240,6 +245,7 @@
         },
         data() {
             return {
+                isMobile: isMobile,
                 transaction: null,
                 leaseid: null,
                 did: null,
