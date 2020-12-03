@@ -6,7 +6,8 @@ import VueAxios from 'vue-axios'
 import CurrencyFormatter from 'currency-formatter';
 import moment from "moment";
 import {BigNumber} from "bignumber.js";
-import 'bootstrap'
+import 'bootstrap';
+import {isHex, hexToString} from '@polkadot/util';
 
 import App from './App.vue';
 import router from './router';
@@ -103,6 +104,14 @@ Vue.filter('fact', function(fact) {
         return fact.Date
     } else {
         return "";
+    }
+});
+
+Vue.filter('hexcheck', function(str) {
+    if(isHex(str)){
+        return hexToString(str);
+    } else {
+        return str;
     }
 });
 

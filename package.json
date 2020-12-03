@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@polkadot/api": "^1.23.1",
+        "@polkadot/util": "^4.2.1",
         "axios": "^0.18.0",
         "bignumber.js": "^8.0.1",
         "bootstrap": "4.4.1",
