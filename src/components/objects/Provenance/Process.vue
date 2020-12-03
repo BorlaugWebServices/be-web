@@ -142,7 +142,7 @@
                                                     <th class="p-2 font-bold w-50">Fact</th>
                                                 </tr>
                                                 <tr v-for="att in step.attributes">
-                                                    <td class="p-2">{{att.name}}</td>
+                                                    <td class="p-2">{{att.name | hexcheck}}</td>
                                                     <td class="p-2">{{att.fact | fact}}</td>
                                                 </tr>
                                             </table>
