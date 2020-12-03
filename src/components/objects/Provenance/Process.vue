@@ -138,8 +138,8 @@
                                             <h5 class="mt-2">Attestations</h5>
                                             <table class="table table-bordered mb-0">
                                                 <tr>
-                                                    <th class="p-2 font-bold">Name</th>
-                                                    <th class="p-2 font-bold">Fact</th>
+                                                    <th class="p-2 font-bold w-50">Name</th>
+                                                    <th class="p-2 font-bold w-50">Fact</th>
                                                 </tr>
                                                 <tr v-for="att in step.attributes">
                                                     <td class="p-2">{{att.name}}</td>
@@ -327,5 +327,7 @@
 </script>
 
 <style scoped>
-
+    td {
+        word-break: break-all;
+    }
 </style>
