@@ -137,13 +137,15 @@
                                 </dd>
 
                                 <dt class="m-b-5">Attested By :</dt>
-                                <dd class="mb-3">
+                                <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
                                     <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].attestation.attested_by.id) }}">
                                         <Blockie :address="identity.claims[claimIndex].attestation.attested_by.id" class=""/>
                                         {{identity.claims[claimIndex].attestation.attested_by.id | did }}
                                     </router-link>
                                 </dd>
-
+                                <dd class="mb-3" v-else>
+                                  N/A
+                                </dd>
                                 <dt class="m-t-20 m-b-5">Valid Until :</dt>
                                 <dd>
                                     {{identity.claims[claimIndex].attestation.valid_until | date}}
