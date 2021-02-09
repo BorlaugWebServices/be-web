@@ -147,8 +147,11 @@
                                   N/A
                                 </dd>
                                 <dt class="m-t-20 m-b-5">Valid Until :</dt>
-                                <dd>
+                                <dd v-if="identity.claims[claimIndex].attestation">
                                     {{identity.claims[claimIndex].attestation.valid_until | date}}
+                                </dd>
+                                <dd v-else>
+                                  N/A
                                 </dd>
                             </div>
                         </div>
