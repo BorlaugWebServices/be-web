@@ -6,11 +6,15 @@
                     <div class="card-body">
                         <h4 class="card-title text-dark m-b-20">Explore Blocks, Transactions and Addresses</h4>
                         <div class="input-group">
-                            <input aria-describedby="button-header-search" autocomplete="off" autofocus="" class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
-                                   id="searchCriteria" name="searchCriteria" placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance" type="text" v-model="searchCriteria">
+                            <input aria-describedby="button-header-search" autocomplete="off" autofocus=""
+                                   class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
+                                   id="searchCriteria" name="searchCriteria"
+                                   placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance"
+                                   type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
-                                    <i class="fa fa-search d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Clear</span>
+                                    <i class="fa fa-search d-inline-block d-sm-none"></i><span
+                                        class="d-none d-sm-inline-block">Clear</span>
                                 </button>
                             </div>
                         </div>
@@ -56,11 +60,13 @@
                                     </td>
                                     <td>
                                         <div class="d-flex no-block align-items-center">
-                                            <router-link :to="{name: 'block', params: {number: block.number}}">{{ block.number}}</router-link>
+                                            <router-link :to="{name: 'block', params: {number: block.number}}">{{
+                                                block.number}}
+                                            </router-link>
                                         </div>
                                     </td>
                                     <td>
-                                        <age v-if="block.timestamp" :timestamp="block.timestamp"/>
+                                        <age :timestamp="block.timestamp" v-if="block.timestamp"/>
                                     </td>
                                     <td>
                                         {{block.transactions.length}}
@@ -75,7 +81,8 @@
                                     <!--                                        {{block.logs.length}}-->
                                     <!--                                    </td>-->
                                     <td class="text-right">
-                                        <router-link :to="{name: 'block', params: {number: block.number}}" class="btn btn-sm btn-orange text-white">
+                                        <router-link :to="{name: 'block', params: {number: block.number}}"
+                                                     class="btn btn-sm btn-orange text-white">
                                             Details
                                         </router-link>
                                     </td>
@@ -86,8 +93,11 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="m-b-10">Last Synced Block Time: <strong v-if="latestBlockTime">{{latestBlockTime.toString() | timestamp}}</strong></div>
-                        <router-link :to="{name: 'blocks'}" class="btn btn-orange btn-block text-white font-weight-bold">View All Blocks</router-link>
+                        <div class="m-b-10">Last Synced Block Time: <strong v-if="latestBlockTime">{{latestBlockTime.toString()
+                            | timestamp}}</strong></div>
+                        <router-link :to="{name: 'blocks'}"
+                                     class="btn btn-orange btn-block text-white font-weight-bold">View All Blocks
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -125,20 +135,25 @@
                                         <i class="fas fa-file-signature"></i>
                                     </td>
                                     <td>
-                                        <div class="d-flex no-block align-items-center" :title="tx.hash">
-                                            <router-link :to="{name: 'transaction', params: {hash: tx.hash}}">{{ tx.hash | truncate(8,'...')}}</router-link>
+                                        <div :title="tx.hash" class="d-flex no-block align-items-center">
+                                            <router-link :to="{name: 'transaction', params: {hash: tx.hash}}">{{ tx.hash
+                                                | truncate(8,'...')}}
+                                            </router-link>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="d-flex no-block align-items-center">
-                                            <router-link :to="{name: 'block', params: {number: tx.blockNumber}}">{{ tx.blockNumber}}</router-link>
+                                            <router-link :to="{name: 'block', params: {number: tx.blockNumber}}">{{
+                                                tx.blockNumber}}
+                                            </router-link>
                                         </div>
                                     </td>
                                     <td>
                                         {{tx.method.method}}
                                     </td>
                                     <td class="text-right">
-                                        <router-link :to="{name: 'transaction', params: {hash: tx.hash}}" class="btn btn-sm btn-orange text-white">
+                                        <router-link :to="{name: 'transaction', params: {hash: tx.hash}}"
+                                                     class="btn btn-sm btn-orange text-white">
                                             Details
                                         </router-link>
                                     </td>
@@ -149,8 +164,11 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="m-b-10">Last Synced Transaction Time: <strong v-if="latestTxnTime">{{latestTxnTime.toString() | timestamp}}</strong></div>
-                        <router-link :to="{name: 'transactions'}" class="btn btn-orange btn-block text-white font-weight-bold">View All Transaction</router-link>
+                        <div class="m-b-10">Last Synced Transaction Time: <strong v-if="latestTxnTime">{{latestTxnTime.toString()
+                            | timestamp}}</strong></div>
+                        <router-link :to="{name: 'transactions'}"
+                                     class="btn btn-orange btn-block text-white font-weight-bold">View All Transaction
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -180,7 +198,8 @@
                                     <i class="fa fa-exclamation-triangle"/>
                                 </span>
                                 <div class="mb-4 lead">Nothing found.</div>
-                                <a href="javascript:void(0);" class="font-weight-bold text-orange" @click="clear"> Clear</a>
+                                <a @click="clear" class="font-weight-bold text-orange" href="javascript:void(0);">
+                                    Clear</a>
                             </div>
                         </div>
                     </div>
@@ -218,9 +237,12 @@
                                             <h4>Lease: {{lease.lease_id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{lease.blockNumber}} |
-                                                <span class="font-weight-bold">Contract No :</span> {{lease.contract_number}} |
-                                                <span class="font-weight-bold">Registry Id :</span> {{lease.allocations[0].registry_id}} |
-                                                <span class="font-weight-bold">Asset Id :</span> {{lease.allocations[0].asset_id}} |
+                                                <span class="font-weight-bold">Contract No :</span>
+                                                {{lease.contract_number}} |
+                                                <span class="font-weight-bold">Registry Id :</span>
+                                                {{lease.allocations[0].registry_id}} |
+                                                <span class="font-weight-bold">Asset Id :</span>
+                                                {{lease.allocations[0].asset_id}} |
                                             </small>
                                         </router-link>
                                     </td>
@@ -231,7 +253,8 @@
                                             <h4>Audit: {{audit.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{audit.blockNumber}} |
-                                                <span class="font-weight-bold">Creator :</span> {{audit.audit_creator}} |
+                                                <span class="font-weight-bold">Creator :</span> {{audit.audit_creator}}
+                                                |
                                                 <span class="font-weight-bold">Auditor :</span> {{audit.auditor}}
                                             </small>
                                         </router-link>
@@ -243,7 +266,8 @@
                                             <h4>{{identity.did | did}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{identity.blockNumber}} |
-                                                <span class="font-weight-bold">Tx Hash :</span> {{identity.extrinsicHash}}
+                                                <span class="font-weight-bold">Tx Hash :</span>
+                                                {{identity.extrinsicHash}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -326,10 +350,10 @@
             };
         },
         watch: {
-            lastSyncedBlock: function(nv, ov) {
-                if(nv !== ov) {
-                    if(ov) {
-                        if(ov.block.hash !== nv.block.hash) {
+            lastSyncedBlock: function (nv, ov) {
+                if (nv !== ov) {
+                    if (ov) {
+                        if (ov.block.hash !== nv.block.hash) {
                             this.pushBlock(nv);
                         }
                     } else {
@@ -337,10 +361,10 @@
                     }
                 }
             },
-            lastSyncedTxn: function(nv, ov) {
-                if(nv !== ov) {
-                    if(ov) {
-                        if(ov.hash !== nv.hash) {
+            lastSyncedTxn: function (nv, ov) {
+                if (nv !== ov) {
+                    if (ov) {
+                        if (ov.hash !== nv.hash) {
                             this.pushTxn(nv);
                         }
                     } else {
@@ -348,9 +372,9 @@
                     }
                 }
             },
-            searchCriteria: function(nv, ov) {
-                if(nv !== ov) {
-                    if(nv) {
+            searchCriteria: function (nv, ov) {
+                if (nv !== ov) {
+                    if (nv) {
                         this.search();
                     } else {
                         this.clear();
@@ -359,9 +383,9 @@
             }
         },
         mounted() {
-            window.onbeforeunload = function(event) {
+            window.onbeforeunload = function (event) {
                 // console.log("Disconnecting socket on page refresh or close");
-                if(this.socket) {
+                if (this.socket) {
                     this.socket.disconnect();
                 }
             };
@@ -369,7 +393,7 @@
         },
         destroyed() {
             // console.log("Disconnecting socket on destroy");
-            if(this.socket) {
+            if (this.socket) {
                 this.socket.disconnect();
             }
         },
@@ -391,32 +415,33 @@
                         this.getLatestBlocks();
                         this.getLatestTxns();
                     });
-                } catch(e) {
-
+                } catch (e) {
+                    this.destroyed();
+                    console.error(e);
                 } finally {
                     EventBus.$emit('hide');
                 }
             },
             async getRecentBlocks() {
-                let reply   = await this.$http.get("/blocks");
+                let reply = await this.$http.get("/blocks");
                 this.blocks = reply.data.slice;
-                if(this.blocks.length > 0) {
+                if (this.blocks.length > 0) {
                     this.latestBlockTime = this.blocks[0].timestamp;
                 }
             },
             async getRecentTxns() {
-                let reply         = await this.$http.get("/transactions");
+                let reply = await this.$http.get("/transactions");
                 this.transactions = reply.data.slice;
-                if(this.transactions.length > 0) {
+                if (this.transactions.length > 0) {
                     this.latestTxnTime = this.transactions[0].timestamp;
                 }
             },
             async search() {
-                let reply         = await this.$http.get("/search", {params: {searchCriteria: this.searchCriteria}});
+                let reply = await this.$http.get("/search", {params: {searchCriteria: this.searchCriteria}});
                 this.searchResult = reply.data;
             },
             clear() {
-                this.searchResult   = null;
+                this.searchResult = null;
                 this.searchCriteria = null;
             },
             async getLatestBlocks() {
@@ -433,7 +458,7 @@
             },
             pushBlock(arg) {
                 // console.log("New Block Number : ", JSON.stringify(arg));
-                if(this.blocks.length > 9) {
+                if (this.blocks.length > 9) {
                     this.blocks.pop();
                 }
                 this.blocks.unshift(arg.block);
@@ -441,7 +466,7 @@
             },
             pushTxn(txn) {
                 // console.log("New Txn : ", JSON.stringify(txn));
-                if(this.transactions.length > 9) {
+                if (this.transactions.length > 9) {
                     this.transactions.pop();
                 }
                 this.transactions.unshift(txn);
