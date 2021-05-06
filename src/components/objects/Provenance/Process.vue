@@ -70,7 +70,7 @@
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
                                 <router-link v-if="sequence.extrinsicHash"
-                                             :to="{ name : 'transaction', params: {hash: sequence.extrinsicHash}}">
+                                             :to="{ name : 'transaction-from-chain', params: {blockhash: sequence.blockHash, txhash: sequence.extrinsicHash}}">
                                     {{sequence.extrinsicHash}}
                                 </router-link>
                             </dd>
