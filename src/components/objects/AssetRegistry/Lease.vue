@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction', params: {hash: lease.extrinsicHash}}">{{lease.extrinsicHash}}</router-link>
+                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: lease.blockHash, txhash: lease.extrinsicHash}}">{{lease.extrinsicHash}}</router-link>
                             </dd>
                         </div>
                     </dl>

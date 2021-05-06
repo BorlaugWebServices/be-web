@@ -61,7 +61,13 @@ export default new VueRouter({
                             path: ":hash",
                             name: "transaction",
                             props: true,
-                            component: resolve => require(["@/components/transactions/Transaction.vue"], resolve),
+                            component: resolve => require(["./components/transactions/Transaction.vue"], resolve),
+                        },
+                        {
+                            path: ":blockhash/:txhash",
+                            name: "transaction-from-chain",
+                            props: true,
+                            component: resolve => require(["./components/transactions/TransactionFromChain.vue"], resolve),
                         }
                     ]
                 },
