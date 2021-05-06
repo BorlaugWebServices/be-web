@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction', params: {hash: audit.extrinsicHash}}">{{audit.extrinsicHash}}</router-link>
+                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: audit.blockHash, txhash: audit.extrinsicHash}}">{{audit.extrinsicHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
