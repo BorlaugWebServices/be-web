@@ -128,7 +128,7 @@
                                         <td class="block">
                                             <div class="d-flex no-block align-items-center">
                                                 <router-link :title="tx.hash"
-                                                             :to="{ name: 'transaction', params: {hash: tx.hash}}"
+                                                             :to="{ name: 'transaction-from-chain', params: { blockhashornumber: block.number, txhash: tx.hash}}"
                                                              class="hash">{{ tx.hash }}
                                                 </router-link>
                                             </div>
@@ -152,7 +152,7 @@
                                             </span>
                                         </td>
                                         <td class="text-right">
-                                            <router-link :to="{ name: 'transaction', params: {hash: tx.hash}}" class="btn btn-sm btn-orange text-white">
+                                            <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: block.number, txhash: tx.hash}}" class="btn btn-sm btn-orange text-white">
                                                 Details
                                             </router-link>
                                         </td>

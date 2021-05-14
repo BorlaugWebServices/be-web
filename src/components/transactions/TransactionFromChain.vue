@@ -236,7 +236,7 @@
 
     export default {
         name: "TransactionFromChain",
-        props: ["blockhash", "txhash"],
+        props: ["blockhashornumber", "txhash"],
         components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process},
         watch: {
             "txhash": async function(nv, ov) {
@@ -262,7 +262,7 @@
             async getTransaction() {
                 try {
                     EventBus.$emit('show');
-                    let reply         = await this.$http.get(`/transactions/${this.blockhash}/${this.txhash}`);
+                    let reply         = await this.$http.get(`/transactions/${this.blockhashornumber}/${this.txhash}`);
                     this.transaction  = reply.data;
                     let successEvents = _.filter(this.transaction.events, (event) => {
                         return event.meta.name === "ExtrinsicSuccess";

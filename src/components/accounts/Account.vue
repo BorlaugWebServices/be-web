@@ -22,6 +22,7 @@
                                 <th class="border-0 font-weight-bold">Age</th>
                                 <th class="border-0 font-weight-bold">Module</th>
                                 <th class="border-0 font-weight-bold">Method</th>
+                                <th class="border-0 font-weight-bold">Value</th>
                                 <th class="border-0"></th>
                             </tr>
                             </thead>
@@ -31,17 +32,21 @@
                                     <i class="fas fa-file-signature"></i>
                                 </td>
                                 <td class="block">
-                                    <div class="d-flex no-block align-items-center" :title="transaction.hash">
-                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">{{ transaction.hash | truncate(16, '...')}}</router-link>
+                                    <div :title="transaction.hash" class="d-flex no-block align-items-center">
+                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">{{
+                                            transaction.hash | truncate(16, '...')}}
+                                        </router-link>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{ transaction.blockNumber}}</router-link>
+                                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{
+                                            transaction.blockNumber}}
+                                        </router-link>
                                     </div>
                                 </td>
                                 <td>
-                                    <age v-if="transaction.timestamp" :timestamp="transaction.timestamp"/>
+                                    <age :timestamp="transaction.timestamp" v-if="transaction.timestamp"/>
                                 </td>
                                 <td>
                                     {{transaction.method.section}}
@@ -49,14 +54,15 @@
                                 <td>
                                     {{transaction.method.method}}
                                 </td>
-                                <!--                                <td>-->
-                                <!--                                    {{block.events.length}}-->
-                                <!--                                </td>-->
+                                <td>
+                                    0.125 GRAM
+                                </td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.logs.length}}-->
                                 <!--                                </td>-->
                                 <td class="text-right">
-                                    <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}" class="btn btn-sm btn-orange text-white">
+                                    <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}"
+                                                 class="btn btn-sm btn-orange text-white">
                                         Details
                                     </router-link>
                                 </td>
@@ -94,7 +100,8 @@
     import Age from "../common/Age";
 
     export default {
-        name: "Transactions",
+        name: "Account",
+        props: ['address'],
         components: {Paginate, Age},
         data() {
             return {
@@ -106,23 +113,23 @@
             };
         },
         mounted() {
-            this.getRecentTxns(1);
+            this.getTxsByAccount(1);
         },
         methods: {
-            async getRecentTxns(page) {
+            async getTxsByAccount(page) {
                 try {
                     EventBus.$emit('show');
-                    let reply         = await this.$http.get("/transactions", {
+                    let reply = await this.$http.get(`/accounts/${this.address}`, {
                         params: {
                             page: page - 1,
                             perPage: this.perPage
                         }
                     });
                     this.transactions = reply.data.slice;
-                    this.total        = reply.data.total;
+                    this.total = reply.data.total;
                     this.setPageCount();
                     this.show = true;
-                } catch(e) {
+                } catch (e) {
 
                 } finally {
                     EventBus.$emit('hide');
@@ -153,4 +160,5 @@
         vertical-align: bottom;
         border-bottom: 2px solid #dee2e6 !important;
     }
+
 </style>
