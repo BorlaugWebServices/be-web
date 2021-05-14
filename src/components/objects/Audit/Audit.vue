@@ -113,7 +113,7 @@
                             <td>{{i+1 }}</td>
                             <td>{{activity.method.method}}</td>
                             <td>
-                                <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
+                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: audit.blockNumber, txhash: activity.hash}}"
                                              :title="activity.hash">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>

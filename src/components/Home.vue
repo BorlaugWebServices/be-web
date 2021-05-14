@@ -136,7 +136,7 @@
                                     </td>
                                     <td>
                                         <div :title="tx.hash" class="d-flex no-block align-items-center">
-                                            <router-link :to="{name: 'transaction', params: {hash: tx.hash}}">{{ tx.hash
+                                            <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}">{{ tx.hash
                                                 | truncate(8,'...')}}
                                             </router-link>
                                         </div>
@@ -152,7 +152,7 @@
                                         {{tx.method.method}}
                                     </td>
                                     <td class="text-right">
-                                        <router-link :to="{name: 'transaction', params: {hash: tx.hash}}"
+                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}"
                                                      class="btn btn-sm btn-orange text-white">
                                             Details
                                         </router-link>
@@ -191,7 +191,7 @@
                     <div class="card-body" v-if="searchResult && searchResult.blocks.length === 0 && searchResult.txns.length === 0
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
                     && searchResult.events.length === 0 && searchResult.logs.length === 0
-                    && searchResult.identities.length === 0 && searchResult.sequences.length === 0">
+                    && searchResult.identities.length === 0 && searchResult.sequences.length === 0 && searchResult.address.length === 0">
                         <div class="row justify-content-center">
                             <div class="col-md-12 text-center text-muted">
                                 <span class="display-1 d-block">
@@ -215,6 +215,17 @@
                                                 <span class="font-weight-bold">Hash :</span> {{block.hash}} |
                                                 <span class="font-weight-bold">Timestamp :</span> {{block.timestamp}}
                                             </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="address in searchResult.address">
+                                    <td>
+                                        <router-link :to="{ name : 'view-account' , params: { address: address.signer }}">
+                                            <h4>Address: {{address.signer}}</h4>
+<!--                                            <small class="text-secondary">-->
+<!--                                                <span class="font-weight-bold">Hash :</span> {{block.hash}} |-->
+<!--                                                <span class="font-weight-bold">Timestamp :</span> {{block.timestamp}}-->
+<!--                                            </small>-->
                                         </router-link>
                                     </td>
                                 </tr>

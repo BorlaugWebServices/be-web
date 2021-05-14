@@ -64,10 +64,22 @@ export default new VueRouter({
                             component: resolve => require(["./components/transactions/Transaction.vue"], resolve),
                         },
                         {
-                            path: ":blockhash/:txhash",
+                            path: ":blockhashornumber/:txhash",
                             name: "transaction-from-chain",
                             props: true,
                             component: resolve => require(["./components/transactions/TransactionFromChain.vue"], resolve),
+                        }
+                    ]
+                },
+                {
+                    path: 'accounts',
+                    component: resolve => require(["@/components/accounts/AccountLayout"], resolve),
+                    children: [
+                        {
+                            path: ":address",
+                            name: "view-account",
+                            props: true,
+                            component: resolve => require(["@/components/accounts/Account"], resolve),
                         }
                     ]
                 },
