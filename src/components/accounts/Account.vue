@@ -136,7 +136,7 @@
                 }
             },
             pageHandler(pageNum) {
-                this.getRecentTxns(pageNum);
+                this.getTxsByAccount(pageNum);
             },
             setPageCount() {
                 this.pageCount = this.total <= 10 ? 1 : Math.ceil(this.total / 10);
