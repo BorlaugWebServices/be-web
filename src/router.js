@@ -76,6 +76,11 @@ export default new VueRouter({
                     component: resolve => require(["@/components/accounts/AccountLayout"], resolve),
                     children: [
                         {
+                            path: "",
+                            name: "accounts",
+                            component: resolve => require(["@/components/accounts/Accounts"], resolve)
+                        },
+                        {
                             path: ":address",
                             name: "view-account",
                             props: true,
@@ -170,10 +175,10 @@ export default new VueRouter({
                 {
                     path: "404",
                     name: "404",
-                    props: { isPage: true },
+                    props: {isPage: true},
                     component: resolve => require(["@/components/common/NotFound.vue"], resolve)
                 },
-                { path: '*', redirect: '/404' }
+                {path: '*', redirect: '/404'}
             ]
         }
     ]
