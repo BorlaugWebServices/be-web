@@ -4,10 +4,10 @@
             <div class="card ">
                 <div class="card-header row m-b-0 p-b-0">
                     <div class="card-header-title">
-                        <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
+                        <h5 v-if="show">Showing {{accounts.length}} of {{total}} accounts</h5>
                     </div>
                     <div class="card-header-icon">
-                        <h3><i class="fas fa-user-circle card-title text-orange"/></h3>
+                        <h3><i class="fas fa-users card-title text-orange"/></h3>
                     </div>
                 </div>
 
@@ -16,53 +16,30 @@
                         <table class="table v-middle">
                             <thead>
                             <tr class="border-0">
-                                <th class="border-0"></th>
-                                <th class="border-0 font-weight-bold">Hash</th>
-                                <th class="border-0 font-weight-bold">Block</th>
-                                <th class="border-0 font-weight-bold">Age</th>
-                                <th class="border-0 font-weight-bold">Module</th>
-                                <th class="border-0 font-weight-bold">Method</th>
-                                <th class="border-0 font-weight-bold">Value</th>
+                                <th class="border-0">#</th>
+                                <th class="border-0 font-weight-bold">Address</th>
+                                <th class="border-0 font-weight-bold">No. of Transactions</th>
                                 <th class="border-0"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(transaction, index) in transactions">
+                            <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(account, index) in accounts">
+                                <td>{{index+1}}</td>
                                 <td>
-                                    <i class="fas fa-file-signature"></i>
+                                    <dd class="mb-1">
+                                        <div class="float-left mr-2" :class="isMobile?'pt-2':''">
+                                            <Blockie :address="account.signer" class="mm-5-0-5-0"/>
+                                        </div>
+                                        <div class="float-left adjust-40">
+                                            <span :title="account.signer" class="align-middle word-break">{{ account.signer }}</span>
+                                        </div>
+                                    </dd>
                                 </td>
-                                <td class="block">
-                                    <div :title="transaction.hash" class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">{{
-                                            transaction.hash | truncate(16, '...')}}
-                                        </router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{
-                                            transaction.blockNumber}}
-                                        </router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <age :timestamp="transaction.timestamp" v-if="transaction.timestamp"/>
-                                </td>
-                                <td>
-                                    {{transaction.method.section}}
-                                </td>
-                                <td>
-                                    {{transaction.method.method}}
-                                </td>
-                                <td>
-                                    0.125 GRAM
-                                </td>
-                                <!--                                <td>-->
-                                <!--                                    {{block.logs.length}}-->
-                                <!--                                </td>-->
+                                <td>{{account.count}}</td>
                                 <td class="text-right">
-                                    <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}"
-                                                 class="btn btn-sm btn-orange text-white">
+                                    <router-link
+                                            :to="{name: 'view-account', params: {address: account.signer}}"
+                                            class="btn btn-sm btn-orange text-white">
                                         Details
                                     </router-link>
                                 </td>
@@ -98,14 +75,17 @@
     import EventBus from "../../event-bus";
     import Paginate from 'vuejs-paginate';
     import Age from "../common/Age";
+    import {isMobile} from "mobile-device-detect";
+    import Blockie from "../common/Blockie";
 
     export default {
-        name: "Account",
+        name: "Accounts",
         props: ['address'],
-        components: {Paginate, Age},
+        components: {Paginate, Age, Blockie},
         data() {
             return {
-                transactions: [],
+                isMobile: isMobile,
+                accounts: [],
                 total: 0,
                 pageCount: 1,
                 show: false,
@@ -113,19 +93,19 @@
             };
         },
         mounted() {
-            this.getTxsByAccount(1);
+            this.getSigners(1);
         },
         methods: {
-            async getTxsByAccount(page) {
+            async getSigners(page) {
                 try {
                     EventBus.$emit('show');
-                    let reply = await this.$http.get(`/accounts/${this.address}`, {
+                    let reply = await this.$http.get(`/accounts`, {
                         params: {
                             page: page - 1,
                             perPage: this.perPage
                         }
                     });
-                    this.transactions = reply.data.slice;
+                    this.accounts = reply.data.slice;
                     this.total = reply.data.total;
                     this.setPageCount();
                     this.show = true;
@@ -136,7 +116,7 @@
                 }
             },
             pageHandler(pageNum) {
-                this.getTxsByAccount(pageNum);
+                this.getSigners(pageNum);
             },
             setPageCount() {
                 this.pageCount = this.total <= 10 ? 1 : Math.ceil(this.total / 10);
@@ -160,5 +140,4 @@
         vertical-align: bottom;
         border-bottom: 2px solid #dee2e6 !important;
     }
-
 </style>
