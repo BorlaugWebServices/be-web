@@ -106,6 +106,10 @@
                         }
                     });
                     this.accounts = reply.data.slice;
+                    this.accounts = this.accounts.map(a=> {
+                        a.signer = JSON.parse(a.signer).Id;
+                        return a;
+                    })
                     this.total = reply.data.total;
                     this.setPageCount();
                     this.show = true;
