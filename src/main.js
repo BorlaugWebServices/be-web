@@ -19,8 +19,8 @@ import "./assets/css/custom.css"
 
 Vue.config.productionTip = false;
 
-Vue.prototype.$API_URL = process.env.VUE_APP_API_URL;
-Vue.prototype.SITE_URI = process.env.VUE_APP_SITE_URI;
+Vue.prototype.$API_URL = process.env.VUE_APP_AZTEC_API_URL;
+Vue.prototype.SITE_URI = process.env.VUE_APP_AZTEC_SITE_URI;
 
 Vue.use(VueAxios, axios.create({
     baseURL: Vue.prototype.$API_URL,
