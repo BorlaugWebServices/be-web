@@ -419,7 +419,7 @@
                     // await this.getRecentBlocks();
                     // await this.getRecentTxns();
 
-                    this.socket = await io(process.env.VUE_APP_API_URL);
+                    this.socket = await io(process.env.VUE_APP_AZTEC_API_URL);
 
                     this.socket.on('connect', () => {
                         //console.log("Socket connection established");
