@@ -132,6 +132,10 @@ Vue.axios.interceptors.response.use((res) => {
     }
     return Promise.reject(error)
 });
+Vue.filter('from_ms', function(date_num) {
+    // return new Date(parseInt(date_num)).toDateString();
+    return moment.unix(date_num/1000).format("DD MMM YYYY hh:mm a")
+});
 
 new Vue({
     router,

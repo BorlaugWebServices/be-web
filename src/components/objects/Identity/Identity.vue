@@ -84,7 +84,7 @@
                     </div>
                 </dl>
                 <hr/>
-                <dl class="row mb-0">
+                <dl class="row mb-0" v-if="identity && identity.properties">
                     <div class="col-sm-2 text-sm-right">
                         <dt>Properties</dt>
                     </div>
@@ -104,7 +104,7 @@
                     </div>
                 </dl>
                 <hr/>
-                <dl class="row mb-0" v-if="identity">
+                <dl class="row mb-0" v-if="identity && identity.claims">
                     <div class="col-sm-2 text-sm-right">
                         <dt>Claims</dt>
                     </div>
@@ -148,7 +148,7 @@
                                 </dd>
                                 <dt class="m-t-20 m-b-5">Valid Until :</dt>
                                 <dd v-if="identity.claims[claimIndex].attestation">
-                                    {{identity.claims[claimIndex].attestation.valid_until | date}}
+                                    {{identity.claims[claimIndex].attestation.valid_until}}
                                 </dd>
                                 <dd v-else>
                                   N/A

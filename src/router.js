@@ -161,6 +161,18 @@ export default new VueRouter({
                     ]
                 },
                 {
+                    path: 'proposals',
+                    component: resolve => require(["@/components/objects/Proposal/Layout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":proposalid",
+                            name: "proposal",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Proposal/Proposal.vue"], resolve),
+                        }
+                    ]
+                },
+                {
                     path: 'provenance',
                     component: resolve => require(["@/components/objects/Provenance/Layout.vue"], resolve),
                     children: [
