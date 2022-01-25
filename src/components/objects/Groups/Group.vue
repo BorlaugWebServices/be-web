@@ -3,20 +3,69 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Proposal</h4>
+                    <h4>Group</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
+                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
 
             <div class="card-body mg-b-20 p-t-0">
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Proposal Id</dt>
+                        <dt>ID</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
-                        <dd class="mb-1">{{proposal.id}}</dd>
+                        <dd class="mb-1">{{groupid}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Name</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">
+                            {{group.name}}
+                        </dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Address</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <Blockie :address="group.anonymous_account" class="mm-5-0-5-0 float-left"/>
+                        <dd class="ml-2 float-left">{{group.anonymous_account}}</dd>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-else>
+                        <a href="javascript:void(0)">
+                            <Blockie :address="group.anonymous_account" class="mm-5-0-5-0 float-left"/>
+                            <dd class="ml-2 float-left">{{group.anonymous_account}}</dd>
+                        </a>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Total Vote Weight</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">
+                            {{group.total_vote_weight}}
+                        </dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Threshold</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">
+                            {{group.threshold}}
+                        </dd>
                     </div>
                 </dl>
                 <hr/>
@@ -27,7 +76,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: proposal.blockNumber}}">{{proposal.blockNumber}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">{{group.blockNumber}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -38,7 +87,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: proposal.blockNumber}}">{{proposal.blockHash}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">{{group.blockHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -49,42 +98,40 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: proposal.blockHash, txhash: proposal.extrinsicHash}}">{{proposal.extrinsicHash}}</router-link>
+                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: group.blockHash, txhash: group.extrinsicHash}}">{{group.extrinsicHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
                     <hr/>
                 </template>
-                <dl class="row mb-0">
+                <dl class="row mb-0" v-if="group && group.members">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Proposal Creator</dt>
+                        <dt>Members</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <Blockie :address="proposal.proposer" class="mm-5-0-5-0"/>
-                            <span :title="proposal.proposer" class="m-l-5 align-middle">{{ proposal.proposer }}</span>
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Group Involved</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-<!--                            <Blockie :address="proposal.group_id" class="mm-5-0-5-0"/>-->
-                            <span :title="proposal.group_id" class="m-l-5 align-middle">{{ proposal.group_id }}</span>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="p-2 font-bold">Account</th>
+                                    <th class="p-2 font-bold">Weight</th>
+                                </tr>
+                                <tr v-for="prop in group.members">
+                                    <td class="p-2">
+                                        <Blockie :address="prop.account" class="mm-5-0-5-0 float-left mr-2"/>
+                                        {{prop.account}}
+                                    </td>
+                                    <td class="p-2">{{prop.weight}}</td>
+                                </tr>
+                            </table>
                         </dd>
                     </div>
                 </dl>
             </div>
         </div>
-
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Proposal Activities</h4>
+                    <h4>Group Activities</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
@@ -108,7 +155,7 @@
                             <td>{{i+1 }}</td>
                             <td>{{activity.method.method}}</td>
                             <td>
-                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: proposal.blockNumber, txhash: activity.hash}}"
+                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: group.blockNumber, txhash: activity.hash}}"
                                              :title="activity.hash">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>
@@ -137,9 +184,9 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching proposal, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                        Fetching group, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound module="Proposal" :module-id="proposalid" v-if="flag === 'FAILURE'"/>
+                    <NotFound module="Group" :module-id="groupid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -153,12 +200,12 @@
     import NotFound from "../../common/NotFound";
     
     export default {
-        name: "Proposal",
-        props: ["proposalid", "hideChainDetails"],
+        name: "Groups",
+        props: ["groupid", "hideChainDetails"],
         components: {Blockie, NotFound},
         data() {
             return {
-                proposal: null,
+                group: null,
                 activities: [],
                 show: false,
                 flag: 'SEARCHING'
@@ -170,16 +217,16 @@
         },
         methods: {
             async init() {
-                await this.getProposal();
-                await this.getProposalActivities();
+                await this.getGroup();
+                await this.getGroupActivities();
             },
-            async getProposal() {
-                if(this.proposalid !== null) {
+            async getGroup() {
+                if(this.groupid !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply  = await this.$http.get(`/proposals/${this.proposalid}`);
-                        this.proposal = reply.data;
-                        if(this.proposal) {
+                        let reply  = await this.$http.get(`/groups/${this.groupid}`);
+                        this.group = reply.data;
+                        if(this.group) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
@@ -191,15 +238,15 @@
                     }
                 }
             },
-            async getProposalActivities() {
-                if(this.proposal) {
+            async getGroupActivities() {
+                if(this.group) {
                     try {
-                        let reply       = await this.$http.get(`/proposals/${this.proposalid}/activities`);
+                        let reply       = await this.$http.get(`/groups/${this.groupid}/activities`);
                         this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
                     } catch(e) {
 
                     } finally {
-
+    
                     }
                 }
             },
@@ -209,9 +256,6 @@
                 d.setSeconds(seconds);
                 return d;
             },
-            getDid(did) {
-                return this.$options.filters.did(did);
-            }
         }
     }
 </script>

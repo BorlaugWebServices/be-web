@@ -161,6 +161,18 @@ export default new VueRouter({
                     ]
                 },
                 {
+                    path: 'groups',
+                    component: resolve => require(["@/components/objects/Groups/Layout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":groupid",
+                            name: "group",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Groups/Group.vue"], resolve),
+                        }
+                    ]
+                },
+                {
                     path: 'proposals',
                     component: resolve => require(["@/components/objects/Proposal/Layout.vue"], resolve),
                     children: [
