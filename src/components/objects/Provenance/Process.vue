@@ -146,12 +146,12 @@
                                                     <td class="p-2">{{att.fact | fact}}</td>
                                                 </tr>
                                             </table>
-                                            <h5 class="mt-2">Attested By {{step.attestor.short_name}}</h5>
-                                            <router-link :to="{name: 'identity', params : { did: getDid(step.attestor.did.id) }}">
-                                                <Blockie :address="step.attested_by.id" class="mm-5-0-5-0 float-left"/>
-                                                <dd class="ml-2 float-left" v-if="isMobile">{{step.attestor.did.id | did | truncate(25, '...')}}</dd>
-                                                <dd class="ml-2 float-left" v-else>{{step.attestor.did.id | did }}</dd>
-                                            </router-link>
+                                            <h5 class="mt-2">Attested By</h5>
+<!--                                            <router-link :to="{name: 'identity', params : { did: getDid(step.attestor.did.id) }}">-->
+                                                <Blockie :address="step.attestor" class="mm-5-0-5-0 float-left"/>
+                                                <dd class="ml-2 float-left">{{step.attestor}}</dd>
+<!--                                                <dd class="ml-2 float-left" v-else>{{step.attestor.did.id | did }}</dd>-->
+<!--                                            </router-link>-->
                                             <div class="clearfix"></div>
                                         </template>
                                         <template v-if="step.status === 'IN_PROGRESS'">
