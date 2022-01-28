@@ -66,8 +66,10 @@
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <Blockie :address="audit.audit_creator" class="mm-5-0-5-0"/>
-                            <span :title="audit.audit_creator" class="m-l-5 align-middle">{{ audit.audit_creator }}</span>
+                            <router-link :to="{name: 'view-account',params: { address: audit.audit_creator }}">
+                                <Blockie :address="audit.audit_creator" class="mm-5-0-5-0"/>
+                                <span :title="audit.audit_creator" class="m-l-5 align-middle">{{ audit.audit_creator }}</span>
+                            </router-link>
                         </dd>
                     </div>
                 </dl>
@@ -78,8 +80,10 @@
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <Blockie :address="audit.auditor" class="mm-5-0-5-0"/>
-                            <span :title="audit.auditor" class="m-l-5 align-middle">{{ audit.auditor }}</span>
+                            <router-link :to="{name: 'view-account',params: { address: audit.auditor }}">
+                                <Blockie :address="audit.auditor" class="mm-5-0-5-0"/>
+                                <span :title="audit.auditor" class="m-l-5 align-middle">{{ audit.auditor }}</span>
+                            </router-link>
                         </dd>
                     </div>
                 </dl>
@@ -111,7 +115,7 @@
                         <tbody>
                         <tr v-for="(activity,i) in activities">
                             <td>{{i+1 }}</td>
-                            <td>{{activity.method.method}}</td>
+                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
                             <td>
                                 <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: audit.blockNumber, txhash: activity.hash}}"
                                              :title="activity.hash">

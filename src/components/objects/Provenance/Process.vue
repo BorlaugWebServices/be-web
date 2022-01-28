@@ -83,10 +83,9 @@
                         <dt class="mb-1">Process Creator</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(sequence.sequence_creator) }}">
+                        <router-link :to="{name: 'view-account',params: { address: sequence.sequence_creator }}">
                             <Blockie :address="sequence.sequence_creator" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left" v-if="isMobile">{{sequence.sequence_creator | did | truncate(32, '...')}}</dd>
-                            <dd class="ml-2 float-left" v-else>{{sequence.sequence_creator }}</dd>
+                            <dd class="ml-2 float-left">{{sequence.sequence_creator }}</dd>
                         </router-link>
                     </div>
                 </dl>
@@ -147,11 +146,12 @@
                                                 </tr>
                                             </table>
                                             <h5 class="mt-2">Attested By</h5>
-<!--                                            <router-link :to="{name: 'identity', params : { did: getDid(step.attestor.did.id) }}">-->
+                                            <router-link :to="{name: 'view-account',params: { address: step.attestor }}">
                                                 <Blockie :address="step.attestor" class="mm-5-0-5-0 float-left"/>
-                                                <dd class="ml-2 float-left">{{step.attestor}}</dd>
-<!--                                                <dd class="ml-2 float-left" v-else>{{step.attestor.did.id | did }}</dd>-->
-<!--                                            </router-link>-->
+                                                <dd class="ml-2 float-left">
+                                                    {{step.attestor}}
+                                                </dd>
+                                            </router-link>
                                             <div class="clearfix"></div>
                                         </template>
                                         <template v-if="step.status === 'IN_PROGRESS'">
@@ -194,7 +194,7 @@
                         <tbody>
                         <tr v-for="(activity,i) in activities">
                             <td>{{i+1 }}</td>
-                            <td>{{activity.method.method}}</td>
+                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
                             <td>
                                 <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: sequence.blockNumber, txhash: activity.hash }}"
                                              :title="activity.hash">

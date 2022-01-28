@@ -9,7 +9,7 @@
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus=""
                                    class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
                                    id="searchCriteria" name="searchCriteria"
-                                   placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance"
+                                   placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance / Account"
                                    type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">

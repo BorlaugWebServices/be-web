@@ -62,7 +62,10 @@
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
                             <Blockie :address="proposal.proposer" class="mm-5-0-5-0"/>
-                            <span :title="proposal.proposer" class="m-l-5 align-middle">{{ proposal.proposer }}</span>
+                            <span :title="proposal.proposer" class="m-l-5 align-middle">
+                                <router-link :to="{ name : 'view-account' , params: { address: proposal.proposer }}">
+                                    {{ proposal.proposer }}</router-link>
+                            </span>
                         </dd>
                     </div>
                 </dl>
@@ -73,8 +76,9 @@
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-<!--                            <Blockie :address="proposal.group_id" class="mm-5-0-5-0"/>-->
-                            <span :title="proposal.group_id" class="m-l-5 align-middle">{{ proposal.group_id }}</span>
+                            <span :title="proposal.group_id" class="m-l-5 align-middle">
+                                <router-link :to="{name: 'group', params: {groupid: proposal.group_id}}">{{proposal.group_id}}</router-link>
+                            </span>
                         </dd>
                     </div>
                 </dl>

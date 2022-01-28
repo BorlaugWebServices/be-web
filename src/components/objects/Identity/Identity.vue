@@ -67,9 +67,12 @@
                         <dt>Subject</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            {{identity.subject}}
-                        </dd>
+                        <router-link :to="{name: 'view-account',params: { address: identity.subject }}">
+                            <Blockie :address="identity.subject" class="mm-5-0-5-0 float-left"/>
+                            <dd class="mb-1 ml-2 float-left">
+                                {{identity.subject}}
+                            </dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -78,9 +81,12 @@
                         <dt>Controller</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            {{identity.controller}}
-                        </dd>
+                        <router-link :to="{name: 'view-account',params: { address: identity.controller }}">
+                            <Blockie :address="identity.controller" class="mm-5-0-5-0 float-left"/>
+                            <dd class="mb-1 ml-2 float-left">
+                                {{identity.controller}}
+                            </dd>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -170,56 +176,56 @@
             </div>
         </div>
 
-<!--        <div class="card">-->
-<!--            <div class="card-header row m-b-0 p-b-0">-->
-<!--                <div class="card-header-title">-->
-<!--                    <h4>Identity Activities</h4>-->
-<!--                </div>-->
-<!--                <div class="card-header-icon">-->
-<!--                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>-->
-<!--                </div>-->
-<!--            </div>-->
+        <div class="card">
+            <div class="card-header row m-b-0 p-b-0">
+                <div class="card-header-title">
+                    <h4>Identity Activities</h4>
+                </div>
+                <div class="card-header-icon">
+                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
+                </div>
+            </div>
 
-<!--            <div class="card-body mg-b-20 p-t-0">-->
-<!--                <div class="table-responsive blocks" v-if="activities.length > 0">-->
-<!--                    <table class="table v-middle">-->
-<!--                        <thead>-->
-<!--                        <tr>-->
-<!--                            <th class="border-top-0 font-weight-bold">#</th>-->
-<!--                            <th class="border-top-0 font-weight-bold">Activity</th>-->
-<!--                            <th class="border-top-0 font-weight-bold">Transaction Hash</th>-->
-<!--                            <th class="border-top-0 font-weight-bold">Status</th>-->
-<!--                            <th class="border-top-0 font-weight-bold">Timestamp</th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                        <tr v-for="(activity,i) in activities">-->
-<!--                            <td>{{i+1 }}</td>-->
-<!--                            <td>{{activity.method.method}}</td>-->
-<!--                            <td>-->
-<!--                                <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"-->
-<!--                                             :title="activity.hash">-->
-<!--                                    {{activity.hash | truncate(32, '')}}-->
-<!--                                </router-link>-->
-<!--                            </td>-->
-<!--                            <td>-->
-<!--                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">-->
-<!--                                    <i class="fa fa-check-circle"/> SUCCESS-->
-<!--                                </span>-->
-<!--                                <span class="badge badge-pill badge-danger font-bold" v-else>-->
-<!--                                    <i class="fas fa-exclamation-circle"></i> FAILED-->
-<!--                                </span>-->
-<!--                            </td>-->
-<!--                            <td>{{activity.timestamp.toString() | timestamp}}</td>-->
-<!--                        </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-<!--                </div>-->
-<!--                <div class="p-b-10" v-else>-->
-<!--                    <h4 class="text-muted text-center">No Activities found</h4>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+            <div class="card-body mg-b-20 p-t-0">
+                <div class="table-responsive blocks" v-if="activities.length > 0">
+                    <table class="table v-middle">
+                        <thead>
+                        <tr>
+                            <th class="border-top-0 font-weight-bold">#</th>
+                            <th class="border-top-0 font-weight-bold">Activity</th>
+                            <th class="border-top-0 font-weight-bold">Transaction Hash</th>
+                            <th class="border-top-0 font-weight-bold">Status</th>
+                            <th class="border-top-0 font-weight-bold">Timestamp</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(activity,i) in activities">
+                            <td>{{i+1 }}</td>
+                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
+                            <td>
+                                <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
+                                             :title="activity.hash">
+                                    {{activity.hash | truncate(32, '')}}
+                                </router-link>
+                            </td>
+                            <td>
+                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">
+                                    <i class="fa fa-check-circle"/> SUCCESS
+                                </span>
+                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                    <i class="fas fa-exclamation-circle"></i> FAILED
+                                </span>
+                            </td>
+                            <td>{{activity.timestamp.toString() | timestamp}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-b-10" v-else>
+                    <h4 class="text-muted text-center">No Activities found</h4>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row" v-else>
         <div class="col-12">
@@ -268,7 +274,7 @@
             async init() {
                 await this.getIdentity();
                 window.scrollTo(0, 0);
-                // await this.getIdentityActivities();
+                await this.getIdentityActivities();
             },
             async getIdentity() {
                 if(this.did !== null) {

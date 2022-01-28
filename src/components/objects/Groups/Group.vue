@@ -16,7 +16,9 @@
                         <dt>ID</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
-                        <dd class="mb-1">{{groupid}}</dd>
+                        <dd class="mb-1">
+                            <router-link :to="{name: 'groups', params: {groupid: groupid}}">{{groupid}}</router-link>
+                        </dd>
                     </div>
                 </dl>
                 <hr/>
@@ -36,14 +38,10 @@
                         <dt>Address</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
-                        <Blockie :address="group.anonymous_account" class="mm-5-0-5-0 float-left"/>
-                        <dd class="ml-2 float-left">{{group.anonymous_account}}</dd>
-                    </div>
-                    <div class="col-sm-9 text-sm-left" v-else>
-                        <a href="javascript:void(0)">
+                        <router-link :to="{name: 'view-account',params: { address: group.anonymous_account }}">
                             <Blockie :address="group.anonymous_account" class="mm-5-0-5-0 float-left"/>
                             <dd class="ml-2 float-left">{{group.anonymous_account}}</dd>
-                        </a>
+                        </router-link>
                     </div>
                 </dl>
                 <hr/>
@@ -76,7 +74,9 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">{{group.blockNumber}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">
+                                    {{group.blockNumber}}
+                                </router-link>
                             </dd>
                         </div>
                     </dl>
@@ -87,7 +87,9 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">{{group.blockHash}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">
+                                    {{group.blockHash}}
+                                </router-link>
                             </dd>
                         </div>
                     </dl>
@@ -98,7 +100,10 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: group.blockHash, txhash: group.extrinsicHash}}">{{group.extrinsicHash}}</router-link>
+                                <router-link
+                                        :to="{ name : 'transaction-from-chain', params: {blockhash: group.blockHash, txhash: group.extrinsicHash}}">
+                                    {{group.extrinsicHash}}
+                                </router-link>
                             </dd>
                         </div>
                     </dl>
@@ -117,8 +122,10 @@
                                 </tr>
                                 <tr v-for="prop in group.members">
                                     <td class="p-2">
-                                        <Blockie :address="prop.account" class="mm-5-0-5-0 float-left mr-2"/>
-                                        {{prop.account}}
+                                        <router-link :to="{name: 'view-account',params: { address: prop.account }}">
+                                            <Blockie :address="prop.account" class="mm-5-0-5-0 float-left mr-2"/>
+                                            {{prop.account}}
+                                        </router-link>
                                     </td>
                                     <td class="p-2">{{prop.weight}}</td>
                                 </tr>
@@ -155,8 +162,9 @@
                             <td>{{i+1 }}</td>
                             <td>{{activity.method.method}}</td>
                             <td>
-                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: group.blockNumber, txhash: activity.hash}}"
-                                             :title="activity.hash">
+                                <router-link
+                                        :title="activity.hash"
+                                        :to="{ name: 'transaction-from-chain', params: { blockhashornumber: group.blockNumber, txhash: activity.hash}}">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>
                             </td>
@@ -186,7 +194,7 @@
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
                         Fetching group, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound module="Group" :module-id="groupid" v-if="flag === 'FAILURE'"/>
+                    <NotFound :module-id="groupid" module="Group" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -198,7 +206,7 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
     import NotFound from "../../common/NotFound";
-    
+
     export default {
         name: "Groups",
         props: ["groupid", "hideChainDetails"],
@@ -221,17 +229,17 @@
                 await this.getGroupActivities();
             },
             async getGroup() {
-                if(this.groupid !== null) {
+                if (this.groupid !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply  = await this.$http.get(`/groups/${this.groupid}`);
+                        let reply = await this.$http.get(`/groups/${this.groupid}`);
                         this.group = reply.data;
-                        if(this.group) {
+                        if (this.group) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
                         }
-                    } catch(e) {
+                    } catch (e) {
                         this.flag = 'FAILURE';
                     } finally {
                         EventBus.$emit('hide');
@@ -239,20 +247,20 @@
                 }
             },
             async getGroupActivities() {
-                if(this.group) {
+                if (this.group) {
                     try {
-                        let reply       = await this.$http.get(`/groups/${this.groupid}/activities`);
+                        let reply = await this.$http.get(`/groups/${this.groupid}/activities`);
                         this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
-                    } catch(e) {
+                    } catch (e) {
 
                     } finally {
-    
+
                     }
                 }
             },
             toDateString(str) {
                 let seconds = Number(str.replace(/,/g, ''));
-                let d       = new Date(0);
+                let d = new Date(0);
                 d.setSeconds(seconds);
                 return d;
             },
