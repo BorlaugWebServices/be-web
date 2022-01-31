@@ -134,8 +134,14 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <Blockie :address="tx.signer"/>
-                                            <span :title="tx.signer" class="from ml-1">{{ tx.signer }}</span>
+                                            <router-link :to="{name: 'view-account',params: { address: tx.signer.Id }}">
+                                                <div class="float-left mr-2">
+                                                    <Blockie :address="tx.signer.Id" class="mm-5-0-5-0"/>
+                                                </div>
+                                                <div class="float-left adjust-40">
+                                                    <span :title="tx.signer.Id" class="align-middle word-break">{{ tx.signer.Id }}</span>
+                                                </div>
+                                            </router-link>
                                         </td>
                                         <td>
                                             {{tx.method.section}}

@@ -101,12 +101,14 @@
                         </div>
                         <div class="col-sm-10 text-sm-left">
                             <dd class="mb-1">
-                                <div class="float-left mr-2" :class="isMobile?'pt-2':''">
-                                    <Blockie :address="transaction.signer" class="mm-5-0-5-0"/>
-                                </div>
-                                <div class="float-left adjust-40">
-                                    <span :title="transaction.signer" class="align-middle word-break">{{ transaction.signer }}</span>
-                                </div>
+                                <router-link :to="{name: 'view-account',params: { address: transaction.signer.Id }}">
+                                    <div class="float-left mr-2">
+                                        <Blockie :address="transaction.signer.Id" class="mm-5-0-5-0"/>
+                                    </div>
+                                    <div class="float-left adjust-40">
+                                        <span :title="transaction.signer.Id" class="align-middle word-break">{{ transaction.signer.Id }}</span>
+                                    </div>
+                                </router-link>
                             </dd>
                         </div>
                     </dl>
