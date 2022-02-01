@@ -9,7 +9,7 @@
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus=""
                                    class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
                                    id="searchCriteria" name="searchCriteria"
-                                   placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance / Account"
+                                   placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance / Account / Group / Proposal / Event"
                                    type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
@@ -136,7 +136,9 @@
                                     </td>
                                     <td>
                                         <div :title="tx.hash" class="d-flex no-block align-items-center">
-                                            <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}">{{ tx.hash
+                                            <router-link
+                                                    :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}">
+                                                {{ tx.hash
                                                 | truncate(8,'...')}}
                                             </router-link>
                                         </div>
@@ -152,8 +154,9 @@
                                         {{tx.method.method}}
                                     </td>
                                     <td class="text-right">
-                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}"
-                                                     class="btn btn-sm btn-orange text-white">
+                                        <router-link
+                                                :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}"
+                                                class="btn btn-sm btn-orange text-white">
                                             Details
                                         </router-link>
                                     </td>
@@ -191,7 +194,8 @@
                     <div class="card-body" v-if="searchResult && searchResult.blocks.length === 0 && searchResult.txns.length === 0
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
                     && searchResult.events.length === 0 && searchResult.logs.length === 0
-                    && searchResult.identities.length === 0 && searchResult.sequences.length === 0 && searchResult.address.length === 0">
+                    && searchResult.identities.length === 0 && searchResult.sequences.length === 0 && searchResult.address.length === 0 && searchResult.audits.length === 0
+                    && searchResult.groups.length === 0 && searchResult.proposals.length === 0">
                         <div class="row justify-content-center">
                             <div class="col-md-12 text-center text-muted">
                                 <span class="display-1 d-block">
@@ -220,18 +224,16 @@
                                 </tr>
                                 <tr v-for="address in searchResult.address">
                                     <td>
-                                        <router-link :to="{ name : 'view-account' , params: { address: address.signer }}">
+                                        <router-link
+                                                :to="{ name : 'view-account' , params: { address: address.signer }}">
                                             <h4>Address: {{address.signer}}</h4>
-<!--                                            <small class="text-secondary">-->
-<!--                                                <span class="font-weight-bold">Hash :</span> {{block.hash}} |-->
-<!--                                                <span class="font-weight-bold">Timestamp :</span> {{block.timestamp}}-->
-<!--                                            </small>-->
                                         </router-link>
                                     </td>
                                 </tr>
                                 <tr v-for="txn in searchResult.txns">
                                     <td>
-                                        <router-link :to="{ name : 'transaction-from-chain' , params: { blockhash: block.hash, txhash: txn.hash }}">
+                                        <router-link
+                                                :to="{ name : 'transaction-from-chain' , params: { blockhash: block.hash, txhash: txn.hash }}">
                                             <h4>Transaction: {{txn.hash}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{txn.blockNumber}} |
@@ -289,7 +291,7 @@
                                             <h4>Inherent: {{inherent.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{inherent.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{inherent.timestamp}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{inherent.timestamp | from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -300,7 +302,7 @@
                                             <h4>Event: {{event.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{event.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{event.timestamp}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{event.timestamp | from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -311,20 +313,44 @@
                                             <h4>Log: {{log.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{log.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{log.timestamp}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{log.timestamp | from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
                                 </tr>
                                 <tr v-for="sequence in searchResult.sequences">
                                     <td>
-                                        <router-link :to="{ name : 'sequence' , params: { sequenceid: sequence.id }}">
-                                            <h4>Sequence: {{sequence.id}}</h4>
+                                        <router-link :to="{ name : 'process' , params: { processid: sequence.id }}">
+                                            <h4>Provenance: {{sequence.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Registry :</span> {{sequence.registry}} |
                                                 <span class="font-weight-bold">Template :</span> {{sequence.template}} |
                                                 <span class="font-weight-bold">Block :</span> {{sequence.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{sequence.timestamp}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{sequence.timestamp | from_ms}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="group in searchResult.groups">
+                                    <td>
+                                        <router-link :to="{ name : 'group' , params: { groupid: group.id }}">
+                                            <h4>Group: {{group.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Group Creator :</span> {{group.group_creator}} |
+                                                <span class="font-weight-bold">Block :</span> {{group.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{group.timestamp | from_ms}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="proposal in searchResult.proposals">
+                                    <td>
+                                        <router-link :to="{ name : 'proposal' , params: { proposalid: proposal.id }}">
+                                            <h4>Proposal: {{proposal.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Proposer :</span> {{proposal.proposer}} |
+                                                <span class="font-weight-bold">Block :</span> {{proposal.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{proposal.timestamp | from_ms}}
                                             </small>
                                         </router-link>
                                     </td>

@@ -160,7 +160,7 @@
                         <tbody>
                         <tr v-for="(activity,i) in activities">
                             <td>{{i+1 }}</td>
-                            <td>{{activity.method.method}}</td>
+                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
                             <td>
                                 <router-link
                                         :title="activity.hash"
