@@ -24,27 +24,27 @@
                         </div>
                     </dl>
                     <hr/>
-                        <dl class="row mb-0">
-                            <div class="col-sm-3 text-sm-right">
-                                <dt>Available Balance</dt>
-                            </div>
-                            <div class="col-sm-9 text-sm-left">
-                                <dd class="mb-1">
-                                    <get-account-balance class="text-orange" :address="address"></get-account-balance>
-                                </dd>
-                            </div>
-                        </dl>
-                        <hr/>
-                        <dl class="row mb-0">
-                            <div class="col-sm-3 text-sm-right">
-                                <dt>Spent on Transactions</dt>
-                            </div>
-                            <div class="col-sm-9 text-sm-left">
-                                <dd class="mb-1">
-                                    <b class="text-orange">{{spent_on_txs | formatGRAM}}</b>
-                                </dd>
-                            </div>
-                        </dl>
+                    <dl class="row mb-0">
+                        <div class="col-sm-3 text-sm-right">
+                            <dt>Available Balance</dt>
+                        </div>
+                        <div class="col-sm-9 text-sm-left">
+                            <dd class="mb-1">
+                                <get-account-balance :address="address" class="text-orange"></get-account-balance>
+                            </dd>
+                        </div>
+                    </dl>
+                    <hr/>
+                    <dl class="row mb-0">
+                        <div class="col-sm-3 text-sm-right">
+                            <dt>Spent on Transactions</dt>
+                        </div>
+                        <div class="col-sm-9 text-sm-left">
+                            <dd class="mb-1">
+                                <b class="text-orange">{{spent_on_txs | formatGRAM}}</b>
+                            </dd>
+                        </div>
+                    </dl>
                 </div>
             </div>
 
@@ -80,7 +80,9 @@
                                 </td>
                                 <td class="block">
                                     <div :title="transaction.hash" class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">{{
+                                        <router-link
+                                                :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">
+                                            {{
                                             transaction.hash | truncate(16, '...')}}
                                         </router-link>
                                     </div>
@@ -108,8 +110,9 @@
                                 <!--                                    {{block.logs.length}}-->
                                 <!--                                </td>-->
                                 <td class="text-right">
-                                    <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}"
-                                                 class="btn btn-sm btn-orange text-white">
+                                    <router-link
+                                            :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}"
+                                            class="btn btn-sm btn-orange text-white">
                                         Details
                                     </router-link>
                                 </td>
@@ -152,7 +155,7 @@
     export default {
         name: "Account",
         props: ['address'],
-        components: {GetAccountBalance, Blockie,  Paginate, Age},
+        components: {GetAccountBalance, Blockie, Paginate, Age},
         data() {
             return {
                 transactions: [],
@@ -164,9 +167,13 @@
             };
         },
         mounted() {
-            this.getTxsByAccount(1);
+            this.init(1);
         },
         methods: {
+            async init() {
+                await this.getTxsByAccount(1);
+                await this.getTotalSpent();
+            },
             async getTxsByAccount(page) {
                 try {
                     EventBus.$emit('show');
@@ -177,7 +184,6 @@
                         }
                     });
                     this.transactions = reply.data.slice;
-                    this.spent_on_txs = _.sumBy(this.transactions, 'tx_fee');
                     this.total = reply.data.total;
                     this.setPageCount();
                     this.show = true;
@@ -185,6 +191,19 @@
 
                 } finally {
                     EventBus.$emit('hide');
+                }
+            },
+            async getTotalSpent() {
+                try {
+                    let reply = await this.$http.get(`/accounts/${this.address}`, {
+                        params: {
+                            page: 0,
+                            perPage: this.total
+                        }
+                    });
+                    this.spent_on_txs = _.sumBy(reply.data.slice, 'tx_fee');
+                } catch (e) {
+
                 }
             },
             pageHandler(pageNum) {
