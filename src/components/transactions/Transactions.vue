@@ -50,7 +50,7 @@
                                 <td>
                                     {{transaction.method.method}}
                                 </td>
-                                <td><tx-deposit :hash="transaction.hash"></tx-deposit> </td>
+                                <td><b>{{transaction.tx_fee | formatGRAM}}</b></td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.events.length}}-->
                                 <!--                                </td>-->
@@ -94,11 +94,10 @@
     import EventBus from "../../event-bus";
     import Paginate from 'vuejs-paginate';
     import Age from "../common/Age";
-    import TxDeposit from "../common/TxDeposit";
 
     export default {
         name: "Transactions",
-        components: {TxDeposit, Paginate, Age},
+        components: { Paginate, Age},
         data() {
             return {
                 transactions: [],

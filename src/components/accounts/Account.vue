@@ -1,13 +1,60 @@
 <template>
     <div class="row">
         <div class="col-12">
+            <div class="card">
+                <div class="card-header row m-b-0 p-b-0">
+                    <div class="card-header-title">
+                        <h4>Account</h4>
+                    </div>
+                    <div class="card-header-icon">
+                        <h3><i class="fas fa-user card-title text-orange"/></h3>
+                    </div>
+                </div>
+
+                <div class="card-body mg-b-20 p-t-0">
+                    <dl class="row mb-0">
+                        <div class="col-sm-3 text-sm-right">
+                            <dt>Address</dt>
+                        </div>
+                        <div class="col-sm-9 text-sm-left">
+                            <dd class="mb-1">
+                                <Blockie :address="address" class="mm-5-0-5-0"/>
+                                <span :title="address" class="m-l-5 align-middle">{{ address }}</span>
+                            </dd>
+                        </div>
+                    </dl>
+                    <hr/>
+                        <dl class="row mb-0">
+                            <div class="col-sm-3 text-sm-right">
+                                <dt>Available Balance</dt>
+                            </div>
+                            <div class="col-sm-9 text-sm-left">
+                                <dd class="mb-1">
+                                    <get-account-balance class="text-orange" :address="address"></get-account-balance>
+                                </dd>
+                            </div>
+                        </dl>
+                        <hr/>
+                        <dl class="row mb-0">
+                            <div class="col-sm-3 text-sm-right">
+                                <dt>Spent on Transactions</dt>
+                            </div>
+                            <div class="col-sm-9 text-sm-left">
+                                <dd class="mb-1">
+                                    <b class="text-orange">{{spent_on_txs | formatGRAM}}</b>
+                                </dd>
+                            </div>
+                        </dl>
+                </div>
+            </div>
+
             <div class="card ">
                 <div class="card-header row m-b-0 p-b-0">
                     <div class="card-header-title">
                         <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
                     </div>
                     <div class="card-header-icon">
-                        <h3><i class="fas fa-user-circle card-title text-orange"/></h3>
+                        <h3><i class="fa fa-file-signature card-title text-orange"/></h3>
                     </div>
                 </div>
 
@@ -55,7 +102,7 @@
                                     {{transaction.method.method}}
                                 </td>
                                 <td>
-                                    <tx-deposit :hash="transaction.hash"></tx-deposit>
+                                    <b>{{transaction.tx_fee | formatGRAM}}</b>
                                 </td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.logs.length}}-->
@@ -98,19 +145,22 @@
     import EventBus from "../../event-bus";
     import Paginate from 'vuejs-paginate';
     import Age from "../common/Age";
-    import TxDeposit from "../common/TxDeposit";
+    import Blockie from "../common/Blockie";
+    import GetAccountBalance from "../common/GetAccountBalance";
+    import _ from "lodash";
 
     export default {
         name: "Account",
         props: ['address'],
-        components: {TxDeposit, Paginate, Age},
+        components: {GetAccountBalance, Blockie,  Paginate, Age},
         data() {
             return {
                 transactions: [],
                 total: 0,
                 pageCount: 1,
                 show: false,
-                perPage: localStorage.getItem("perPage") || 10
+                perPage: localStorage.getItem("perPage") || 10,
+                spent_on_txs: 0
             };
         },
         mounted() {
@@ -127,6 +177,7 @@
                         }
                     });
                     this.transactions = reply.data.slice;
+                    this.spent_on_txs = _.sumBy(this.transactions, 'tx_fee');
                     this.total = reply.data.total;
                     this.setPageCount();
                     this.show = true;
