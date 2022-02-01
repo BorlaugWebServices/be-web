@@ -137,6 +137,14 @@ Vue.filter('from_ms', function(date_num) {
     return moment.unix(date_num/1000).format("DD MMM YYYY hh:mm a")
 });
 
+Vue.filter('formatGRAM', function (n) {
+    n /= 1e6;
+    if (n < 1e6) return Number(n).toLocaleString() + ' GRAM';
+    if (n >= 1e6 && n < 1e9) return Number(n / 1e6).toLocaleString() + ' MGRAM';
+    if (n >= 1e9 && n < 1e12) return Number(n / 1e9).toLocaleString() + ' BGRAM';
+    if (n >= 1e12) return Number(n / 1e12).toLocaleString() + ' TGRAM';
+});
+
 new Vue({
     router,
     store,

@@ -55,7 +55,7 @@
                                     {{transaction.method.method}}
                                 </td>
                                 <td>
-                                    0.125 GRAM
+                                    <tx-deposit :hash="transaction.hash"></tx-deposit>
                                 </td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.logs.length}}-->
@@ -98,11 +98,12 @@
     import EventBus from "../../event-bus";
     import Paginate from 'vuejs-paginate';
     import Age from "../common/Age";
+    import TxDeposit from "../common/TxDeposit";
 
     export default {
         name: "Account",
         props: ['address'],
-        components: {Paginate, Age},
+        components: {TxDeposit, Paginate, Age},
         data() {
             return {
                 transactions: [],

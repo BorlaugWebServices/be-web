@@ -22,6 +22,7 @@
                                 <th class="border-0 font-weight-bold">Age</th>
                                 <th class="border-0 font-weight-bold">Module</th>
                                 <th class="border-0 font-weight-bold">Method</th>
+                                <th class="border-0 font-weight-bold">Value</th>
                                 <th class="border-0"></th>
                             </tr>
                             </thead>
@@ -49,6 +50,7 @@
                                 <td>
                                     {{transaction.method.method}}
                                 </td>
+                                <td><tx-deposit :hash="transaction.hash"></tx-deposit> </td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.events.length}}-->
                                 <!--                                </td>-->
@@ -92,10 +94,11 @@
     import EventBus from "../../event-bus";
     import Paginate from 'vuejs-paginate';
     import Age from "../common/Age";
+    import TxDeposit from "../common/TxDeposit";
 
     export default {
         name: "Transactions",
-        components: {Paginate, Age},
+        components: {TxDeposit, Paginate, Age},
         data() {
             return {
                 transactions: [],

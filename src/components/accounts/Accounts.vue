@@ -19,6 +19,7 @@
                                 <th class="border-0">#</th>
                                 <th class="border-0 font-weight-bold">Address</th>
                                 <th class="border-0 font-weight-bold">No. of Transactions</th>
+                                <th class="border-0 font-weight-bold">Balance</th>
                                 <th class="border-0"></th>
                             </tr>
                             </thead>
@@ -36,6 +37,7 @@
                                     </dd>
                                 </td>
                                 <td>{{account.count}}</td>
+                                <td><get-account-balance :address="account.signer"></get-account-balance> </td>
                                 <td class="text-right">
                                     <router-link
                                             :to="{name: 'view-account', params: {address: account.signer}}"
@@ -77,11 +79,12 @@
     import Age from "../common/Age";
     import {isMobile} from "mobile-device-detect";
     import Blockie from "../common/Blockie";
+    import GetAccountBalance from "../common/GetAccountBalance";
 
     export default {
         name: "Accounts",
         props: ['address'],
-        components: {Paginate, Age, Blockie},
+        components: {GetAccountBalance, Paginate, Age, Blockie},
         data() {
             return {
                 isMobile: isMobile,
