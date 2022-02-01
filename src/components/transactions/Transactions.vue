@@ -22,7 +22,7 @@
                                 <th class="border-0 font-weight-bold">Age</th>
                                 <th class="border-0 font-weight-bold">Module</th>
                                 <th class="border-0 font-weight-bold">Method</th>
-                                <th class="border-0 font-weight-bold">Value</th>
+                                <th class="border-0 text-right font-weight-bold">Transaction Cost</th>
                                 <th class="border-0"></th>
                             </tr>
                             </thead>
@@ -50,7 +50,7 @@
                                 <td>
                                     {{transaction.method.method}}
                                 </td>
-                                <td><b>{{transaction.tx_fee | formatGRAM}}</b></td>
+                                <td class="text-right"><b>{{transaction.tx_fee | formatGRAM}}</b></td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.events.length}}-->
                                 <!--                                </td>-->
