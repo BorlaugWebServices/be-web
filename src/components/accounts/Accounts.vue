@@ -37,7 +37,9 @@
                                     </dd>
                                 </td>
                                 <td>{{account.count}}</td>
-                                <td class="text-right"><get-account-balance :address="account.signer"></get-account-balance> </td>
+                                <td class="text-right">
+                                    <b>{{account.balance | formatGRAM}}</b>
+                                </td>
                                 <td class="text-right">
                                     <router-link
                                             :to="{name: 'view-account', params: {address: account.signer}}"

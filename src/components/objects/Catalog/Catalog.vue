@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Audit</h4>
+                    <h4>Catalog</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
@@ -13,10 +13,10 @@
             <div class="card-body mg-b-20 p-t-0">
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Audit Id</dt>
+                        <dt>Catalog Id</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{audit.id}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{catalog.id}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: audit.blockNumber}}">{{audit.blockNumber}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: catalog.blockNumber}}">{{catalog.blockNumber}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: audit.blockNumber}}">{{audit.blockHash}}</router-link>
+                                <router-link :to="{ name : 'block', params: {number: catalog.blockNumber}}">{{catalog.blockHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: audit.blockHash, txhash: audit.extrinsicHash}}">{{audit.extrinsicHash}}</router-link>
+                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: catalog.blockHash, txhash: catalog.extrinsicHash}}">{{catalog.extrinsicHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -57,28 +57,30 @@
                 </template>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Audit Creator</dt>
+                        <dt>Catalog Creator</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <router-link :to="{name: 'view-account',params: { address: audit.audit_creator }}">
-                                <Blockie :address="audit.audit_creator" class="mm-5-0-5-0"/>
-                                <span :title="audit.audit_creator" class="m-l-5 align-middle">{{ audit.audit_creator }}</span>
-                            </router-link>
+                            <Blockie :address="catalog.caller" class="mm-5-0-5-0"/>
+                            <span :title="catalog.caller" class="m-l-5 align-middle">
+                                <router-link :to="{ name : 'view-account' , params: { address: catalog.caller }}">
+                                    {{ catalog.caller }}</router-link>
+                            </span>
                         </dd>
                     </div>
                 </dl>
                 <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Auditor</dt>
+                        <dt>Controller</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <router-link :to="{name: 'view-account',params: { address: audit.auditor }}">
-                                <Blockie :address="audit.auditor" class="mm-5-0-5-0"/>
-                                <span :title="audit.auditor" class="m-l-5 align-middle">{{ audit.auditor }}</span>
-                            </router-link>
+                            <Blockie :address="catalog.controller" class="mm-5-0-5-0"/>
+                            <span :title="catalog.controller" class="m-l-5 align-middle">
+                                <router-link :to="{ name : 'view-account' , params: { address: catalog.controller }}">
+                                    {{ catalog.controller }}</router-link>
+                            </span>
                         </dd>
                     </div>
                 </dl>
@@ -88,7 +90,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{audit.timestamp | from_ms}}</dd>
+                        <dd class="mb-1">{{catalog.timestamp | from_ms}}</dd>
                     </div>
                 </dl>
             </div>
@@ -97,7 +99,7 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Audit Activities</h4>
+                    <h4>Catalog Activities</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
@@ -121,7 +123,7 @@
                             <td>{{i+1 }}</td>
                             <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
                             <td>
-                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: audit.blockNumber, txhash: activity.hash}}"
+                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: catalog.blockNumber, txhash: activity.hash}}"
                                              :title="activity.hash">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>
@@ -150,9 +152,9 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching audit, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                        Fetching catalog, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound module="Audit" :module-id="auditid" v-if="flag === 'FAILURE'"/>
+                    <NotFound module="Catalog" :module-id="catalogid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -166,12 +168,12 @@
     import NotFound from "../../common/NotFound";
 
     export default {
-        name: "Audit",
-        props: ["auditid", "hideChainDetails"],
+        name: "Catalog",
+        props: ["catalogid", "hideChainDetails"],
         components: {Blockie, NotFound},
         data() {
             return {
-                audit: null,
+                catalog: null,
                 activities: [],
                 show: false,
                 flag: 'SEARCHING'
@@ -183,16 +185,16 @@
         },
         methods: {
             async init() {
-                await this.getAudit();
-                await this.getAuditActivities();
+                await this.getCatalog();
+                await this.getCatalogActivities();
             },
-            async getAudit() {
-                if(this.auditid !== null) {
+            async getCatalog() {
+                if(this.catalogid !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply  = await this.$http.get(`/audits/${this.auditid}`);
-                        this.audit = reply.data;
-                        if(this.audit) {
+                        let reply  = await this.$http.get(`identities/catalogs/${this.catalogid}`);
+                        this.catalog = reply.data;
+                        if(this.catalog) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
@@ -204,10 +206,10 @@
                     }
                 }
             },
-            async getAuditActivities() {
-                if(this.audit) {
+            async getCatalogActivities() {
+                if(this.catalog) {
                     try {
-                        let reply       = await this.$http.get(`/audits/${this.auditid}/activities`);
+                        let reply       = await this.$http.get(`identities/catalogs/${this.catalogid}/activities`);
                         this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
                     } catch(e) {
 

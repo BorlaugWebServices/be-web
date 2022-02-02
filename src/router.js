@@ -197,6 +197,18 @@ export default new VueRouter({
                     ]
                 },
                 {
+                    path: 'catalog',
+                    component: resolve => require(["@/components/objects/Catalog/Layout.vue"], resolve),
+                    children: [
+                        {
+                            path: ":catalogid",
+                            name: "catalog",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Catalog/Catalog.vue"], resolve),
+                        }
+                    ]
+                },
+                {
                     path: "404",
                     name: "404",
                     props: {isPage: true},

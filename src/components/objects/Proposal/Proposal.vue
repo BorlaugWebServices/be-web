@@ -82,6 +82,15 @@
                         </dd>
                     </div>
                 </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Created at</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">{{proposal.timestamp | from_ms}}</dd>
+                    </div>
+                </dl>
             </div>
         </div>
 

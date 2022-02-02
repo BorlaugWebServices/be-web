@@ -90,7 +90,16 @@
                     </div>
                 </dl>
                 <hr/>
-                <dl class="row mb-0" v-if="identity && identity.properties">
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Created at</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">{{identity.timestamp | from_ms}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0" v-if="identity && identity.properties.length>0">
                     <div class="col-sm-2 text-sm-right">
                         <dt>Properties</dt>
                     </div>
@@ -109,8 +118,16 @@
                         </dd>
                     </div>
                 </dl>
+                <dl class="row mb-0" v-else>
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Properties</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <h5 class="text-muted">No records found</h5>
+                    </div>
+                </dl>
                 <hr/>
-                <dl class="row mb-0" v-if="identity && identity.claims">
+                <dl class="row mb-0" v-if="identity && identity.claims.length>0">
                     <div class="col-sm-2 text-sm-right">
                         <dt>Claims</dt>
                     </div>
@@ -171,6 +188,14 @@
                         <div class="w-25 float-left">
                             <button class="btn btn-orange text-white float-right" @click="next" :disabled="claimIndex === (identity.claims.length-1)">Next</button>
                         </div>
+                    </div>
+                </dl>
+                <dl class="row mb-0" v-else>
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Claims</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <h5 class="text-muted">No records found</h5>
                     </div>
                 </dl>
             </div>
@@ -280,7 +305,7 @@
                 if(this.did !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply     = await this.$http.get(`/identities/${this.did}`);
+                            let reply     = await this.$http.get(`/identities/${this.did}`);
                         this.identity = reply.data;
                         if(this.identity) {
                             this.flag = 'SUCCESS';

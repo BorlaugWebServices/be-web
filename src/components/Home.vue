@@ -9,7 +9,7 @@
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus=""
                                    class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
                                    id="searchCriteria" name="searchCriteria"
-                                   placeholder="Search by Block Number / Txhash / Lease / DID / Audit / Provenance / Account / Group / Proposal / Event"
+                                   placeholder="Search by Block Number / Txhash / Lease / Catalog / DID / Audit / Provenance / Account / Group / Proposal / Event"
                                    type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
@@ -195,7 +195,7 @@
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
                     && searchResult.events.length === 0 && searchResult.logs.length === 0
                     && searchResult.identities.length === 0 && searchResult.sequences.length === 0 && searchResult.address.length === 0 && searchResult.audits.length === 0
-                    && searchResult.groups.length === 0 && searchResult.proposals.length === 0">
+                    && searchResult.groups.length === 0 && searchResult.proposals.length === 0 && searchResult.catalogs.length === 0">
                         <div class="row justify-content-center">
                             <div class="col-md-12 text-center text-muted">
                                 <span class="display-1 d-block">
@@ -351,6 +351,19 @@
                                                 <span class="font-weight-bold">Proposer :</span> {{proposal.proposer}} |
                                                 <span class="font-weight-bold">Block :</span> {{proposal.blockNumber}} |
                                                 <span class="font-weight-bold">Timestamp :</span> {{proposal.timestamp | from_ms}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="catalog in searchResult.catalogs">
+                                    <td>
+                                        <router-link :to="{ name : 'catalog' , params: { catalogid: catalog.id }}">
+                                            <h4>Catalog: {{catalog.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Creator :</span> {{catalog.caller}} |
+                                                <span class="font-weight-bold">Controller :</span> {{catalog.controller}} |
+                                                <span class="font-weight-bold">Block :</span> {{catalog.blockNumber}} |
+                                                <span class="font-weight-bold">Timestamp :</span> {{catalog.timestamp | from_ms}}
                                             </small>
                                         </router-link>
                                     </td>

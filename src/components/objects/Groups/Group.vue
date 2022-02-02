@@ -108,6 +108,15 @@
                         </div>
                     </dl>
                     <hr/>
+                    <dl class="row mb-0">
+                        <div class="col-sm-2 text-sm-right">
+                            <dt>Created at</dt>
+                        </div>
+                        <div class="col-sm-9 text-sm-left">
+                            <dd class="mb-1">{{group.timestamp | from_ms}}</dd>
+                        </div>
+                    </dl>
+                    <hr/>
                 </template>
                 <dl class="row mb-0" v-if="group && group.members">
                     <div class="col-sm-2 text-sm-right">

@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="card ">
+            <div class="card" v-if="transactions.length>0">
                 <div class="card-header row m-b-0 p-b-0">
                     <div class="card-header-title">
                         <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
@@ -122,8 +122,16 @@
                     </div>
                 </div>
             </div>
+            <div class="card" v-else>
+                <div class="card-body">
+                    <div class="card-header row m-b-0 p-b-0">
+                        <h4>Transactions</h4>
+                    </div>
+                    <h4 class="text-muted text-center">No records found</h4>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-if="transactions.length>0">
             <div class="text-right">
                 <nav aria-label="Page navigation example">
                     <paginate
