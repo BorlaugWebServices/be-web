@@ -307,3 +307,8 @@ Text
 .page-link.active a {
     color: #fff;
 }
+
+a:not([href]) {
+    color: #36bbf4;
+    text-decoration: none;
+}
