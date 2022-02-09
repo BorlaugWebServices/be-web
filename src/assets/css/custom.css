@@ -301,6 +301,7 @@ Text
     z-index: 2;
     background-color: #36bbf4;
     border-color: #36bbf4;
+    color: #fff;
 }
 
 .page-link.active a {

@@ -59,15 +59,16 @@
                 <nav aria-label="Page navigation example">
                     <paginate
                             :click-handler="pageHandler"
-                            :container-class="'pagination float-right'"
+                            :container-class="'ui pagination menu float-right'"
                             :margin-pages="2"
-                            :next-class="'page-link'"
-                            :next-text="'Next'"
-                            :page-class="'page-link'"
                             :page-count=pageCount
                             :page-range="1"
-                            :prev-class="'page-link'"
-                            :prev-text="'Prev'">
+                            :prev-text="'Prev'"
+                            :no-li-surround="true"
+                            :page-link-class="'page-link'"
+                            :prev-link-class="'page-link'"
+                            :next-link-class="'page-link'"
+                            :break-view-link-class="'break-view-link'">
                     </paginate>
                 </nav>
             </div>
