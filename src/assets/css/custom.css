@@ -296,3 +296,13 @@ Text
 .adjust-500 {
     width: calc(100% - 500px);
 }
+
+.page-link.active {
+    z-index: 2;
+    background-color: #36bbf4;
+    border-color: #36bbf4;
+}
+
+.page-link.active a {
+    color: #fff;
+}
