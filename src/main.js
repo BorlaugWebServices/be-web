@@ -132,6 +132,10 @@ Vue.axios.interceptors.response.use((res) => {
     }
     return Promise.reject(error)
 });
+Vue.filter('from_ms_to_date', function(date_num) {
+    // return new Date(parseInt(date_num)).toDateString();
+    return moment.unix(date_num/1000).format("DD MMM YYYY")
+});
 Vue.filter('from_ms', function(date_num) {
     // return new Date(parseInt(date_num)).toDateString();
     return moment.unix(date_num/1000).format("DD MMM YYYY hh:mm a")
@@ -143,6 +147,14 @@ Vue.filter('formatGRAM', function (n) {
     if (n >= 1e6 && n < 1e9) return Number(n / 1e6).toLocaleString() + ' MGRAM';
     if (n >= 1e9 && n < 1e12) return Number(n / 1e9).toLocaleString() + ' BGRAM';
     if (n >= 1e12) return Number(n / 1e12).toLocaleString() + ' TGRAM';
+});
+
+Vue.filter('hexToString', function (hexx) {
+    let hex = hexx.toString();//force conversion
+    let str = '';
+    for (let i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
 });
 
 new Vue({

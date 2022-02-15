@@ -3,29 +3,85 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Lease</h4>
+                    <h4>Asset</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
                 </div>
             </div>
 
             <div class="card-body mg-b-20 p-t-0">
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lease Id</dt>
+                        <dt>Asset Id</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.id}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{asset.id}}</dd>
                     </div>
                 </dl>
                 <hr/>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Contract Number</dt>
+                        <dt>Asset Number</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.contract_number | hexToString}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{asset.asset_number}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Asset Name</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{asset.name}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Status</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <span class="badge badge-pill badge-success font-bold" v-if="asset.status">
+                            <i class="fa fa-check-circle"/> {{asset.status}}
+                        </span>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Total Shares</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{asset.total_shares}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Residual Value</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{asset.residual_value}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Purchase Value</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{asset.purchase_value}}</dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Acquired Date</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{Number(asset.acquired_date.replace(/,/g, ""))*1000 | from_ms_to_date}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -36,8 +92,8 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
-                                    {{lease.blockNumber}}
+                                <router-link :to="{ name : 'block', params: {number: asset.blockNumber}}">
+                                    {{asset.blockNumber}}
                                 </router-link>
                             </dd>
                         </div>
@@ -49,8 +105,8 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
-                                    {{lease.blockHash}}
+                                <router-link :to="{ name : 'block', params: {number: asset.blockNumber}}">
+                                    {{asset.blockHash}}
                                 </router-link>
                             </dd>
                         </div>
@@ -63,8 +119,8 @@
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
                                 <router-link
-                                        :to="{ name : 'transaction-from-chain', params: {blockhash: lease.blockHash, txhash: lease.extrinsicHash}}">
-                                    {{lease.extrinsicHash}}
+                                        :to="{ name : 'transaction-from-chain', params: {blockhash: asset.blockHash, txhash: asset.extrinsicHash}}">
+                                    {{asset.extrinsicHash}}
                                 </router-link>
                             </dd>
                         </div>
@@ -73,67 +129,38 @@
                 </template>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lessor</dt>
+                        <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessor) }}">
-                            <Blockie :address="lease.lessor" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{lease.lessor | did}}</dd>
-                        </router-link>
+                        <dd class="mb-1">{{asset.timestamp | from_ms}}</dd>
                     </div>
                 </dl>
                 <hr/>
-                <dl class="row mb-0">
+                <dl class="row mb-0" v-if="asset && asset.properties.length>0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lessee</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessee) }}">
-                            <Blockie :address="lease.lessee" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{lease.lessee | did}}</dd>
-                        </router-link>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective From</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.effective_ts | date}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective To</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.expiry_ts | date}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0" v-if="lease && lease.allocations.length>0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Allocations</dt>
+                        <dt>Properties</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th class="p-2 font-bold">Asset</th>
-                                    <th class="p-2 font-bold">Allocated Shares</th>
+                                    <th class="p-2 font-bold">Name</th>
+                                    <th class="p-2 font-bold">Fact</th>
                                 </tr>
-                                <tr v-for="prop in lease.allocations">
-                                    <td class="p-2">
-                                        <router-link :to="{name: 'asset',params: { assetid: prop.asset_id }}">
-                                            {{prop.asset_id}}
-                                        </router-link>
-                                    </td>
-                                    <td class="p-2">{{prop.allocated_shares}}</td>
+                                <tr v-for="prop in asset.properties">
+                                    <td class="p-2">{{prop.name}}</td>
+                                    <td class="p-2">{{prop.fact.Text}}</td>
                                 </tr>
                             </table>
                         </dd>
+                    </div>
+                </dl>
+                <dl class="row mb-0" v-else>
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Properties</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <h5 class="text-muted">No records found</h5>
                     </div>
                 </dl>
             </div>
@@ -142,10 +169,10 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Lease Activities</h4>
+                    <h4>Asset Activities</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
                 </div>
             </div>
 
@@ -164,11 +191,13 @@
                         <tbody>
                         <tr v-for="(activity,i) in activities">
                             <td>{{i+1 }}</td>
-                            <td>{{activity.method.method}}</td>
+                            <td>{{activity.method.args[1].method ? activity.method.args[1].method :
+                                activity.method.method}}
+                            </td>
                             <td>
                                 <router-link
                                         :title="activity.hash"
-                                        :to="{ name: 'transaction-from-chain', params: { blockhashornumber: lease.blockNumber, txhash: activity.hash }}">
+                                        :to="{ name: 'transaction-from-chain', params: { blockhashornumber: asset.blockNumber, txhash: activity.hash}}">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>
                             </td>
@@ -196,9 +225,9 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                        Fetching asset, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound :module-id="leaseid" module="Lease" v-if="flag === 'FAILURE'"/>
+                    <NotFound :module-id="assetid" module="Asset Asset" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -212,12 +241,12 @@
     import NotFound from "../../common/NotFound";
 
     export default {
-        name: "Lease",
-        props: ["leaseid", "hideChainDetails"],
+        name: "Asset",
+        props: ["assetid", "hideChainDetails"],
         components: {Blockie, NotFound},
         data() {
             return {
-                lease: null,
+                asset: null,
                 activities: [],
                 show: false,
                 flag: 'SEARCHING'
@@ -229,16 +258,16 @@
         },
         methods: {
             async init() {
-                await this.getLease();
-                await this.getLeaseActivities();
+                await this.getAsset();
+                await this.getAssetActivities();
             },
-            async getLease() {
-                if (this.leaseid !== null) {
+            async getAsset() {
+                if (this.assetid !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply = await this.$http.get(`assetregistry/leases/${this.leaseid}`);
-                        this.lease = reply.data;
-                        if (this.lease) {
+                        let reply = await this.$http.get(`assetregistry/assets/${this.assetid}`);
+                        this.asset = reply.data;
+                        if (this.asset) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
@@ -250,10 +279,10 @@
                     }
                 }
             },
-            async getLeaseActivities() {
-                if (this.lease) {
+            async getAssetActivities() {
+                if (this.asset) {
                     try {
-                        let reply = await this.$http.get(`assetregistry/leases/${this.leaseid}/activities`);
+                        let reply = await this.$http.get(`assetregistry/assets/${this.assetid}/activities`);
                         this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
                     } catch (e) {
 

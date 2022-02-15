@@ -9,7 +9,7 @@
                             <input aria-describedby="button-header-search" autocomplete="off" autofocus=""
                                    class="form-control form-control--focus-white searchautocomplete ui-autocomplete-input"
                                    id="searchCriteria" name="searchCriteria"
-                                   placeholder="Search by Block Number / Txhash / Lease / Catalog / DID / Audit / Provenance / Account / Group / Proposal / Event"
+                                   placeholder="Search by Block Number / Txhash / Registry / Asset / Lease / Catalog / DID / Audit / Provenance / Account / Group / Proposal / Event"
                                    type="text" v-model="searchCriteria">
                             <div class="input-group-append" v-if="searchResult">
                                 <button @click="clear" class="btn btn-orange text-white font-weight-bold" type="submit">
@@ -47,9 +47,7 @@
                                     <th class="border-0 font-weight-bold">Number</th>
                                     <th class="border-0 font-weight-bold">Age</th>
                                     <th class="border-0 font-weight-bold">Transactions</th>
-                                    <!--                                    <th class="border-0 font-weight-bold">Inherents</th>-->
                                     <th class="border-0 font-weight-bold">Events</th>
-                                    <!--                                    <th class="border-0 font-weight-bold">Logs</th>-->
                                     <th class="border-0"></th>
                                 </tr>
                                 </thead>
@@ -71,15 +69,9 @@
                                     <td>
                                         {{block.transactions.length}}
                                     </td>
-                                    <!--                                    <td>-->
-                                    <!--                                        {{block.inherents.length}}-->
-                                    <!--                                    </td>-->
                                     <td>
                                         {{block.events.length}}
                                     </td>
-                                    <!--                                    <td>-->
-                                    <!--                                        {{block.logs.length}}-->
-                                    <!--                                    </td>-->
                                     <td class="text-right">
                                         <router-link :to="{name: 'block', params: {number: block.number}}"
                                                      class="btn btn-sm btn-orange text-white">
@@ -195,7 +187,7 @@
                     && searchResult.leases.length === 0 && searchResult.inherents.length === 0
                     && searchResult.events.length === 0 && searchResult.logs.length === 0
                     && searchResult.identities.length === 0 && searchResult.sequences.length === 0 && searchResult.address.length === 0 && searchResult.audits.length === 0
-                    && searchResult.groups.length === 0 && searchResult.proposals.length === 0 && searchResult.catalogs.length === 0">
+                    && searchResult.groups.length === 0 && searchResult.proposals.length === 0 && searchResult.catalogs.length === 0 && searchResult.asset_registries.length === 0 && searchResult.assets.length === 0">
                         <div class="row justify-content-center">
                             <div class="col-md-12 text-center text-muted">
                                 <span class="display-1 d-block">
@@ -246,16 +238,31 @@
                                 </tr>
                                 <tr v-for="lease in searchResult.leases">
                                     <td>
-                                        <router-link :to="{ name : 'lease' , params: { leaseid: lease.lease_id }}">
-                                            <h4>Lease: {{lease.lease_id}}</h4>
+                                        <router-link :to="{ name : 'lease' , params: { leaseid: lease.id }}">
+                                            <h4>Lease: {{lease.id}}</h4>
                                             <small class="text-secondary">
-                                                <span class="font-weight-bold">Block :</span> {{lease.blockNumber}} |
-                                                <span class="font-weight-bold">Contract No :</span>
-                                                {{lease.contract_number}} |
-                                                <span class="font-weight-bold">Registry Id :</span>
-                                                {{lease.allocations[0].registry_id}} |
-                                                <span class="font-weight-bold">Asset Id :</span>
-                                                {{lease.allocations[0].asset_id}} |
+                                                <span class="font-weight-bold">Block :</span> {{lease.blockNumber}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="registry in searchResult.asset_registries">
+                                    <td>
+                                        <router-link :to="{ name : 'asset-registry' , params: { registryid: registry.id }}">
+                                            <h4>Asset Registry: {{registry.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{registry.blockNumber}}
+                                            </small>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                                <tr v-for="asset in searchResult.assets">
+                                    <td>
+                                        <router-link :to="{ name : 'asset' , params: { assetid: asset.id }}">
+                                            <h4>Asset: {{asset.id}}</h4>
+                                            <small class="text-secondary">
+                                                <span class="font-weight-bold">Block :</span> {{asset.blockNumber}} |
+                                                <span class="font-weight-bold">Reistry :</span> {{asset.registry_id}}
                                             </small>
                                         </router-link>
                                     </td>

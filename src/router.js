@@ -125,11 +125,23 @@ export default new VueRouter({
                     ]
                 },
                 {
-                    path: 'lease',
+                    path: 'assetregistry',
                     component: resolve => require(["@/components/objects/AssetRegistry/Layout.vue"], resolve),
                     children: [
                         {
-                            path: ":leaseid",
+                            path: "registries/:registryid",
+                            name: "asset-registry",
+                            props: true,
+                            component: resolve => require(["@/components/objects/AssetRegistry/Registry.vue"], resolve),
+                        },
+                        {
+                            path: "assets/:assetid",
+                            name: "asset",
+                            props: true,
+                            component: resolve => require(["@/components/objects/AssetRegistry/Asset.vue"], resolve),
+                        },
+                        {
+                            path: "leases/:leaseid",
                             name: "lease",
                             props: true,
                             component: resolve => require(["@/components/objects/AssetRegistry/Lease.vue"], resolve),

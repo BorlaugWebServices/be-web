@@ -3,29 +3,20 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Lease</h4>
+                    <h4>Registry</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
                 </div>
             </div>
 
             <div class="card-body mg-b-20 p-t-0">
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lease Id</dt>
+                        <dt>Registry Id</dt>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.id}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Contract Number</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.contract_number | hexToString}}</dd>
+                    <div class="col-sm-9 text-sm-left" v-if="show">
+                        <dd class="mb-1">{{registry.id}}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -36,9 +27,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
-                                    {{lease.blockNumber}}
-                                </router-link>
+                                <router-link :to="{ name : 'block', params: {number: registry.blockNumber}}">{{registry.blockNumber}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -49,9 +38,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
-                                    {{lease.blockHash}}
-                                </router-link>
+                                <router-link :to="{ name : 'block', params: {number: registry.blockNumber}}">{{registry.blockHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -62,10 +49,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <router-link
-                                        :to="{ name : 'transaction-from-chain', params: {blockhash: lease.blockHash, txhash: lease.extrinsicHash}}">
-                                    {{lease.extrinsicHash}}
-                                </router-link>
+                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: registry.blockHash, txhash: registry.extrinsicHash}}">{{registry.extrinsicHash}}</router-link>
                             </dd>
                         </div>
                     </dl>
@@ -73,67 +57,25 @@
                 </template>
                 <dl class="row mb-0">
                     <div class="col-sm-2 text-sm-right">
-                        <dt>Lessor</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessor) }}">
-                            <Blockie :address="lease.lessor" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{lease.lessor | did}}</dd>
-                        </router-link>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Lessee</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessee) }}">
-                            <Blockie :address="lease.lessee" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{lease.lessee | did}}</dd>
-                        </router-link>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective From</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.effective_ts | date}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective To</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.expiry_ts | date}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0" v-if="lease && lease.allocations.length>0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Allocations</dt>
+                        <dt>Registry Owner</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th class="p-2 font-bold">Asset</th>
-                                    <th class="p-2 font-bold">Allocated Shares</th>
-                                </tr>
-                                <tr v-for="prop in lease.allocations">
-                                    <td class="p-2">
-                                        <router-link :to="{name: 'asset',params: { assetid: prop.asset_id }}">
-                                            {{prop.asset_id}}
-                                        </router-link>
-                                    </td>
-                                    <td class="p-2">{{prop.allocated_shares}}</td>
-                                </tr>
-                            </table>
+                            <Blockie :address="registry.owner" class="mm-5-0-5-0"/>
+                            <span :title="registry.caller" class="m-l-5 align-middle">
+                                <router-link :to="{ name : 'identity' , params: { did: 'did:bws:' + registry.owner.substring(2, registry.owner.length) }}">
+                                    {{ registry.owner | did }}</router-link>
+                            </span>
                         </dd>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-2 text-sm-right">
+                        <dt>Created at</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <dd class="mb-1">{{registry.timestamp | from_ms}}</dd>
                     </div>
                 </dl>
             </div>
@@ -142,10 +84,10 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Lease Activities</h4>
+                    <h4>Registry Activities</h4>
                 </div>
                 <div class="card-header-icon">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                    <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
                 </div>
             </div>
 
@@ -164,11 +106,10 @@
                         <tbody>
                         <tr v-for="(activity,i) in activities">
                             <td>{{i+1 }}</td>
-                            <td>{{activity.method.method}}</td>
+                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
                             <td>
-                                <router-link
-                                        :title="activity.hash"
-                                        :to="{ name: 'transaction-from-chain', params: { blockhashornumber: lease.blockNumber, txhash: activity.hash }}">
+                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: registry.blockNumber, txhash: activity.hash}}"
+                                             :title="activity.hash">
                                     {{activity.hash | truncate(32, '')}}
                                 </router-link>
                             </td>
@@ -196,9 +137,9 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                        Fetching registry, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
                     </h4>
-                    <NotFound :module-id="leaseid" module="Lease" v-if="flag === 'FAILURE'"/>
+                    <NotFound module="Asset Registry" :module-id="registryid" v-if="flag === 'FAILURE'"/>
                 </div>
             </div>
         </div>
@@ -210,14 +151,14 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie";
     import NotFound from "../../common/NotFound";
-
+    
     export default {
-        name: "Lease",
-        props: ["leaseid", "hideChainDetails"],
+        name: "Registry",
+        props: ["registryid", "hideChainDetails"],
         components: {Blockie, NotFound},
         data() {
             return {
-                lease: null,
+                registry: null,
                 activities: [],
                 show: false,
                 flag: 'SEARCHING'
@@ -229,33 +170,33 @@
         },
         methods: {
             async init() {
-                await this.getLease();
-                await this.getLeaseActivities();
+                await this.getRegistry();
+                await this.getRegistryActivities();
             },
-            async getLease() {
-                if (this.leaseid !== null) {
+            async getRegistry() {
+                if(this.registryid !== null) {
                     try {
                         EventBus.$emit('show');
-                        let reply = await this.$http.get(`assetregistry/leases/${this.leaseid}`);
-                        this.lease = reply.data;
-                        if (this.lease) {
+                        let reply  = await this.$http.get(`assetregistry/registries/${this.registryid}`);
+                        this.registry = reply.data;
+                        if(this.registry) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
                         }
-                    } catch (e) {
+                    } catch(e) {
                         this.flag = 'FAILURE';
                     } finally {
                         EventBus.$emit('hide');
                     }
                 }
             },
-            async getLeaseActivities() {
-                if (this.lease) {
+            async getRegistryActivities() {
+                if(this.registry) {
                     try {
-                        let reply = await this.$http.get(`assetregistry/leases/${this.leaseid}/activities`);
+                        let reply       = await this.$http.get(`assetregistry/registries/${this.registryid}/activities`);
                         this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
-                    } catch (e) {
+                    } catch(e) {
 
                     } finally {
 
@@ -264,7 +205,7 @@
             },
             toDateString(str) {
                 let seconds = Number(str.replace(/,/g, ''));
-                let d = new Date(0);
+                let d       = new Date(0);
                 d.setSeconds(seconds);
                 return d;
             },
