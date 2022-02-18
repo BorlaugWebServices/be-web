@@ -248,7 +248,8 @@
                                 </tr>
                                 <tr v-for="registry in searchResult.asset_registries">
                                     <td>
-                                        <router-link :to="{ name : 'asset-registry' , params: { registryid: registry.id }}">
+                                        <router-link
+                                                :to="{ name : 'asset-registry' , params: { registryid: registry.id }}">
                                             <h4>Asset Registry: {{registry.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{registry.blockNumber}}
@@ -298,7 +299,8 @@
                                             <h4>Inherent: {{inherent.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{inherent.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{inherent.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{inherent.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -309,7 +311,8 @@
                                             <h4>Event: {{event.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{event.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{event.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{event.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -320,7 +323,8 @@
                                             <h4>Log: {{log.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{log.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{log.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{log.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -333,7 +337,8 @@
                                                 <span class="font-weight-bold">Registry :</span> {{sequence.registry}} |
                                                 <span class="font-weight-bold">Template :</span> {{sequence.template}} |
                                                 <span class="font-weight-bold">Block :</span> {{sequence.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{sequence.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{sequence.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -343,9 +348,11 @@
                                         <router-link :to="{ name : 'group' , params: { groupid: group.id }}">
                                             <h4>Group: {{group.id}}</h4>
                                             <small class="text-secondary">
-                                                <span class="font-weight-bold">Group Creator :</span> {{group.group_creator}} |
+                                                <span class="font-weight-bold">Group Creator :</span>
+                                                {{group.group_creator}} |
                                                 <span class="font-weight-bold">Block :</span> {{group.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{group.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{group.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -357,7 +364,8 @@
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Proposer :</span> {{proposal.proposer}} |
                                                 <span class="font-weight-bold">Block :</span> {{proposal.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{proposal.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{proposal.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -368,9 +376,11 @@
                                             <h4>Catalog: {{catalog.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Creator :</span> {{catalog.caller}} |
-                                                <span class="font-weight-bold">Controller :</span> {{catalog.controller}} |
+                                                <span class="font-weight-bold">Controller :</span>
+                                                {{catalog.controller}} |
                                                 <span class="font-weight-bold">Block :</span> {{catalog.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{catalog.timestamp | from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{catalog.timestamp |
+                                                from_ms}}
                                             </small>
                                         </router-link>
                                     </td>
@@ -389,6 +399,7 @@
     import EventBus from "../event-bus";
     import io from 'socket.io-client';
     import Age from "./common/Age";
+    import * as fromNow from "from-now";
 
     export default {
         name: "Home",
@@ -403,10 +414,18 @@
                 latestBlockTime: '',
                 lastSyncedBlock: null,
                 latestTxnTime: '',
-                lastSyncedTxn: null
+                lastSyncedTxn: null,
+                timestamp: null,
+                alert_sent: false,
+                counter: 0
             };
         },
         watch: {
+            counter: async function (nv, ov) {
+                if (nv !== ov && nv === 1) {
+                    await this.sendAlert(nv);
+                }
+            },
             lastSyncedBlock: function (nv, ov) {
                 if (nv !== ov) {
                     if (ov) {
@@ -441,20 +460,36 @@
         },
         mounted() {
             window.onbeforeunload = function (event) {
-                // console.log("Disconnecting socket on page refresh or close");
                 if (this.socket) {
                     this.socket.disconnect();
                 }
             };
             this.init();
+            let self = this;
+            setInterval(() => {
+                let age = fromNow(Number(this.latestBlockTime));
+                if (age.indexOf('minutes') !== -1) {
+                    let from_now = Number(age.replace(/[^0-9]/g, ''));
+                    if (from_now > 10) {
+                        ++self.counter;
+                    } else {
+                        self.counter = 0;
+                    }
+                }
+            }, 600000);
         },
         destroyed() {
-            // console.log("Disconnecting socket on destroy");
             if (this.socket) {
                 this.socket.disconnect();
             }
         },
         methods: {
+            async sendAlert() {
+                try {
+                    await this.$http.post(`email/chainalert`);
+                } catch (e) {
+                }
+            },
             async init() {
                 try {
                     EventBus.$emit('show');
@@ -462,13 +497,8 @@
                         this.getRecentBlocks(),
                         this.getRecentTxns()
                     ])
-                    // await this.getRecentBlocks();
-                    // await this.getRecentTxns();
-
                     this.socket = await io(process.env.VUE_APP_AZTEC_API_URL);
-
                     this.socket.on('connect', () => {
-                        //console.log("Socket connection established");
                         this.getLatestBlocks();
                         this.getLatestTxns();
                     });
