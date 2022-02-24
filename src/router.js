@@ -201,10 +201,22 @@ export default new VueRouter({
                     component: resolve => require(["@/components/objects/Provenance/Layout.vue"], resolve),
                     children: [
                         {
-                            path: ":processid",
+                            path: "process/:processid",
                             name: "process",
                             props: true,
                             component: resolve => require(["@/components/objects/Provenance/Process.vue"], resolve),
+                        },
+                        {
+                            path: "registries/:registryid",
+                            name: "registry",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Provenance/Registry.vue"], resolve),
+                        },
+                        {
+                            path: "definitions/:definitionid",
+                            name: "definition",
+                            props: true,
+                            component: resolve => require(["@/components/objects/Provenance/ProcessDefinition.vue"], resolve),
                         }
                     ]
                 },
