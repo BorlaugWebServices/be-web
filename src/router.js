@@ -45,6 +45,12 @@ export default new VueRouter({
                             name: "block",
                             props: true,
                             component: resolve => require(["@/components/blocks/Block.vue"], resolve),
+                        },
+                        {
+                            path: ":number/sync",
+                            name: "sync-block",
+                            props: true,
+                            component: resolve => require(["@/components/blocks/SyncBlock.vue"], resolve),
                         }
                     ]
                 },
