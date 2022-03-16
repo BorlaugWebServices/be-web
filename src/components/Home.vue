@@ -516,13 +516,14 @@
                 let age = fromNow(Number(this.latestBlockTime));
                 if (age.indexOf('minutes') !== -1) {
                     let from_now = Number(age.replace(/[^0-9]/g, ''));
+                    console.log(from_now)
                     if (from_now > 10) {
                         ++self.counter;
                     } else {
                         self.counter = 0;
                     }
                 }
-            }, 600000);
+            }, 1000);
         },
         destroyed() {
             if (this.socket) {
