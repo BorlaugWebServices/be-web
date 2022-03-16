@@ -513,6 +513,7 @@
             this.init();
             let self = this;
             setInterval(() => {
+                console.log(new Date(this.latestBlockTime))
                 let age = fromNow(Number(this.latestBlockTime));
                 if (age.indexOf('minutes') !== -1) {
                     let from_now = Number(age.replace(/[^0-9]/g, ''));
@@ -523,7 +524,7 @@
                         self.counter = 0;
                     }
                 }
-            }, 1000);
+            }, 5000);
         },
         destroyed() {
             if (this.socket) {
