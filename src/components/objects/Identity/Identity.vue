@@ -97,7 +97,8 @@
                                 </tr>
                                 <tr v-for="prop in identity.properties">
                                     <td class="p-2">{{prop.name}}</td>
-                                    <td class="p-2">{{prop.fact}}</td>
+                                    <td class="p-2" v-if="typeof prop.fact === 'object'">{{prop.fact | formatDate}}</td>
+                                    <td class="p-2" v-else>{{prop.fact}}</td>
                                 </tr>
                             </table>
                         </dd>
@@ -123,7 +124,8 @@
                                         </tr>
                                         <tr v-for="st    in identity.claims[claimIndex].statements">
                                             <td class="p-2">{{st.name}}</td>
-                                            <td class="p-2">{{st.fact}}</td>
+                                            <td class="p-2"  v-if="typeof st.fact === 'object'">{{st.fact | formatDate}}</td>
+                                            <td class="p-2" v-else>{{st.fact}}</td>
                                         </tr>
                                     </table>
                                 </dd>
