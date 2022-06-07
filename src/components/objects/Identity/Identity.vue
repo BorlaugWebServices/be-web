@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Identity</h4>
+                    <h4>Identifier</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-id-card card-title text-orange"/></h3>
