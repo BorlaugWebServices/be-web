@@ -9,7 +9,7 @@
                     <p>Effective as of March 1, 2019</p>
 
                     <p>Welcome to the Borlaug’s Terms of Use agreement. For purposes of this agreement, "Site" refers to the Company’s website, which can be accessed at <a
-                            href="https://www.borlaug.network">https://www.borlaug.network</a>. "Service" refers to the Company’s services accessed via the Site. The terms "we," "us," and "our" refer
+                            href="https://www.borlaug.ws/">https://www.borlaug.ws/</a>. "Service" refers to the Company’s services accessed via the Site. The terms "we," "us," and "our" refer
                         to the Company. "You" refers to you, as a user of our Site or our Service.</p>
 
                     <p>Please review the following terms carefully. By accessing or using the Service, you signify your agreement to these Terms of Use. If you do not agree to be bound by these Terms

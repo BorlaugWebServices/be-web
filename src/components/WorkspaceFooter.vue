@@ -20,7 +20,7 @@
             <div class="col-6 col-md">
                 <h5>Resources</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Documentation</a></li>
+                    <li><a class="text-muted" href="https://www.borlaug.ws/bws-sales-private" target="_blank">Documentation</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md">

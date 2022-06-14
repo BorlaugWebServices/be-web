@@ -9,7 +9,7 @@
                     <p>Borlaug Web Services (the "Company") is committed to maintaining robust privacy protections for its users. Our Privacy Policy ("Privacy Policy") is designed to help you understand how we
                         collect, use and safeguard the information you provide to us and to assist you in making informed decisions when using our Service.</p>
 
-                    <p>For purposes of this Agreement, "Site" refers to the Company’s website, which can be accessed at <a href="https://www.borlaug.network">https://www.borlaug.network</a></p>
+                    <p>For purposes of this Agreement, "Site" refers to the Company’s website, which can be accessed at <a href="https://www.borlaug.ws/">https://www.borlaug.ws/</a></p>
                     <p>The terms "we," "us," and "our" refer to the Company.</p>
                     <p>"You" refers to you, as a user of our Site or our Service.</p>
                     <p>By accessing our Site or our Service, you accept our Privacy Policy and <a href="/terms">Terms of Use</a>, and you consent to our collection, storage, use and disclosure of your
