@@ -8,13 +8,13 @@
             <div class="col-6 col-md">
                 <h5>About Us</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="https://www.qlikchain.com/" target="_blank">Company</a></li>
+                    <li><a class="text-muted" href="https://www.borlaug.ws/" target="_blank">Company</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md">
-                <h5>About Borlaug</h5>
+                <h5>Contact Us</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="/stakeholders">Stakeholders</a></li>
+                    <li><a class="text-muted" href="javascript:void(0)">info@borlaug.ws</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md">

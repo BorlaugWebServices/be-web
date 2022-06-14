@@ -6,7 +6,7 @@
                     <h4 class="card-title">Privacy Policy</h4>
                 </div>
                 <div class="card-body">
-                    <p>Qlikchain (the "Company") is committed to maintaining robust privacy protections for its users. Our Privacy Policy ("Privacy Policy") is designed to help you understand how we
+                    <p>Borlaug Web Services (the "Company") is committed to maintaining robust privacy protections for its users. Our Privacy Policy ("Privacy Policy") is designed to help you understand how we
                         collect, use and safeguard the information you provide to us and to assist you in making informed decisions when using our Service.</p>
 
                     <p>For purposes of this Agreement, "Site" refers to the Company’s website, which can be accessed at <a href="https://www.borlaug.network">https://www.borlaug.network</a></p>
@@ -45,7 +45,7 @@
                             <p>The Site and the Service are not directed to anyone under the age of 13. The Site does not knowingly collect or solicit information from anyone under the age of 13, or
                                 allow anyone under the age of 13 to sign up for the Service. In the event that we learn that we have gathered personal information from anyone under the age of 13
                                 without the consent of a parent or guardian, we will delete that information as soon as possible. If you believe we have collected such information, please contact us
-                                at info@qlikchain.com.</p>
+                                at info@borlaug.ws.</p>
                         </li>
                     </ol>
 
@@ -89,7 +89,7 @@
                     <ul>
                         <li>unsubscribing from the mailing list;</li>
                         <li>editing the relevant account settings to unsubscribe; or</li>
-                        <li>sending a request to info@qlikchain.com</li>
+                        <li>sending a request to info@borlaug.ws</li>
                     </ul>
 
                     <h6>V. LINKS TO OTHER WEBSITES</h6>
@@ -108,7 +108,7 @@
 
                     <h6>VII. CONTACT US</h6>
 
-                    <p>If you have any questions regarding this Privacy Policy or the practices of this Site, please contact us by sending an email to info@qlikchain.com.</p>
+                    <p>If you have any questions regarding this Privacy Policy or the practices of this Site, please contact us by sending an email to info@borlaug.ws.</p>
                     <p>Last Updated: This Privacy Policy was last updated on April 3, 2019.</p>
                 </div>
             </div>

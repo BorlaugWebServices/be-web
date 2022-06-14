@@ -117,8 +117,8 @@
                         agreements, notices, disclosures, and other communications that we provide to you electronically satisfy any legal requirement that such communications would satisfy if it were
                         in writing. The foregoing does not affect your non-waivable rights.</p>
 
-                    <p>We may also use your email address to send you other messages, including information about the Site or the Service and special offers. You may opt out of such email by changing
-                        your account settings, using the "Unsubscribe" link in the message, or by sending an email to unsubscribe@qlikchain.com.</p>
+<!--                    <p>We may also use your email address to send you other messages, including information about the Site or the Service and special offers. You may opt out of such email by changing-->
+<!--                        your account settings, using the "Unsubscribe" link in the message, or by sending an email to unsubscribe@qlikchain.com.</p>-->
 
                     <p>Opting out may prevent you from receiving messages regarding the Site, the Service or special offers.</p>
 
