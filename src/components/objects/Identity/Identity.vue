@@ -98,6 +98,9 @@
                                 <tr v-for="prop in identity.properties">
                                     <td class="p-2">{{prop.name}}</td>
                                     <td class="p-2" v-if="typeof prop.fact === 'object'">{{prop.fact | formatDate}}</td>
+                                    <td class="p-2" v-else-if="isUrl(prop.fact)">
+                                        <a target="_blank" v-bind:href="prop.fact">Click here....</a>
+                                    </td>
                                     <td class="p-2" v-else>{{prop.fact}}</td>
                                 </tr>
                             </table>
@@ -125,6 +128,9 @@
                                         <tr v-for="st    in identity.claims[claimIndex].statements">
                                             <td class="p-2">{{st.name}}</td>
                                             <td class="p-2"  v-if="typeof st.fact === 'object'">{{st.fact | formatDate}}</td>
+                                            <td class="p-2" v-else-if="isUrl(st.fact)">
+                                                <a target="_blank" v-bind:href="st.fact">Click here....</a>
+                                            </td>
                                             <td class="p-2" v-else>{{st.fact}}</td>
                                         </tr>
                                     </table>
@@ -267,6 +273,10 @@
             this.init();
         },
         methods: {
+            isUrl(value) {
+                let r = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
+                return r.test(value);
+            },
             async init() {
                 await this.getIdentity();
                 window.scrollTo(0, 0);

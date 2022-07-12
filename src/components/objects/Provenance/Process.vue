@@ -143,7 +143,10 @@
                                                 </tr>
                                                 <tr v-for="att in step.attributes">
                                                     <td class="p-2">{{att.name | hexcheck}}</td>
-                                                    <td class="p-2">{{att.fact | fact}}</td>
+                                                    <td class="p-2" v-if="att.fact && att.fact.Text && isUrl(att.fact.Text)">
+                                                        <a target="_blank" v-bind:href="att.fact.Text">Click here....</a>
+                                                    </td>
+                                                    <td class="p-2" v-else>{{att.fact | fact}}</td>
                                                 </tr>
                                             </table>
                                             <h5 class="mt-2">Attested By {{step.attestor.short_name}}</h5>
@@ -267,6 +270,10 @@
             this.init();
         },
         methods: {
+            isUrl(value) {
+                let r = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
+                return r.test(value);
+            },
             async init() {
                 await this.getProvenace();
                 await this.getProvenaceActivities();
