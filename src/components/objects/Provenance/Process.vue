@@ -144,7 +144,7 @@
                                                 <tr v-for="att in step.attributes">
                                                     <td class="p-2">{{att.name | hexcheck}}</td>
                                                     <td class="p-2" v-if="att.fact && att.fact.Text && isUrl(att.fact.Text)">
-                                                        <a target="_blank" v-bind:href="att.fact.Text">Click here....</a>
+                                                        <a target="_blank" v-bind:href="att.fact.Text">View Details</a>
                                                     </td>
                                                     <td class="p-2" v-else>{{att.fact | fact}}</td>
                                                 </tr>
