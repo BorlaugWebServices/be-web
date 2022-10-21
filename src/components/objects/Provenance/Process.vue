@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
                 <div class="card-header-title">
-                    <h4>Provenance</h4>
+                    <h4>Chain of Custody</h4>
                 </div>
                 <div class="card-header-icon">
                     <h3><i class="fas fa-route card-title text-orange"/></h3>
