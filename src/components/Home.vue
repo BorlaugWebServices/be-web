@@ -231,7 +231,7 @@
                                 </tr>
                                 <tr v-for="txn in searchResult.txns">
                                     <td>
-                                        <router-link :to="{ name : 'transaction-from-chain' , params: { blockhash: block.hash, txhash: txn.hash }}">
+                                        <router-link :to="{ name : 'transaction-from-chain' , params: { blockhashornumber: txn.blockNumber, txhash: txn.hash }}">
                                             <h4>Transaction: {{txn.hash}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{txn.blockNumber}} |
