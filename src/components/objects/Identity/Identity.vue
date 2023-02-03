@@ -101,7 +101,7 @@
                                     <td class="p-2" v-else-if="isUrl(prop.fact)">
                                         <a target="_blank" v-bind:href="prop.fact">View Details</a>
                                     </td>
-                                    <td class="p-2" v-else>{{prop.fact}}</td>
+                                    <td class="p-2" v-else :title="prop.fact">{{prop.fact | hex_format(30, '......................')}}</td>
                                 </tr>
                             </table>
                         </dd>

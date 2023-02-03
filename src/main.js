@@ -75,6 +75,15 @@ Vue.filter('truncate', function(text, length, suffix) {
     if(text.length <= length) return text;
     return text.substring(0, length) + suffix;
 });
+
+Vue.filter('hex_format', function (text, length, suffix) {
+    console.log(text.length)
+    if (text.length <= length) return text;
+    else if (typeof text === 'string')
+    return text.substring(0, length) + suffix + text.substring(text.length - length);
+    else return text;
+});
+
 Vue.filter('did', function(didString) {
     if(!didString) {
         return '';
