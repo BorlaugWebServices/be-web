@@ -137,7 +137,7 @@
                                 <dt>Description :</dt>
                                 <dd>{{identity.claims[claimIndex].description}}</dd>
 
-                                <dt>Statments :</dt>
+                                <dt>Statements :</dt>
                                 <dd>
                                     <table class="table table-bordered">
                                         <tr>
@@ -153,17 +153,17 @@
 
                                 <dt class="m-b-5">Created By :</dt>
                                 <dd class="mb-3">
-                                    <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].created_by.id) }}">
-                                        <Blockie :address="identity.claims[claimIndex].created_by.id"/>
-                                        {{identity.claims[claimIndex].created_by.id | did }}
+                                    <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].created_by) }}">
+                                        <Blockie :address="identity.claims[claimIndex].created_by"/>
+                                        {{identity.claims[claimIndex].created_by | did }}
                                     </router-link>
                                 </dd>
 
                                 <dt class="m-b-5">Attested By :</dt>
                                 <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
-                                    <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].attestation.attested_by.id) }}">
-                                        <Blockie :address="identity.claims[claimIndex].attestation.attested_by.id" class=""/>
-                                        {{identity.claims[claimIndex].attestation.attested_by.id | did }}
+                                    <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].attestation.attested_by) }}">
+                                        <Blockie :address="identity.claims[claimIndex].attestation.attested_by" class=""/>
+                                        {{identity.claims[claimIndex].attestation.attested_by | did }}
                                     </router-link>
                                 </dd>
                                 <dd class="mb-3" v-else>
