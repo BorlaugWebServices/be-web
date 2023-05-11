@@ -343,6 +343,7 @@
     import EventBus from "../event-bus";
     import io from 'socket.io-client';
     import Age from "./common/Age";
+    import * as fromNow from "from-now";
 
     export default {
         name: "Home",
@@ -357,10 +358,18 @@
                 latestBlockTime: '',
                 lastSyncedBlock: null,
                 latestTxnTime: '',
-                lastSyncedTxn: null
+                lastSyncedTxn: null,
+                timestamp: null,
+                alert_sent: false,
+                counter: 0
             };
         },
         watch: {
+            counter: async function (nv, ov) {
+                if (nv !== ov && nv === 1) {
+                    await this.sendAlert(nv);
+                }
+            },
             lastSyncedBlock: function (nv, ov) {
                 if (nv !== ov) {
                     if (ov) {
@@ -401,6 +410,20 @@
                 }
             };
             this.init();
+            let self = this;
+            setInterval(() => {
+                console.log(new Date(this.latestBlockTime))
+                let age = fromNow(Number(this.latestBlockTime));
+                if (age.indexOf('minutes') !== -1) {
+                    let from_now = Number(age.replace(/[^0-9]/g, ''));
+                    console.log(from_now)
+                    if (from_now > 5) {
+                        ++self.counter;
+                    } else {
+                        self.counter = 0;
+                    }
+                }
+            }, 5000);
         },
         destroyed() {
             // console.log("Disconnecting socket on destroy");
@@ -409,6 +432,12 @@
             }
         },
         methods: {
+            async sendAlert() {
+                try {
+                    await this.$http.post(`email/chainalert`);
+                } catch (e) {
+                }
+            },
             async init() {
                 try {
                     EventBus.$emit('show');
