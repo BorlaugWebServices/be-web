@@ -287,12 +287,18 @@
                         EventBus.$emit('show');
                         let reply     = await this.$http.get(`/sequences/${this.processid}`);
                         this.sequence = reply.data;
+                        this.sequence.steps = this.sequence.steps.map(step=> ({
+                          ...step,
+                          attributes: step.attributes ? step.attributes.sort((a,b)=> a.name.localeCompare(b.name)) : []
+                        }))
+                      console.log(this.sequence)
                         if(this.sequence) {
                             this.flag = 'SUCCESS';
                         } else {
                             this.flag = 'FAILURE';
                         }
                     } catch(e) {
+                      console.log(e)
                         this.flag = 'FAILURE';
                     } finally {
                         EventBus.$emit('hide');
