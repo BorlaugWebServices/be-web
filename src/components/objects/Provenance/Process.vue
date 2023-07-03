@@ -147,7 +147,7 @@
                                                         <a target="_blank" v-bind:href="att.fact.Text">View Details</a>
                                                     </td>
                                                     <td class="p-2" v-else-if="att.name.indexOf('Sourcemap') !== -1">
-                                                      <a target="_blank" v-bind:href="'https://www.maya.explorer.borlaug.network/provenance/'+att.fact.U128">View Details</a>
+                                                      <a target="_blank" v-bind:href="'https://www.maya.explorer.borlaug.network/provenance/'+att.fact.U128.replaceAll(',', '')">View Details</a>
                                                     </td>
                                                     <td class="p-2" v-else>{{att.fact | fact}}</td>
                                                 </tr>
