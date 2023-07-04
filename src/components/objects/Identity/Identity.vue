@@ -101,6 +101,7 @@
                                     <td class="p-2" v-else-if="isUrl(prop.fact)">
                                         <a target="_blank" v-bind:href="prop.fact">View Details</a>
                                     </td>
+                                    <td class="p-2" v-else-if="typeof prop.fact === 'number'">{{ prop.fact }}</td>
                                     <td class="p-2" v-else :title="prop.fact">{{prop.fact | truncate(60, '....................')}}</td>
                                 </tr>
                             </table>
