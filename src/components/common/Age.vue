@@ -10,14 +10,20 @@
         props: ["timestamp"],
         data() {
             return {
-                age: ''
+                age: '',
+                interval: null
             };
         },
         mounted() {
-            setInterval(() => {
+            this.interval = setInterval(() => {
                 let age  = fromNow(Number(this.timestamp));
                 this.age = age === 'now' ? 'now' : age + ' ago';
             }, 1000);
+        },
+        unmounted() {
+            if (this.interval) {
+                clearInterval(this.interval);
+            }
         }
     }
 </script>

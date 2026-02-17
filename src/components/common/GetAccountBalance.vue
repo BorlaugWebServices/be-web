@@ -1,5 +1,5 @@
 <template>
-    <b>{{balance | formatGRAM}}</b>
+    <b>{{ $filters.formatGRAM(balance) }}</b>
 </template>
 
 <script>
@@ -17,7 +17,7 @@
         methods: {
             async getBalance() {
                 try {
-                    let {data} = await this.$http.get(`/accounts/${this.address}/balance`);
+                    let {data} = await this.axios.get(`/accounts/${this.address}/balance`);
                     this.balance = data;
                 } catch (e) {
 

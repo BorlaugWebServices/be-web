@@ -3,10 +3,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5>Event <span class="fit">{{eventid}}</span></h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fas fa-file-alt card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -69,22 +69,26 @@
                                     <tr v-for="i in event.meta.args.length">
                                         <td>{{event.meta.args[i-1]}}</td>
                                         <td>
-                                            <router-link :to="{name: 'view-account',params: { address: event.event.data[i-1] }}"
-                                                         v-if="event.meta.args[i-1] === 'AccountId'">
-                                                <div class="float-left mr-2">
-                                                    <Blockie :address="event.event.data[i-1]" class="mm-5-0-5-0"/>
-                                                </div>
-                                                <div class="float-left adjust-40">
-                                                    <span :title="event.event.data[i-1]"
-                                                          class="align-middle word-break">{{ event.event.data[i-1] }}</span>
-                                                </div>
-                                            </router-link>
-                                            <router-link :to="{name: 'group', params: {groupid: event.event.data[i-1]}}"
-                                                         v-else-if="event.meta.args[i-1] === 'GroupId'">
-                                                {{event.event.data[i-1]}}
-                                            </router-link>
-                                            <vue-json-pretty :data="event.event.data[i-1]" :path="'res'" v-else>
-                                            </vue-json-pretty>
+                                            <div v-if="event.meta.args[i-1] === 'AccountId'">
+                                                <router-link :to="{name: 'view-account',params: { address: event.event.data[i-1] }}">
+                                                    <div class="float-left mr-2">
+                                                        <Blockie :address="event.event.data[i-1]" class="mm-5-0-5-0"/>
+                                                    </div>
+                                                    <div class="float-left adjust-40">
+                                                        <span :title="event.event.data[i-1]"
+                                                              class="align-middle word-break">{{ event.event.data[i-1] }}</span>
+                                                    </div>
+                                                </router-link>
+                                            </div>
+                                            <div v-else-if="event.meta.args[i-1] === 'GroupId'">
+                                                <router-link :to="{name: 'group', params: {groupid: event.event.data[i-1]}}">
+                                                    {{event.event.data[i-1]}}
+                                                </router-link>
+                                            </div>
+                                            <div v-else>
+                                                <vue-json-pretty :data="event.event.data[i-1]" :path="'res'">
+                                                </vue-json-pretty>
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>
@@ -112,8 +116,8 @@
 <script>
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
-    import NotFound from "../common/NotFound";
-    import Blockie from "../common/Blockie";
+    import NotFound from "../common/NotFound.vue";
+    import Blockie from "../common/Blockie.vue";
 
     export default {
         name: "Lease",
@@ -132,8 +136,8 @@
         methods: {
             async getEvent() {
                 try {
-                    EventBus.$emit('show');
-                    let reply = await this.$http.get(`/events/${this.eventid}`);
+                    EventBus.emit('show');
+                    let reply = await this.axios.get(`/events/${this.eventid}`);
                     this.event = reply.data;
                     if (this.event) {
                         this.flag = 'SUCCESS';
@@ -143,7 +147,7 @@
                 } catch (e) {
                     this.flag = 'FAILURE';
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
 
             }

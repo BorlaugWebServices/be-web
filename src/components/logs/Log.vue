@@ -70,7 +70,7 @@
 <script>
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
-    import NotFound from "../common/NotFound";
+    import NotFound from "../common/NotFound.vue";
 
     export default {
         name: "Log",
@@ -89,8 +89,8 @@
         methods: {
             async getLog() {
                 try {
-                    EventBus.$emit('show');
-                    let reply = await this.$http.get(`/logs/${this.logid}`);
+                    EventBus.emit('show');
+                    let reply = await this.axios.get(`/logs/${this.logid}`);
                     this.log  = reply.data;
                     if(this.log) {
                         this.type = Object.keys(this.log.log)[0];
@@ -101,7 +101,7 @@
                 } catch(e) {
                     this.flag = 'FAILURE';
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             }
         }

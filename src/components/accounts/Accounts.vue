@@ -3,10 +3,10 @@
         <div class="col-12">
             <div class="card ">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5 v-if="show">Showing {{accounts.length}} of {{total}} accounts</h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fas fa-users card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                                 </td>
                                 <td>{{account.count}}</td>
                                 <td class="text-right">
-                                    <b>{{account.balance | formatGRAM}}</b>
+                                    <b>{{ $filters.formatGRAM(account.balance) }}</b>
                                 </td>
                                 <td class="text-right">
                                     <router-link
@@ -59,14 +59,18 @@
                 <nav aria-label="Page navigation example">
                     <paginate
                             :click-handler="pageHandler"
-                            :container-class="'ui pagination menu float-right'"
+                            :container-class="'pagination justify-content-end'"
                             :margin-pages="2"
-                            :page-count=pageCount
+                            :page-count="pageCount"
                             :page-range="1"
                             :prev-text="'Prev'"
-                            :no-li-surround="true"
+                            :next-text="'Next'"
+                            :no-li-surround="false"
+                            :page-class="'page-item'"
                             :page-link-class="'page-link'"
+                            :prev-class="'page-item'"
                             :prev-link-class="'page-link'"
+                            :next-class="'page-item'"
                             :next-link-class="'page-link'"
                             :break-view-link-class="'break-view-link'">
                     </paginate>
@@ -78,11 +82,11 @@
 
 <script>
     import EventBus from "../../event-bus";
-    import Paginate from 'vuejs-paginate';
-    import Age from "../common/Age";
+    import Paginate from 'vuejs-paginate-next';
+    import Age from "../common/Age.vue";
     import {isMobile} from "mobile-device-detect";
-    import Blockie from "../common/Blockie";
-    import GetAccountBalance from "../common/GetAccountBalance";
+    import Blockie from "../common/Blockie.vue";
+    import GetAccountBalance from "../common/GetAccountBalance.vue";
 
     export default {
         name: "Accounts",
@@ -104,8 +108,8 @@
         methods: {
             async getSigners(page) {
                 try {
-                    EventBus.$emit('show');
-                    let reply = await this.$http.get(`/accounts`, {
+                    EventBus.emit('show');
+                    let reply = await this.axios.get(`/accounts`, {
                         params: {
                             page: page - 1,
                             perPage: this.perPage
@@ -122,7 +126,7 @@
 
                 } finally {
                     this.show = true;
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             },
             pageHandler(pageNum) {

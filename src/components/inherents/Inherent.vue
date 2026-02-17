@@ -3,10 +3,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5>Inherent <span class="fit">{{inherentid}}</span></h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fas fa-file-alt card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                             <dt>Timestamp</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{extrinsic.timestamp.toString() | timestamp}}</dd>
+                            <dd class="mb-1">{{ $filters.timestamp(extrinsic.timestamp.toString()) }}</dd>
                         </div>
                     </dl>
                     <hr/>
@@ -98,7 +98,7 @@
 <script>
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
-    import NotFound from "../common/NotFound";
+    import NotFound from "../common/NotFound.vue";
 
     export default {
         name: "Inherent",
@@ -116,8 +116,8 @@
         methods: {
             async getExtrinsic() {
                 try {
-                    EventBus.$emit('show');
-                    let reply      = await this.$http.get(`/inherents/${this.inherentid}`);
+                    EventBus.emit('show');
+                    let reply      = await this.axios.get(`/inherents/${this.inherentid}`);
                     this.extrinsic = reply.data;
                     if(this.extrinsic) {
                         this.flag = 'SUCCESS';
@@ -127,7 +127,7 @@
                 } catch(e) {
                     this.flag = 'FAILURE';
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
 
             }

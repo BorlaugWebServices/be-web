@@ -3,10 +3,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5>Block # <span class="fit">{{block.number}}</span></h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fa fa-cube card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                             <dt>Timestamp</dt>
                         </div>
                         <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.timestamp.toString() | timestamp}}</dd>
+                            <dd class="mb-1">{{ $filters.timestamp(block.timestamp.toString()) }}</dd>
                         </div>
                     </dl>
                     <hr/>
@@ -85,22 +85,22 @@
                 <div class="card-body">
                     <ul class="nav nav-pills custom-pills" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a aria-controls="transactions" aria-selected="true" class="nav-link active" data-toggle="tab" href="#transactions" id="transactions-tab" role="tab">
+                            <a aria-controls="transactions" aria-selected="true" class="nav-link active" data-bs-toggle="tab" href="#transactions" id="transactions-tab" role="tab">
                                 <i class="fas fa-file-signature"/> Transaction
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a aria-controls="inherents" aria-selected="true" class="nav-link" data-toggle="tab" href="#inherents" id="inherents-tab" role="tab">
+                            <a aria-controls="inherents" aria-selected="true" class="nav-link" data-bs-toggle="tab" href="#inherents" id="inherents-tab" role="tab">
                                 <i class="fas fa-file-alt"/> Inherent
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a aria-controls="events" aria-selected="false" class="nav-link" data-toggle="tab" href="#events" id="events-tab" role="tab">
+                            <a aria-controls="events" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#events" id="events-tab" role="tab">
                                 <i class="fas fa-calendar-check"/> Events
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a aria-controls="logs" aria-selected="false" class="nav-link" data-toggle="tab" href="#logs" id="logs-tab" role="tab">
+                            <a aria-controls="logs" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#logs" id="logs-tab" role="tab">
                                 <i class="fas fa-book"/> Logs
                             </a>
                         </li>
@@ -125,7 +125,7 @@
                                         <td>
                                             <i class="fas fa-file-signature"></i>
                                         </td>
-                                        <td class="block">
+                                        <td>
                                             <div class="d-flex no-block align-items-center">
                                                 <router-link :title="tx.hash"
                                                              :to="{ name: 'transaction-from-chain', params: { blockhashornumber: block.number, txhash: tx.hash}}"
@@ -150,10 +150,10 @@
                                             {{tx.method.method}}
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge badge-pill badge-success font-bold" v-if="isTransactionSuccess(tx)">
+                                            <span class="badge rounded-pill bg-success font-bold" v-if="isTransactionSuccess(tx)">
                                                 <i class="fa fa-check-circle"/> SUCCESS
                                             </span>
-                                            <span class="badge badge-pill badge-danger font-bold" v-else>
+                                            <span class="badge rounded-pill bg-danger font-bold" v-else>
                                                 <i class="fas fa-exclamation-circle"></i> FAILED
                                             </span>
                                         </td>
@@ -188,7 +188,7 @@
                                         <td>
                                             <i class="fas fa-file-alt"></i>
                                         </td>
-                                        <td class="block">
+                                        <td>
                                             <div class="d-flex no-block align-items-center">
                                                 <router-link :to="{ name: 'inherent', params: {inherentid: inh.id}}" class="hash">{{ inh.id }}</router-link>
                                             </div>
@@ -233,7 +233,7 @@
                                         <td>
                                             <i class="fas fa-file-alt"></i>
                                         </td>
-                                        <td class="block">
+                                        <td>
                                             <div class="d-flex no-block align-items-center">
                                                 <router-link :to="{ name: 'event', params: {eventid: ev.id}}" class="hash">{{ ev.id }}</router-link>
                                             </div>
@@ -273,7 +273,7 @@
                                         <td>
                                             <i class="fas fa-book"></i>
                                         </td>
-                                        <td class="block">
+                                        <td>
                                             <div class="d-flex no-block align-items-center">
                                                 <router-link :to="{ name: 'log', params: { logid: log.id}}">{{ block.number + '-' + index }}</router-link>
                                             </div>
@@ -314,10 +314,9 @@
 </template>
 
 <script>
-    import _ from "lodash";
     import EventBus from "../../event-bus";
-    import Blockie from "../common/Blockie";
-    import NotFound from "../common/NotFound";
+    import Blockie from "../common/Blockie.vue";
+    import NotFound from "../common/NotFound.vue";
 
     export default {
         name: "SyncBlock",
@@ -340,8 +339,8 @@
         methods: {
             async getBlock() {
                 try {
-                    EventBus.$emit('show');
-                    let reply  = await this.$http.get(`/blocks/${this.number}/sync`);
+                    EventBus.emit('show');
+                    let reply  = await this.axios.get(`/blocks/${this.number}/sync`);
                     this.block = reply.data;
                     if(this.block) {
                         this.flag = 'SUCCESS';
@@ -351,14 +350,14 @@
                 } catch(e) {
                     this.flag = 'FAILURE';
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             },
             getLogType(log) {
                 return Object.keys(log)[0];
             },
             isTransactionSuccess(tx){
-                let successEvent = _.filter(this.block.events, (event) => {
+                let successEvent = this.block.events.filter((event) => {
                     return event.extrinsicid === tx.id && event.meta.name === "ExtrinsicSuccess";
                 });
 

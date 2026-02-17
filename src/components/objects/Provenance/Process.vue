@@ -2,10 +2,10 @@
     <div v-if="flag === 'SUCCESS'">
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Provenance</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-route card-title text-orange"/></h3>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{sequence.timestamp | from_ms}}</dd>
+                        <dd class="mb-1">{{ $filters.from_ms(sequence.timestamp) }}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -125,16 +125,16 @@
                         <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
                             <div class="card" v-for="(step,index) in sequence.steps">
                                 <div class="card-header" role="tab" id="headingOne">
-                                    <a data-toggle="collapse" :href="'#step'+index" aria-expanded="true"
+                                    <a data-bs-toggle="collapse" :href="'#step'+index" aria-expanded="true"
                                        :class="{ 'collapsed': !shouldExpand(index) }" :aria-controls="'step'+index">
                                         {{step.name}}
-                                        <span class="badge badge-pill badge-success font-bold ml-2" v-if="step.status === 'ATTESTED'">
+                                        <span class="badge rounded-pill bg-success font-bold ml-2" v-if="step.status === 'ATTESTED'">
                                             <i class="fa fa-certificate"/> Attested
                                         </span>
-                                        <span class="badge badge-pill badge-warning font-bold ml-2" v-if="step.status === 'IN_PROGRESS'">
+                                        <span class="badge rounded-pill bg-warning font-bold ml-2" v-if="step.status === 'IN_PROGRESS'">
                                             <i class="fa fa-spinner fa-spin"/> In Progress
                                         </span>
-                                        <span class="badge badge-pill badge-secondary font-bold ml-2" v-if="step.status === 'PENDING'">
+                                        <span class="badge rounded-pill bg-secondary font-bold ml-2" v-if="step.status === 'PENDING'">
                                             <i class="fa fa-hourglass-half"/> Pending
                                         </span>
                                     </a>
@@ -150,8 +150,8 @@
                                                     <th class="p-2 font-bold w-50">Fact</th>
                                                 </tr>
                                                 <tr v-for="att in step.attributes">
-                                                    <td class="p-2">{{att.name | hexcheck}}</td>
-                                                    <td class="p-2">{{att.fact | fact}}</td>
+                                                    <td class="p-2">{{ $filters.hexcheck(att.name) }}</td>
+                                                    <td class="p-2">{{ $filters.fact(att.fact) }}</td>
                                                 </tr>
                                             </table>
                                             <h5 class="mt-2">Attested By</h5>
@@ -180,10 +180,10 @@
 
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Process Activities</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
                 </div>
             </div>
@@ -207,18 +207,18 @@
                             <td>
                                 <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: sequence.blockNumber, txhash: activity.hash }}"
                                              :title="activity.hash">
-                                    {{activity.hash | truncate(32, '')}}
+                                    {{ $filters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{activity.timestamp.toString() | timestamp}}</td>
+                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -245,10 +245,9 @@
 
 <script>
     import {isMobile} from 'mobile-device-detect';
-    import _ from "lodash";
     import EventBus from "../../../event-bus";
-    import Blockie from "../../common/Blockie";
-    import NotFound from "../../common/NotFound";
+    import Blockie from "../../common/Blockie.vue";
+    import NotFound from "../../common/NotFound.vue";
 
     export default {
         name: "Process",
@@ -283,8 +282,8 @@
             async getProvenace() {
                 if(this.auditid !== null) {
                     try {
-                        EventBus.$emit('show');
-                        let reply     = await this.$http.get(`/sequences/${this.processid}`);
+                        EventBus.emit('show');
+                        let reply     = await this.axios.get(`/sequences/${this.processid}`);
                         this.sequence = reply.data;
                         if(this.sequence) {
                             this.flag = 'SUCCESS';
@@ -294,15 +293,15 @@
                     } catch(e) {
                         this.flag = 'FAILURE';
                     } finally {
-                        EventBus.$emit('hide');
+                        EventBus.emit('hide');
                     }
                 }
             },
             async getProvenaceActivities() {
                 if(this.sequence) {
                     try {
-                        let reply       = await this.$http.get(`/sequences/${this.processid}/activities`);
-                        this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
+                        let reply       = await this.axios.get(`/sequences/${this.processid}/activities`);
+                        this.activities = reply.data.sort((a, b) => a.timestamp - b.timestamp);
                     } catch(e) {
 
                     } finally {
@@ -317,13 +316,19 @@
                 return d;
             },
             getDid(did) {
-                return this.$options.filters.did(did);
+                return this.$filters.did(did);
             },
             /*
             returns true if index of last OPEN status, else returns true if index is 0, otherwise false
              */
             shouldExpand(index) {
-                let i = _.findLastIndex(this.sequence.steps, ['status', 'ATTESTED']);
+                let i = -1;
+                for (let k = this.sequence.steps.length - 1; k >= 0; k--) {
+                    if (this.sequence.steps[k].status === 'ATTESTED') {
+                        i = k;
+                        break;
+                    }
+                }
 
                 if(i !== -1) {
                     return i === index;

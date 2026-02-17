@@ -3,14 +3,14 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title adjust-500">
+                    <div class="col-md-6 card-title adjust-500">
                         <h5 class="">
                             <i class="fas fa fa-check-circle text-success" v-if="success"/>
                             <i class="fas fa fa-exclamation-circle text-danger" v-else/>
                             <span class="ml-2">Transaction <span class="font-weight-normal word-break">{{txhash}}</span></span>
                         </h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             <dt>Timestamp</dt>
                         </div>
                         <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1" v-if="transaction.timestamp">{{transaction.timestamp.toString() | timestamp}}</dd>
+                            <dd class="mb-1" v-if="transaction.timestamp">{{ $filters.timestamp(transaction.timestamp.toString()) }}</dd>
                         </div>
                     </dl>
                     <hr/>
@@ -58,10 +58,10 @@
                         </div>
                         <div class="col-sm-10 text-sm-left">
                             <dd class="mb-1">
-                                <span class="badge badge-pill badge-success font-bold" v-if="success">
+                                <span class="badge rounded-pill bg-success font-bold" v-if="success">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </dd>
@@ -149,10 +149,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5>Triggered Events</h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fas fa-calendar-check card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -228,13 +228,12 @@
     import {isMobile} from 'mobile-device-detect';
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
-    import Lease from "../objects/AssetRegistry/Lease";
-    import Identity from "../objects/Identity/Identity";
-    import Audit from "../objects/Audit/Audit";
-    import Process from "../objects/Provenance/Process";
-    import Blockie from "../common/Blockie";
-    import NotFound from "../common/NotFound";
-    import _ from "lodash";
+    import Lease from "../objects/AssetRegistry/Lease.vue";
+    import Identity from "../objects/Identity/Identity.vue";
+    import Audit from "../objects/Audit/Audit.vue";
+    import Process from "../objects/Provenance/Process.vue";
+    import Blockie from "../common/Blockie.vue";
+    import NotFound from "../common/NotFound.vue";
 
     export default {
         name: "TransactionFromChain",
@@ -263,35 +262,35 @@
         methods: {
             async getTransaction() {
                 try {
-                    EventBus.$emit('show');
-                    let reply         = await this.$http.get(`/transactions/${this.blockhashornumber}/${this.txhash}`);
+                    EventBus.emit('show');
+                    let reply         = await this.axios.get(`/transactions/${this.blockhashornumber}/${this.txhash}`);
                     this.transaction  = reply.data;
-                    let successEvents = _.filter(this.transaction.events, (event) => {
+                    let successEvents = this.transaction.events.filter((event) => {
                         return event.meta.name === "ExtrinsicSuccess";
                     });
                     this.success      = successEvents.length > 0;
                     if(this.transaction) {
                         this.flag = 'SUCCESS';
                         if(this.transaction.events.length > 0) {
-                            let events = _.filter(this.transaction.events, (ev) => {
+                            let events = this.transaction.events.filter((ev) => {
                                 return ev.meta.name === 'LeaseCreated'
                             });
                             if(events.length > 0) {
                                 this.leaseid = events[0].event.data[0];
                             }
-                            events = _.filter(this.transaction.events, (ev) => {
+                            events = this.transaction.events.filter((ev) => {
                                 return ev.meta.name === 'Registered'
                             });
                             if(events.length > 0) {
-                                this.did = this.$options.filters.did(events[0].event.data[2].id);
+                                this.did = this.$filters.did(events[0].event.data[2].id);
                             }
-                            events = _.filter(this.transaction.events, (ev) => {
+                            events = this.transaction.events.filter((ev) => {
                                 return ev.meta.name === 'AuditCreated'
                             });
                             if(events.length > 0) {
                                 this.auditid = events[0].event.data[1];
                             }
-                            events = _.filter(this.transaction.events, (ev) => {
+                            events = this.transaction.events.filter((ev) => {
                                 return ev.meta.name === 'SequenceCreated'
                             });
                             if(events.length > 0) {
@@ -305,7 +304,7 @@
                     console.error(e);
                     this.flag = 'FAILURE';
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             }
         }

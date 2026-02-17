@@ -85,8 +85,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="m-b-10">Last Synced Block Time: <strong v-if="latestBlockTime">{{latestBlockTime.toString()
-                            | timestamp}}</strong></div>
+                        <div class="m-b-10">Last Synced Block Time: <strong v-if="latestBlockTime">{{ $filters.timestamp(latestBlockTime.toString()) }}</strong></div>
                         <router-link :to="{name: 'blocks'}"
                                      class="btn btn-orange btn-block text-white font-weight-bold">View All Blocks
                         </router-link>
@@ -130,8 +129,7 @@
                                         <div :title="tx.hash" class="d-flex no-block align-items-center">
                                             <router-link
                                                     :to="{name: 'transaction-from-chain', params: {blockhashornumber: tx.blockNumber, txhash: tx.hash}}">
-                                                {{ tx.hash
-                                                | truncate(8,'...')}}
+                                                {{ $filters.truncate(tx.hash, 8, '...') }}
                                             </router-link>
                                         </div>
                                     </td>
@@ -159,8 +157,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <div class="m-b-10">Last Synced Transaction Time: <strong v-if="latestTxnTime">{{latestTxnTime.toString()
-                            | timestamp}}</strong></div>
+                        <div class="m-b-10">Last Synced Transaction Time: <strong v-if="latestTxnTime">{{ $filters.timestamp(latestTxnTime.toString()) }}</strong></div>
                         <router-link :to="{name: 'transactions'}"
                                      class="btn btn-orange btn-block text-white font-weight-bold">View All Transaction
                         </router-link>
@@ -285,7 +282,7 @@
                                 <tr v-for="identity in searchResult.identities">
                                     <td>
                                         <router-link :to="{ name : 'identity' , params: { did: getDid(identity.did) }}">
-                                            <h4>{{identity.did | did}}</h4>
+                                            <h4>{{ $filters.did(identity.did) }}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{identity.blockNumber}} |
                                                 <span class="font-weight-bold">Tx Hash :</span>
@@ -300,8 +297,7 @@
                                             <h4>Inherent: {{inherent.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{inherent.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{inherent.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(inherent.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -312,8 +308,7 @@
                                             <h4>Event: {{event.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{event.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{event.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(event.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -324,8 +319,7 @@
                                             <h4>Log: {{log.id}}</h4>
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Block :</span> {{log.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{log.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(log.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -338,8 +332,7 @@
                                                 <span class="font-weight-bold">Registry :</span> {{sequence.registry}} |
                                                 <span class="font-weight-bold">Template :</span> {{sequence.template}} |
                                                 <span class="font-weight-bold">Block :</span> {{sequence.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{sequence.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(sequence.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -352,8 +345,7 @@
                                                 <span class="font-weight-bold">Group Creator :</span>
                                                 {{group.group_creator}} |
                                                 <span class="font-weight-bold">Block :</span> {{group.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{group.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(group.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -365,8 +357,7 @@
                                             <small class="text-secondary">
                                                 <span class="font-weight-bold">Proposer :</span> {{proposal.proposer}} |
                                                 <span class="font-weight-bold">Block :</span> {{proposal.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{proposal.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(proposal.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -380,8 +371,7 @@
                                                 <span class="font-weight-bold">Controller :</span>
                                                 {{catalog.controller}} |
                                                 <span class="font-weight-bold">Block :</span> {{catalog.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{catalog.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(catalog.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -395,8 +385,7 @@
                                                 <span class="font-weight-bold">Controller :</span>
                                                 {{catalog.controller}} |
                                                 <span class="font-weight-bold">Block :</span> {{catalog.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{catalog.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(catalog.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -410,8 +399,7 @@
                                                 <span class="font-weight-bold">Creator Group :</span>
                                                 {{registry.creator_group}} |
                                                 <span class="font-weight-bold">Block :</span> {{registry.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{registry.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(registry.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -425,8 +413,7 @@
                                                 <span class="font-weight-bold">Controller :</span>
                                                 {{definition.controller}} |
                                                 <span class="font-weight-bold">Block :</span> {{definition.blockNumber}} |
-                                                <span class="font-weight-bold">Timestamp :</span> {{definition.timestamp |
-                                                from_ms}}
+                                                <span class="font-weight-bold">Timestamp :</span> {{ $filters.from_ms(definition.timestamp) }}
                                             </small>
                                         </router-link>
                                     </td>
@@ -444,8 +431,7 @@
 <script>
     import EventBus from "../event-bus";
     import io from 'socket.io-client';
-    import Age from "./common/Age";
-    import * as fromNow from "from-now";
+    import Age from "./common/Age.vue";
 
     export default {
         name: "Home",
@@ -504,29 +490,34 @@
                 }
             }
         },
-        mounted() {
-            window.onbeforeunload = function (event) {
-                if (this.socket) {
-                    this.socket.disconnect();
-                }
-            };
-            this.init();
-            let self = this;
-            setInterval(() => {
-                console.log(new Date(this.latestBlockTime))
-                let age = fromNow(Number(this.latestBlockTime));
-                if (age.indexOf('minutes') !== -1) {
-                    let from_now = Number(age.replace(/[^0-9]/g, ''));
-                    console.log(from_now)
-                    if (from_now > 10) {
-                        ++self.counter;
-                    } else {
-                        self.counter = 0;
-                    }
-                }
-            }, 5000);
-        },
-        destroyed() {
+      mounted() {
+        window.onbeforeunload = function (event) {
+          if (this.socket) {
+            this.socket.disconnect();
+          }
+        };
+        this.init();
+
+        // Monitor for chain stalls (no new blocks for 10 minutes)
+        setInterval(() => {
+          if (!this.latestBlockTime) return;
+
+          const TEN_MINUTES_MS = 10 * 60 * 1000;
+          const now = Date.now();
+          const blockTime = Number(this.latestBlockTime);
+          const diff = now - blockTime;
+
+          if (diff > TEN_MINUTES_MS) {
+            // If the last block is more than 10 mins old, increment counter
+            this.counter++;
+            console.warn(`Chain Stall Alert: Last block was ${Math.floor(diff / 60000)} minutes ago.`);
+          } else {
+            // Reset counter if the chain is moving again
+            this.counter = 0;
+          }
+        }, 5000); // Check every 5 seconds
+      },
+        unmounted() {
             if (this.socket) {
                 this.socket.disconnect();
             }
@@ -534,13 +525,13 @@
         methods: {
             async sendAlert() {
                 try {
-                    await this.$http.post(`email/chainalert`);
+                    await this.axios.post(`email/chainalert`);
                 } catch (e) {
                 }
             },
             async init() {
                 try {
-                    EventBus.$emit('show');
+                    EventBus.emit('show');
                     await Promise.all([
                         this.getRecentBlocks(),
                         this.getRecentTxns()
@@ -551,28 +542,28 @@
                         this.getLatestTxns();
                     });
                 } catch (e) {
-                    this.destroyed();
+                    this.unmounted();
                     console.error(e);
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             },
             async getRecentBlocks() {
-                let reply = await this.$http.get("/blocks");
+                let reply = await this.axios.get("/blocks");
                 this.blocks = reply.data.slice;
                 if (this.blocks.length > 0) {
                     this.latestBlockTime = this.blocks[0].timestamp;
                 }
             },
             async getRecentTxns() {
-                let reply = await this.$http.get("/transactions");
+                let reply = await this.axios.get("/transactions");
                 this.transactions = reply.data.slice;
                 if (this.transactions.length > 0) {
                     this.latestTxnTime = this.transactions[0].timestamp;
                 }
             },
             async search() {
-                let reply = await this.$http.get("/search", {params: {searchCriteria: this.searchCriteria}});
+                let reply = await this.axios.get("/search", {params: {searchCriteria: this.searchCriteria}});
                 this.searchResult = reply.data;
             },
             clear() {
@@ -581,13 +572,13 @@
             },
             async getLatestBlocks() {
                 this.socket.on('block updated', (data) => {
-                    //console.log("New Block Number : ", data.block.blockNumber);
+                    console.log("New Block Number : ", data.block.number);
                     this.lastSyncedBlock = data;
                 })
             },
             getLatestTxns() {
                 this.socket.on('txn updated', (data) => {
-                    //console.log("New Block Number : ", data.block.blockNumber);
+                    console.log("New Block Number : ", data.block.number);
                     this.lastSyncedTxn = data;
                 })
             },
@@ -608,7 +599,7 @@
                 this.latestTxnTime = txn.timestamp;
             },
             getDid(did) {
-                return this.$options.filters.did(did);
+                return this.$filters.did(did);
             }
         }
     }

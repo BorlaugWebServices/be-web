@@ -2,10 +2,10 @@
     <div v-if="flag === 'SUCCESS'">
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Group</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
                         <dd class="mb-1">
-                            <router-link :to="{name: 'groups', params: {groupid: groupid}}">{{groupid}}</router-link>
+                            <router-link :to="{name: 'group', params: {groupid: groupid}}">{{groupid}}</router-link>
                         </dd>
                     </div>
                 </dl>
@@ -113,7 +113,7 @@
                             <dt>Created at</dt>
                         </div>
                         <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{group.timestamp | from_ms}}</dd>
+                            <dd class="mb-1">{{ $filters.from_ms(group.timestamp) }}</dd>
                         </div>
                     </dl>
                     <hr/>
@@ -146,10 +146,10 @@
         </div>
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Group Activities</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
                 </div>
             </div>
@@ -174,18 +174,18 @@
                                 <router-link
                                         :title="activity.hash"
                                         :to="{ name: 'transaction-from-chain', params: { blockhashornumber: group.blockNumber, txhash: activity.hash}}">
-                                    {{activity.hash | truncate(32, '')}}
+                                    {{ $filters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{activity.timestamp.toString() | timestamp}}</td>
+                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -211,10 +211,9 @@
 </template>
 
 <script>
-    import _ from "lodash";
     import EventBus from "../../../event-bus";
-    import Blockie from "../../common/Blockie";
-    import NotFound from "../../common/NotFound";
+    import Blockie from "../../common/Blockie.vue";
+    import NotFound from "../../common/NotFound.vue";
 
     export default {
         name: "Groups",
@@ -240,8 +239,8 @@
             async getGroup() {
                 if (this.groupid !== null) {
                     try {
-                        EventBus.$emit('show');
-                        let reply = await this.$http.get(`/groups/${this.groupid}`);
+                        EventBus.emit('show');
+                        let reply = await this.axios.get(`/groups/${this.groupid}`);
                         this.group = reply.data;
                         if (this.group) {
                             this.flag = 'SUCCESS';
@@ -251,15 +250,15 @@
                     } catch (e) {
                         this.flag = 'FAILURE';
                     } finally {
-                        EventBus.$emit('hide');
+                        EventBus.emit('hide');
                     }
                 }
             },
             async getGroupActivities() {
                 if (this.group) {
                     try {
-                        let reply = await this.$http.get(`/groups/${this.groupid}/activities`);
-                        this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
+                        let reply = await this.axios.get(`/groups/${this.groupid}/activities`);
+                        this.activities = reply.data.sort((a, b) => a.timestamp - b.timestamp);
                     } catch (e) {
 
                     } finally {

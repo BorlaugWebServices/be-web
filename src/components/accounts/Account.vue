@@ -3,10 +3,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h4>Account</h4>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fas fa-user card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-sm-9 text-sm-left">
                             <dd class="mb-1">
-                                <b class="text-orange">{{spent_on_txs | formatGRAM}}</b>
+                                <b class="text-orange">{{ $filters.formatGRAM(spent_on_txs) }}</b>
                             </dd>
                         </div>
                     </dl>
@@ -50,10 +50,10 @@
 
             <div class="card" v-if="transactions.length>0">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fa fa-file-signature card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -82,8 +82,7 @@
                                     <div :title="transaction.hash" class="d-flex no-block align-items-center">
                                         <router-link
                                                 :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">
-                                            {{
-                                            transaction.hash | truncate(16, '...')}}
+                                            {{ $filters.truncate(transaction.hash, 16, '...') }}
                                         </router-link>
                                     </div>
                                 </td>
@@ -104,7 +103,7 @@
                                     {{transaction.method.method}}
                                 </td>
                                 <td class="text-right">
-                                    <b>{{transaction.tx_fee | formatGRAM}}</b>
+                                    <b>{{ $filters.formatGRAM(transaction.tx_fee) }}</b>
                                 </td>
                                 <!--                                <td>-->
                                 <!--                                    {{block.logs.length}}-->
@@ -136,14 +135,18 @@
                 <nav aria-label="Page navigation example">
                     <paginate
                             :click-handler="pageHandler"
-                            :container-class="'ui pagination menu float-right'"
+                            :container-class="'pagination justify-content-end'"
                             :margin-pages="2"
-                            :page-count=pageCount
+                            :page-count="pageCount"
                             :page-range="1"
                             :prev-text="'Prev'"
-                            :no-li-surround="true"
+                            :next-text="'Next'"
+                            :no-li-surround="false"
+                            :page-class="'page-item'"
                             :page-link-class="'page-link'"
+                            :prev-class="'page-item'"
                             :prev-link-class="'page-link'"
+                            :next-class="'page-item'"
                             :next-link-class="'page-link'"
                             :break-view-link-class="'break-view-link'">
                     </paginate>
@@ -155,11 +158,10 @@
 
 <script>
     import EventBus from "../../event-bus";
-    import Paginate from 'vuejs-paginate';
-    import Age from "../common/Age";
-    import Blockie from "../common/Blockie";
-    import GetAccountBalance from "../common/GetAccountBalance";
-    import _ from "lodash";
+    import Paginate from 'vuejs-paginate-next';
+    import Age from "../common/Age.vue";
+    import Blockie from "../common/Blockie.vue";
+    import GetAccountBalance from "../common/GetAccountBalance.vue";
 
     export default {
         name: "Account",
@@ -185,8 +187,8 @@
             },
             async getTxsByAccount(page) {
                 try {
-                    EventBus.$emit('show');
-                    let reply = await this.$http.get(`/accounts/${this.address}`, {
+                    EventBus.emit('show');
+                    let reply = await this.axios.get(`/accounts/${this.address}`, {
                         params: {
                             page: page - 1,
                             perPage: this.perPage
@@ -199,18 +201,18 @@
                 } catch (e) {
 
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             },
             async getTotalSpent() {
                 try {
-                    let reply = await this.$http.get(`/accounts/${this.address}`, {
+                    let reply = await this.axios.get(`/accounts/${this.address}`, {
                         params: {
                             page: 0,
                             perPage: this.total
                         }
                     });
-                    this.spent_on_txs = _.sumBy(reply.data.slice, 'tx_fee');
+                    this.spent_on_txs = reply.data.slice.reduce((total, item) => total + item.tx_fee, 0);
                 } catch (e) {
 
                 }

@@ -1,251 +1,251 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
-Vue.use(VueRouter);
+const routes = [
+    {
+        path: '/',
+        component: () => import("@/components/Workspace.vue"),
+        children: [
+            {
+                path: "",
+                name: "home",
+                component: () => import("@/components/Home.vue")
+            },
+            {
+                path: "terms",
+                name: "terms",
+                component: () => import("@/components/public/Terms.vue")
+            },
+            {
+                path: "privacy",
+                name: "privacy",
+                component: () => import("@/components/public/Privacy.vue")
+            },
+            {
+                path: "stakeholders",
+                name: "stakeholders",
+                component: () => import("@/components/public/Stakeholders.vue")
+            },
+            {
+                path: 'blocks',
+                component: () => import("@/components/blocks/BlocksLayout.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "blocks",
+                        component: () => import("@/components/blocks/Blocks.vue")
+                    },
+                    {
+                        path: ":number",
+                        name: "block",
+                        props: true,
+                        component: () => import("@/components/blocks/Block.vue"),
+                    },
+                    {
+                        path: ":number/sync",
+                        name: "sync-block",
+                        props: true,
+                        component: () => import("@/components/blocks/SyncBlock.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'tx',
+                component: () => import("@/components/transactions/TransactionsLayout.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "transactions",
+                        component: () => import("@/components/transactions/Transactions.vue")
+                    },
+                    {
+                        path: ":hash",
+                        name: "transaction",
+                        props: true,
+                        component: () => import("./components/transactions/Transaction.vue"),
+                    },
+                    {
+                        path: ":blockhashornumber/:txhash",
+                        name: "transaction-from-chain",
+                        props: true,
+                        component: () => import("./components/transactions/TransactionFromChain.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'accounts',
+                component: () => import("@/components/accounts/AccountLayout"),
+                children: [
+                    {
+                        path: "",
+                        name: "accounts",
+                        component: () => import("@/components/accounts/Accounts")
+                    },
+                    {
+                        path: ":address",
+                        name: "view-account",
+                        props: true,
+                        component: () => import("@/components/accounts/Account"),
+                    }
+                ]
+            },
+            {
+                path: 'inherents',
+                component: () => import("@/components/inherents/InherentsLayout.vue"),
+                children: [
+                    {
+                        path: ":inherentid",
+                        name: "inherent",
+                        props: true,
+                        component: () => import("@/components/inherents/Inherent.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'events',
+                component: () => import("@/components/events/EventsLayout.vue"),
+                children: [
+                    {
+                        path: ":eventid",
+                        name: "event",
+                        props: true,
+                        component: () => import("@/components/events/Event.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'logs',
+                component: () => import("@/components/logs/LogsLayout.vue"),
+                children: [
+                    {
+                        path: ":logid",
+                        name: "log",
+                        props: true,
+                        component: () => import("@/components/logs/Log.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'assetregistry',
+                component: () => import("@/components/objects/AssetRegistry/Layout.vue"),
+                children: [
+                    {
+                        path: "registries/:registryid",
+                        name: "asset-registry",
+                        props: true,
+                        component: () => import("@/components/objects/AssetRegistry/Registry.vue"),
+                    },
+                    {
+                        path: "assets/:assetid",
+                        name: "asset",
+                        props: true,
+                        component: () => import("@/components/objects/AssetRegistry/Asset.vue"),
+                    },
+                    {
+                        path: "leases/:leaseid",
+                        name: "lease",
+                        props: true,
+                        component: () => import("@/components/objects/AssetRegistry/Lease.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'identity',
+                component: () => import("@/components/objects/Identity/Layout.vue"),
+                children: [
+                    {
+                        path: ":did",
+                        name: "identity",
+                        props: true,
+                        component: () => import("@/components/objects/Identity/Identity.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'audit',
+                component: () => import("@/components/objects/Audit/Layout.vue"),
+                children: [
+                    {
+                        path: ":auditid",
+                        name: "audit",
+                        props: true,
+                        component: () => import("@/components/objects/Audit/Audit.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'groups',
+                component: () => import("@/components/objects/Groups/Layout.vue"),
+                children: [
+                    {
+                        path: ":groupid",
+                        name: "group",
+                        props: true,
+                        component: () => import("@/components/objects/Groups/Group.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'proposals',
+                component: () => import("@/components/objects/Proposal/Layout.vue"),
+                children: [
+                    {
+                        path: ":proposalid",
+                        name: "proposal",
+                        props: true,
+                        component: () => import("@/components/objects/Proposal/Proposal.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'provenance',
+                component: () => import("@/components/objects/Provenance/Layout.vue"),
+                children: [
+                    {
+                        path: "process/:processid",
+                        name: "process",
+                        props: true,
+                        component: () => import("@/components/objects/Provenance/Process.vue"),
+                    },
+                    {
+                        path: "registries/:registryid",
+                        name: "registry",
+                        props: true,
+                        component: () => import("@/components/objects/Provenance/Registry.vue"),
+                    },
+                    {
+                        path: "definitions/:definitionid",
+                        name: "definition",
+                        props: true,
+                        component: () => import("@/components/objects/Provenance/ProcessDefinition.vue"),
+                    }
+                ]
+            },
+            {
+                path: 'catalog',
+                component: () => import("@/components/objects/Catalog/Layout.vue"),
+                children: [
+                    {
+                        path: ":catalogid",
+                        name: "catalog",
+                        props: true,
+                        component: () => import("@/components/objects/Catalog/Catalog.vue"),
+                    }
+                ]
+            },
+            {
+                path: "404",
+                name: "404",
+                props: {isPage: true},
+                component: () => import("@/components/common/NotFound.vue")
+            },
+            {path: '/:pathMatch(.*)*', redirect: '/404'}
+        ]
+    }
+]
 
-export default new VueRouter({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes: [
-        {
-            path: '/',
-            component: resolve => require(["@/components/Workspace.vue"], resolve),
-            children: [
-                {
-                    path: "",
-                    name: "home",
-                    component: resolve => require(["@/components/Home.vue"], resolve)
-                },
-                {
-                    path: "terms",
-                    name: "terms",
-                    component: resolve => require(["@/components/public/Terms.vue"], resolve)
-                },
-                {
-                    path: "privacy",
-                    name: "privacy",
-                    component: resolve => require(["@/components/public/Privacy.vue"], resolve)
-                },
-                {
-                    path: "stakeholders",
-                    name: "stakeholders",
-                    component: resolve => require(["@/components/public/Stakeholders.vue"], resolve)
-                },
-                {
-                    path: 'blocks',
-                    component: resolve => require(["@/components/blocks/BlocksLayout.vue"], resolve),
-                    children: [
-                        {
-                            path: "",
-                            name: "blocks",
-                            component: resolve => require(["@/components/blocks/Blocks.vue"], resolve)
-                        },
-                        {
-                            path: ":number",
-                            name: "block",
-                            props: true,
-                            component: resolve => require(["@/components/blocks/Block.vue"], resolve),
-                        },
-                        {
-                            path: ":number/sync",
-                            name: "sync-block",
-                            props: true,
-                            component: resolve => require(["@/components/blocks/SyncBlock.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'tx',
-                    component: resolve => require(["@/components/transactions/TransactionsLayout.vue"], resolve),
-                    children: [
-                        {
-                            path: "",
-                            name: "transactions",
-                            component: resolve => require(["@/components/transactions/Transactions.vue"], resolve)
-                        },
-                        {
-                            path: ":hash",
-                            name: "transaction",
-                            props: true,
-                            component: resolve => require(["./components/transactions/Transaction.vue"], resolve),
-                        },
-                        {
-                            path: ":blockhashornumber/:txhash",
-                            name: "transaction-from-chain",
-                            props: true,
-                            component: resolve => require(["./components/transactions/TransactionFromChain.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'accounts',
-                    component: resolve => require(["@/components/accounts/AccountLayout"], resolve),
-                    children: [
-                        {
-                            path: "",
-                            name: "accounts",
-                            component: resolve => require(["@/components/accounts/Accounts"], resolve)
-                        },
-                        {
-                            path: ":address",
-                            name: "view-account",
-                            props: true,
-                            component: resolve => require(["@/components/accounts/Account"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'inherents',
-                    component: resolve => require(["@/components/inherents/InherentsLayout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":inherentid",
-                            name: "inherent",
-                            props: true,
-                            component: resolve => require(["@/components/inherents/Inherent.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'events',
-                    component: resolve => require(["@/components/events/EventsLayout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":eventid",
-                            name: "event",
-                            props: true,
-                            component: resolve => require(["@/components/events/Event.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'logs',
-                    component: resolve => require(["@/components/logs/LogsLayout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":logid",
-                            name: "log",
-                            props: true,
-                            component: resolve => require(["@/components/logs/Log.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'assetregistry',
-                    component: resolve => require(["@/components/objects/AssetRegistry/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: "registries/:registryid",
-                            name: "asset-registry",
-                            props: true,
-                            component: resolve => require(["@/components/objects/AssetRegistry/Registry.vue"], resolve),
-                        },
-                        {
-                            path: "assets/:assetid",
-                            name: "asset",
-                            props: true,
-                            component: resolve => require(["@/components/objects/AssetRegistry/Asset.vue"], resolve),
-                        },
-                        {
-                            path: "leases/:leaseid",
-                            name: "lease",
-                            props: true,
-                            component: resolve => require(["@/components/objects/AssetRegistry/Lease.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'identity',
-                    component: resolve => require(["@/components/objects/Identity/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":did",
-                            name: "identity",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Identity/Identity.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'audit',
-                    component: resolve => require(["@/components/objects/Audit/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":auditid",
-                            name: "audit",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Audit/Audit.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'groups',
-                    component: resolve => require(["@/components/objects/Groups/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":groupid",
-                            name: "group",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Groups/Group.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'proposals',
-                    component: resolve => require(["@/components/objects/Proposal/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":proposalid",
-                            name: "proposal",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Proposal/Proposal.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'provenance',
-                    component: resolve => require(["@/components/objects/Provenance/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: "process/:processid",
-                            name: "process",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Provenance/Process.vue"], resolve),
-                        },
-                        {
-                            path: "registries/:registryid",
-                            name: "registry",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Provenance/Registry.vue"], resolve),
-                        },
-                        {
-                            path: "definitions/:definitionid",
-                            name: "definition",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Provenance/ProcessDefinition.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: 'catalog',
-                    component: resolve => require(["@/components/objects/Catalog/Layout.vue"], resolve),
-                    children: [
-                        {
-                            path: ":catalogid",
-                            name: "catalog",
-                            props: true,
-                            component: resolve => require(["@/components/objects/Catalog/Catalog.vue"], resolve),
-                        }
-                    ]
-                },
-                {
-                    path: "404",
-                    name: "404",
-                    props: {isPage: true},
-                    component: resolve => require(["@/components/common/NotFound.vue"], resolve)
-                },
-                {path: '*', redirect: '/404'}
-            ]
-        }
-    ]
+const router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes
 })
+
+export default router

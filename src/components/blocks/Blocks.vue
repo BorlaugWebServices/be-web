@@ -3,10 +3,10 @@
         <div class="col-12">
             <div class="card ">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="card-header-title">
+                    <div class="col-md-6 card-title">
                         <h5 v-if="show">Showing {{blocks.length}} of {{total}} blocks</h5>
                     </div>
-                    <div class="card-header-icon">
+                    <div class="col-md-6 text-right">
                         <h3><i class="fa fa-cubes card-title text-orange"/></h3>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                                 <td>
                                     <i class="fa fa-cube"></i>
                                 </td>
-                                <td class="block">
+                                <td>
                                     <div class="d-flex no-block align-items-center">
                                         <router-link :to="{name: 'block', params: {number: block.number}}">{{ block.number}}</router-link>
                                     </div>
@@ -68,14 +68,18 @@
                 <nav aria-label="Page navigation example">
                     <paginate
                             :click-handler="pageHandler"
-                            :container-class="'ui pagination menu float-right'"
+                            :container-class="'pagination justify-content-end'"
                             :margin-pages="2"
-                            :page-count=pageCount
+                            :page-count="pageCount"
                             :page-range="1"
                             :prev-text="'Prev'"
-                            :no-li-surround="true"
+                            :next-text="'Next'"
+                            :no-li-surround="false"
+                            :page-class="'page-item'"
                             :page-link-class="'page-link'"
+                            :prev-class="'page-item'"
                             :prev-link-class="'page-link'"
+                            :next-class="'page-item'"
                             :next-link-class="'page-link'"
                             :break-view-link-class="'break-view-link'">
                     </paginate>
@@ -87,8 +91,8 @@
 
 <script>
     import EventBus from "../../event-bus";
-    import Paginate from 'vuejs-paginate';
-    import Age from "../common/Age";
+    import Paginate from 'vuejs-paginate-next';
+    import Age from "../common/Age.vue";
 
     export default {
         name: "Blocks",
@@ -108,8 +112,8 @@
         methods: {
             async getRecentBlocks(page) {
                 try {
-                    EventBus.$emit('show');
-                    let reply   = await this.$http.get("/blocks", {
+                    EventBus.emit('show');
+                    let reply   = await this.axios.get("/blocks", {
                         params: {
                             page: page,
                             perPage: this.perPage
@@ -122,7 +126,7 @@
                 } catch(e) {
 
                 } finally {
-                    EventBus.$emit('hide');
+                    EventBus.emit('hide');
                 }
             },
             pageHandler(pageNum) {

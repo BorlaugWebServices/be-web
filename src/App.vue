@@ -3,7 +3,7 @@
         <router-view></router-view>
 
         <Loading
-                :active.sync="show"
+                v-model:active="show"
                 :background-color="backgroundColor"
                 :can-cancel="false"
                 :color="color"
@@ -17,7 +17,7 @@
     import EventBus from "./event-bus";
     import Loading from 'vue-loading-overlay';
 
-    import 'vue-loading-overlay/dist/vue-loading.css';
+    import 'vue-loading-overlay/dist/css/index.css';
 
     export default {
         name: 'App',
@@ -32,12 +32,16 @@
             }
         },
         mounted() {
-            EventBus.$on('hide', () => {
+            EventBus.on('hide', () => {
                 this.show = false;
             });
-            EventBus.$on('show', () => {
+            EventBus.on('show', () => {
                 this.show = true;
             });
+        },
+        unmounted() {
+            EventBus.off('hide');
+            EventBus.off('show');
         }
     }
 </script>

@@ -2,10 +2,10 @@
     <div v-if="flag === 'SUCCESS'">
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Proposal</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{proposal.timestamp | from_ms}}</dd>
+                        <dd class="mb-1">{{ $filters.from_ms(proposal.timestamp) }}</dd>
                     </div>
                 </dl>
             </div>
@@ -96,10 +96,10 @@
 
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Proposal Activities</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
                 </div>
             </div>
@@ -123,18 +123,18 @@
                             <td>
                                 <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: proposal.blockNumber, txhash: activity.hash}}"
                                              :title="activity.hash">
-                                    {{activity.hash | truncate(32, '')}}
+                                    {{ $filters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{activity.timestamp.toString() | timestamp}}</td>
+                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -160,10 +160,9 @@
 </template>
 
 <script>
-    import _ from "lodash";
     import EventBus from "../../../event-bus";
-    import Blockie from "../../common/Blockie";
-    import NotFound from "../../common/NotFound";
+    import Blockie from "../../common/Blockie.vue";
+    import NotFound from "../../common/NotFound.vue";
     
     export default {
         name: "Proposal",
@@ -189,8 +188,8 @@
             async getProposal() {
                 if(this.proposalid !== null) {
                     try {
-                        EventBus.$emit('show');
-                        let reply  = await this.$http.get(`/proposals/${this.proposalid}`);
+                        EventBus.emit('show');
+                        let reply  = await this.axios.get(`/proposals/${this.proposalid}`);
                         this.proposal = reply.data;
                         if(this.proposal) {
                             this.flag = 'SUCCESS';
@@ -200,15 +199,15 @@
                     } catch(e) {
                         this.flag = 'FAILURE';
                     } finally {
-                        EventBus.$emit('hide');
+                        EventBus.emit('hide');
                     }
                 }
             },
             async getProposalActivities() {
                 if(this.proposal) {
                     try {
-                        let reply       = await this.$http.get(`/proposals/${this.proposalid}/activities`);
-                        this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
+                        let reply       = await this.axios.get(`/proposals/${this.proposalid}/activities`);
+                        this.activities = reply.data.sort((a, b) => a.timestamp - b.timestamp);
                     } catch(e) {
 
                     } finally {
@@ -223,7 +222,7 @@
                 return d;
             },
             getDid(did) {
-                return this.$options.filters.did(did);
+                return this.$filters.did(did);
             }
         }
     }

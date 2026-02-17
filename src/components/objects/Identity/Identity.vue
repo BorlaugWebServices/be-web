@@ -2,10 +2,10 @@
     <div v-if="flag === 'SUCCESS'">
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Identity</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
@@ -17,12 +17,12 @@
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
                         <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
-                        <dd class="ml-2 float-left">{{identity.did | did}}</dd>
+                        <dd class="ml-2 float-left">{{ $filters.did(identity.did) }}</dd>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-else>
                         <router-link :to="{name: 'identity', params : { did: did }}">
                             <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{identity.did | did}}</dd>
+                            <dd class="ml-2 float-left">{{ $filters.did(identity.did) }}</dd>
                         </router-link>
                     </div>
                 </dl>
@@ -95,7 +95,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{identity.timestamp | from_ms}}</dd>
+                        <dd class="mb-1">{{ $filters.from_ms(identity.timestamp) }}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -153,17 +153,17 @@
 
                                 <dt class="m-b-5">Created By :</dt>
                                 <dd class="mb-3">
-                                    <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].created_by) }}">
+                                    <router-link :to="{name: 'identity', params : { did: $filters.did(identity.claims[claimIndex].created_by) }}">
                                         <Blockie :address="identity.claims[claimIndex].created_by"/>
-                                        {{identity.claims[claimIndex].created_by | did }}
+                                        {{ $filters.did(identity.claims[claimIndex].created_by) }}
                                     </router-link>
                                 </dd>
 
                                 <dt class="m-b-5">Attested By :</dt>
                                 <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
-                                    <router-link :to="{name: 'identity', params : { did: $options.filters.did(identity.claims[claimIndex].attestation.attested_by) }}">
+                                    <router-link :to="{name: 'identity', params : { did: $filters.did(identity.claims[claimIndex].attestation.attested_by) }}">
                                         <Blockie :address="identity.claims[claimIndex].attestation.attested_by" class=""/>
-                                        {{identity.claims[claimIndex].attestation.attested_by | did }}
+                                        {{ $filters.did(identity.claims[claimIndex].attestation.attested_by) }}
                                     </router-link>
                                 </dd>
                                 <dd class="mb-3" v-else>
@@ -203,10 +203,10 @@
 
         <div class="card">
             <div class="card-header row m-b-0 p-b-0">
-                <div class="card-header-title">
+                <div class="col-md-6 card-title">
                     <h4>Identity Activities</h4>
                 </div>
-                <div class="card-header-icon">
+                <div class="col-md-6 text-right">
                     <h3><i class="fas fa-id-card card-title text-orange"/></h3>
                 </div>
             </div>
@@ -230,18 +230,18 @@
                             <td>
                                 <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
                                              :title="activity.hash">
-                                    {{activity.hash | truncate(32, '')}}
+                                    {{ $filters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge badge-pill badge-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge badge-pill badge-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{activity.timestamp.toString() | timestamp}}</td>
+                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -267,11 +267,10 @@
 </template>
 
 <script>
-    import _ from "lodash";
     import EventBus from "../../../event-bus";
-    import Blockie from "../../common/Blockie";
+    import Blockie from "../../common/Blockie.vue";
     import VueJsonPretty from "vue-json-pretty";
-    import NotFound from "../../common/NotFound";
+    import NotFound from "../../common/NotFound.vue";
 
     export default {
         name: "Identity",
@@ -304,8 +303,8 @@
             async getIdentity() {
                 if(this.did !== null) {
                     try {
-                        EventBus.$emit('show');
-                            let reply     = await this.$http.get(`/identities/${this.did}`);
+                        EventBus.emit('show');
+                            let reply     = await this.axios.get(`/identities/${this.did}`);
                         this.identity = reply.data;
                         if(this.identity) {
                             this.flag = 'SUCCESS';
@@ -315,15 +314,15 @@
                     } catch(e) {
                         this.flag = 'FAILURE';
                     } finally {
-                        EventBus.$emit('hide');
+                        EventBus.emit('hide');
                     }
                 }
             },
             async getIdentityActivities() {
                 if(this.identity) {
                     try {
-                        let reply       = await this.$http.get(`/identities/${this.did}/activities`);
-                        this.activities = _.orderBy(reply.data, ["timestamp"], ["asc"]);
+                        let reply       = await this.axios.get(`/identities/${this.did}/activities`);
+                        this.activities = reply.data.sort((a, b) => a.timestamp - b.timestamp);
                     } catch(e) {
                         console.log(e);
                     } finally {
