@@ -27,7 +27,7 @@
                         {{event.meta.name}}
                     </DetailItem>
                     <DetailItem title="Description">
-                        {{event.meta.docs.join(' ')}}
+                        {{event.meta.documentation?.join(' ')}}
                     </DetailItem>
                     <dl class="row m-b-10">
                         <div class="col-sm-2 text-sm-right">
@@ -35,25 +35,27 @@
                         </div>
                         <div class="col-sm-10 text-sm-left">
                             <dd class="mb-1">
-                                <table class="table table-bordered">
-                                    <tr v-for="i in event.meta.args.length">
-                                        <td>{{event.meta.args[i-1]}}</td>
-                                        <td>
-                                            <div v-if="event.meta.args[i-1] === 'AccountId'">
-                                                <AccountLink :address="event.event.data[i-1]"/>
-                                            </div>
-                                            <div v-else-if="event.meta.args[i-1] === 'GroupId'">
-                                                <router-link :to="{name: 'group', params: {groupid: event.event.data[i-1]}}">
-                                                    {{event.event.data[i-1]}}
-                                                </router-link>
-                                            </div>
-                                            <div v-else>
-                                                <vue-json-pretty :data="event.event.data[i-1]" :path="'res'">
-                                                </vue-json-pretty>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
+                              <table class="table table-bordered">
+                                <tr v-for="(argName, index) in event.meta.args" :key="index">
+                                  <td>{{ argName }}</td>
+
+                                  <td>
+                                    <template v-if="argName === 'AccountId'">
+                                      <AccountLink :address="event.event.data[index]" />
+                                    </template>
+
+                                    <template v-else-if="argName === 'GroupId'">
+                                      <router-link :to="{ name: 'group', params: { groupid: event.event.data[index] } }">
+                                        {{ event.event.data[index] }}
+                                      </router-link>
+                                    </template>
+
+                                    <template v-else>
+                                      <vue-json-pretty :data="event.event.data[index]" path="res" />
+                                    </template>
+                                  </td>
+                                </tr>
+                              </table>
                             </dd>
                         </div>
                     </dl>

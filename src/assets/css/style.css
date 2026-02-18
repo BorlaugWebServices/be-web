@@ -10829,7 +10829,7 @@ Opacity
 /*******************
 font weight
 *******************/
-html body .font-bold {
+html body .font-weight-bold {
     font-weight: 800;
 }
 

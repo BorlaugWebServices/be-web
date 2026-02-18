@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <ExplorerCard title="account.name" iconClass="fa fa-user" cardClass="mb-4" bodyClass="p-3"><div class="row">
         <div class="col-12">
             <ExplorerCard title="Account" title-tag="h4" icon-class="fas fa-user" body-class="mg-b-20 p-t-0">
                 <dl class="row mb-0">
@@ -134,6 +134,7 @@
             </div>
         </div>
     </div>
+</ExplorerCard>
 </template>
 
 <script>
@@ -142,7 +143,7 @@
     import Age from "../common/Age.vue";
     import Blockie from "../common/Blockie.vue";
     import GetAccountBalance from "../common/GetAccountBalance.vue";
-    import ExplorerCard from "../common/ExplorerCard.vue";
+    import ExplorerCard from '@/components/common/ExplorerCard.vue';
     import { formatters } from "@/utils/formatters";
 
     export default {

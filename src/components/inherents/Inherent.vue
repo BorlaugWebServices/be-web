@@ -28,7 +28,7 @@
                         {{extrinsic.method.method}}
                     </DetailRow>
                     <DetailRow label="Description">
-                        {{extrinsic.method.documentation.join(' ')}}
+                        {{extrinsic.method.docs.join(' ')}}
                     </DetailRow>
                     <DetailRow label="Parameters:" :with-hr="false">
                         <vue-json-pretty :data="extrinsic.method.args" :path="'res'">

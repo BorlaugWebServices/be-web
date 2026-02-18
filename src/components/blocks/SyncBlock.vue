@@ -42,22 +42,22 @@
                 <div class="card-body">
                     <ul class="nav nav-pills custom-pills" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a aria-controls="transactions" aria-selected="true" class="nav-link active" data-bs-toggle="tab" href="#transactions" id="transactions-tab" role="tab">
+                            <a aria-controls="transactions" aria-selected="true" class="nav-link active" data-toggle="tab" href="#transactions" id="transactions-tab" role="tab">
                                 <i class="fas fa-file-signature"/> Transaction
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a aria-controls="inherents" aria-selected="true" class="nav-link" data-bs-toggle="tab" href="#inherents" id="inherents-tab" role="tab">
+                            <a aria-controls="inherents" aria-selected="true" class="nav-link" data-toggle="tab" href="#inherents" id="inherents-tab" role="tab">
                                 <i class="fas fa-file-alt"/> Inherent
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a aria-controls="events" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#events" id="events-tab" role="tab">
+                            <a aria-controls="events" aria-selected="false" class="nav-link" data-toggle="tab" href="#events" id="events-tab" role="tab">
                                 <i class="fas fa-calendar-check"/> Events
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a aria-controls="logs" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#logs" id="logs-tab" role="tab">
+                            <a aria-controls="logs" aria-selected="false" class="nav-link" data-toggle="tab" href="#logs" id="logs-tab" role="tab">
                                 <i class="fas fa-book"/> Logs
                             </a>
                         </li>
@@ -107,10 +107,10 @@
                                             {{tx.method.method}}
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge rounded-pill bg-success font-bold" v-if="isTransactionSuccess(tx)">
+                                            <span class="badge rounded-pill bg-success font-weight-bold" v-if="isTransactionSuccess(tx)">
                                                 <i class="fa fa-check-circle"/> SUCCESS
                                             </span>
-                                            <span class="badge rounded-pill bg-danger font-bold" v-else>
+                                            <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
                                                 <i class="fas fa-exclamation-circle"></i> FAILED
                                             </span>
                                         </td>

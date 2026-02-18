@@ -127,8 +127,8 @@
                             <table class="table table-bordered">
                               <thead>
                                 <tr>
-                                    <th class="p-2 font-bold">Account</th>
-                                    <th class="p-2 font-bold">Weight</th>
+                                    <th class="p-2 font-weight-bold">Account</th>
+                                    <th class="p-2 font-weight-bold">Weight</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -182,10 +182,10 @@
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge rounded-pill bg-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>

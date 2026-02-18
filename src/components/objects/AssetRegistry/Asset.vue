@@ -43,7 +43,7 @@
                         <dt>Status</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
-                        <span class="badge rounded-pill bg-success font-bold" v-if="asset.status">
+                        <span class="badge rounded-pill bg-success font-weight-bold" v-if="asset.status">
                             <i class="fa fa-check-circle"/> {{asset.status}}
                         </span>
                     </div>
@@ -145,8 +145,8 @@
                             <table class="table table-bordered">
                               <thead>
                                 <tr>
-                                    <th class="p-2 font-bold">Name</th>
-                                    <th class="p-2 font-bold">Fact</th>
+                                    <th class="p-2 font-weight-bold">Name</th>
+                                    <th class="p-2 font-weight-bold">Fact</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -206,10 +206,10 @@
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge rounded-pill bg-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>

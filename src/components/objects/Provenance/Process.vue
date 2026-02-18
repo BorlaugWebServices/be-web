@@ -125,16 +125,16 @@
                         <div id="accordion" class="accordion" role="tablist" aria-multiselectable="true">
                             <div class="card" v-for="(step,index) in sequence.steps">
                                 <div class="card-header" role="tab" id="headingOne">
-                                    <a data-bs-toggle="collapse" :href="'#step'+index" aria-expanded="true"
+                                    <a data-toggle="collapse" :href="'#step'+index" aria-expanded="true"
                                        :class="{ 'collapsed': !shouldExpand(index) }" :aria-controls="'step'+index">
                                         {{step.name}}
-                                        <span class="badge rounded-pill bg-success font-bold ml-2" v-if="step.status === 'ATTESTED'">
+                                        <span class="badge rounded-pill bg-success font-weight-bold ml-2" v-if="step.status === 'ATTESTED'">
                                             <i class="fa fa-certificate"/> Attested
                                         </span>
-                                        <span class="badge rounded-pill bg-warning font-bold ml-2" v-if="step.status === 'IN_PROGRESS'">
+                                        <span class="badge rounded-pill bg-warning font-weight-bold ml-2" v-if="step.status === 'IN_PROGRESS'">
                                             <i class="fa fa-spinner fa-spin"/> In Progress
                                         </span>
-                                        <span class="badge rounded-pill bg-secondary font-bold ml-2" v-if="step.status === 'PENDING'">
+                                        <span class="badge rounded-pill bg-secondary font-weight-bold ml-2" v-if="step.status === 'PENDING'">
                                             <i class="fa fa-hourglass-half"/> Pending
                                         </span>
                                     </a>
@@ -147,8 +147,8 @@
                                             <table class="table table-bordered mb-0">
                                               <thead>
                                                 <tr>
-                                                    <th class="p-2 font-bold w-50">Name</th>
-                                                    <th class="p-2 font-bold w-50">Fact</th>
+                                                    <th class="p-2 font-weight-bold w-50">Name</th>
+                                                    <th class="p-2 font-weight-bold w-50">Fact</th>
                                                 </tr>
                                               </thead>
                                               <tbody>
@@ -215,10 +215,10 @@
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-success font-bold" v-if="activity.isSuccess">
+                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
                                     <i class="fa fa-check-circle"/> SUCCESS
                                 </span>
-                                <span class="badge rounded-pill bg-danger font-bold" v-else>
+                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
