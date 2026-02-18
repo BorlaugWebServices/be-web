@@ -1,119 +1,69 @@
 <template>
-    <div class="row">
-        <div class="col-12">
-            <div class="card ">
-                <div class="card-header row m-b-0 p-b-0">
-                    <div class="col-md-6 card-title">
-                        <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
+    <PaginatedTable
+        icon="fas fa-file-signature"
+        entityName="transactions"
+        :headers="['Hash', 'Block', 'Age', 'Module', 'Method', 'Weight', 'Transaction Cost']"
+        :items="transactions"
+        :total="total"
+        :pageCount="pageCount"
+        :show="show"
+        @page-change="pageHandler"
+    >
+        <template #body="{ items }">
+            <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(transaction, index) in items">
+                <td>
+                    <i class="fas fa-file-signature"></i>
+                </td>
+                <td class="block">
+                    <div class="d-flex no-block align-items-center" :title="transaction.hash">
+                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">{{ formatters.truncate(transaction.hash, 16, '...')}}</router-link>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
+                </td>
+                <td>
+                    <div class="d-flex no-block align-items-center">
+                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{ transaction.blockNumber}}</router-link>
                     </div>
-                </div>
-
-                <div class="card-body m-t-0 p-0">
-                    <div class="table-responsive blocks">
-                        <table class="table v-middle">
-                            <thead>
-                            <tr class="border-0">
-                                <th class="border-0"></th>
-                                <th class="border-0 font-weight-bold">Hash</th>
-                                <th class="border-0 font-weight-bold">Block</th>
-                                <th class="border-0 font-weight-bold">Age</th>
-                                <th class="border-0 font-weight-bold">Module</th>
-                                <th class="border-0 font-weight-bold">Method</th>
-                                <th class="border-0 font-weight-bold">Weight</th>
-                                <th class="border-0 text-right font-weight-bold">Transaction Cost</th>
-                                <th class="border-0"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(transaction, index) in transactions">
-                                <td>
-                                    <i class="fas fa-file-signature"></i>
-                                </td>
-                                <td class="block">
-                                    <div class="d-flex no-block align-items-center" :title="transaction.hash">
-                                        <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">{{ $filters.truncate(transaction.hash, 16, '...')}}</router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{ transaction.blockNumber}}</router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <age v-if="transaction.timestamp" :timestamp="transaction.timestamp"/>
-                                </td>
-                                <td>
-                                    {{transaction.method.section}}
-                                </td>
-                                <td>
-                                    {{transaction.method.method}}
-                                </td>
-                                <td>
-                                    {{transaction.weight.toLocaleString()}}
-                                </td>
-                                <td class="text-right"><b>{{ $filters.formatGRAM(transaction.tx_fee) }}</b></td>
-                                <!--                                <td>-->
-                                <!--                                    {{block.events.length}}-->
-                                <!--                                </td>-->
-                                <!--                                <td>-->
-                                <!--                                    {{block.logs.length}}-->
-                                <!--                                </td>-->
-                                <td class="text-right">
-                                    <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}" class="btn btn-sm btn-orange text-white">
-                                        Details
-                                    </router-link>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-12">
-            <div class="text-right">
-                <nav aria-label="Page navigation example">
-                    <paginate
-                            :click-handler="pageHandler"
-                            :container-class="'pagination justify-content-end'"
-                            :margin-pages="2"
-                            :page-count="pageCount"
-                            :page-range="1"
-                            :prev-text="'Prev'"
-                            :next-text="'Next'"
-                            :no-li-surround="false"
-                            :page-class="'page-item'"
-                            :page-link-class="'page-link'"
-                            :prev-class="'page-item'"
-                            :prev-link-class="'page-link'"
-                            :next-class="'page-item'"
-                            :next-link-class="'page-link'"
-                            :break-view-link-class="'break-view-link'">
-                    </paginate>
-                </nav>
-            </div>
-        </div>
-    </div>
+                </td>
+                <td>
+                    <age v-if="transaction.timestamp" :timestamp="transaction.timestamp"/>
+                </td>
+                <td>
+                    {{transaction.method.section}}
+                </td>
+                <td>
+                    {{transaction.method.method}}
+                </td>
+                <td>
+                    {{transaction.weight?.toLocaleString()}}
+                </td>
+                <td class="text-right"><b>{{ formatters.formatGRAM(transaction.tx_fee) }}</b></td>
+                <td class="text-right">
+                    <router-link :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}" class="btn btn-sm btn-orange text-white">
+                        Details
+                    </router-link>
+                </td>
+            </tr>
+        </template>
+    </PaginatedTable>
 </template>
 
 <script>
     import EventBus from "../../event-bus";
-    import Paginate from 'vuejs-paginate-next';
     import Age from "../common/Age.vue";
+    import PaginatedTable from "../common/PaginatedTable.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Transactions",
-        components: { Paginate, Age},
+        components: { Age, PaginatedTable},
         data() {
             return {
                 transactions: [],
                 total: 0,
                 pageCount: 1,
                 show: false,
-                perPage: localStorage.getItem("perPage") || 10
+                perPage: localStorage.getItem("perPage") || 10,
+                formatters: formatters
             };
         },
         mounted() {
@@ -153,15 +103,5 @@
     .block {
         width: 200px;
         min-width: 200px;
-    }
-
-    .blocks table td {
-        padding: 1em 1em !important;
-        vertical-align: top !important;
-    }
-
-    .blocks table th {
-        vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6 !important;
     }
 </style>

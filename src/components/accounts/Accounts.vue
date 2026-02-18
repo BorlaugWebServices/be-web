@@ -27,18 +27,18 @@
                             <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(account, index) in accounts">
                                 <td>{{index+1}}</td>
                                 <td>
-                                    <dd class="mb-1">
+                                    <div class="mb-1">
                                         <div class="float-left mr-2" :class="isMobile?'pt-2':''">
                                             <Blockie :address="account.signer" class="mm-5-0-5-0"/>
                                         </div>
                                         <div class="float-left adjust-40">
                                             <span :title="account.signer" class="align-middle word-break">{{ account.signer }}</span>
                                         </div>
-                                    </dd>
+                                    </div>
                                 </td>
                                 <td>{{account.count}}</td>
                                 <td class="text-right">
-                                    <b>{{ $filters.formatGRAM(account.balance) }}</b>
+                                    <b>{{ formatters.formatGRAM(account.balance) }}</b>
                                 </td>
                                 <td class="text-right">
                                     <router-link
@@ -87,6 +87,7 @@
     import {isMobile} from "mobile-device-detect";
     import Blockie from "../common/Blockie.vue";
     import GetAccountBalance from "../common/GetAccountBalance.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Accounts",
@@ -99,7 +100,8 @@
                 total: 0,
                 pageCount: 1,
                 show: false,
-                perPage: localStorage.getItem("perPage") || 10
+                perPage: localStorage.getItem("perPage") || 10,
+                formatters: formatters
             };
         },
         mounted() {

@@ -12,71 +12,28 @@
                 </div>
 
                 <div class="card-body mg-b-5">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <router-link :to="{name: 'block', params: {number: extrinsic.blockNumber}}">{{extrinsic.blockNumber}}</router-link>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Timestamp</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{ $filters.timestamp(extrinsic.timestamp.toString()) }}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Extrinsic Index</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{extrinsic.index}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Module</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{extrinsic.method.section}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Call</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{extrinsic.method.method}}</dd>
-                        </div>
-                    </dl>
-                    <hr style="height: 1px"/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Description</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{extrinsic.method.documentation.join(' ')}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row m-b-10">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Parameters:</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">
-                                <vue-json-pretty :data="extrinsic.method.args" :path="'res'">
-                                </vue-json-pretty>
-                            </dd>
-                        </div>
-                    </dl>
+                    <DetailRow label="Block">
+                        <router-link :to="{name: 'block', params: {number: extrinsic.blockNumber}}">{{extrinsic.blockNumber}}</router-link>
+                    </DetailRow>
+                    <DetailRow label="Timestamp">
+                        {{ formatters.timestamp(extrinsic.timestamp.toString()) }}
+                    </DetailRow>
+                    <DetailRow label="Extrinsic Index">
+                        {{extrinsic.index}}
+                    </DetailRow>
+                    <DetailRow label="Module">
+                        {{extrinsic.method.section}}
+                    </DetailRow>
+                    <DetailRow label="Call">
+                        {{extrinsic.method.method}}
+                    </DetailRow>
+                    <DetailRow label="Description">
+                        {{extrinsic.method.documentation.join(' ')}}
+                    </DetailRow>
+                    <DetailRow label="Parameters:" :with-hr="false">
+                        <vue-json-pretty :data="extrinsic.method.args" :path="'res'">
+                        </vue-json-pretty>
+                    </DetailRow>
                 </div>
             </div>
         </div>
@@ -99,15 +56,18 @@
     import EventBus from "../../event-bus";
     import VueJsonPretty from 'vue-json-pretty';
     import NotFound from "../common/NotFound.vue";
+    import DetailRow from "../common/DetailRow.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Inherent",
         props: ["inherentid"],
-        components: {VueJsonPretty, NotFound},
+        components: {VueJsonPretty, NotFound, DetailRow},
         data() {
             return {
                 extrinsic: null,
-                flag: 'SEARCHING'
+                flag: 'SEARCHING',
+                formatters: formatters
             };
         },
         mounted() {

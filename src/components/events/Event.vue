@@ -12,53 +12,23 @@
                 </div>
 
                 <div class="card-body mg-b-5">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <router-link :to="{name: 'block', params: {number: event.blockNumber}}">
-                                {{event.blockNumber}}
-                            </router-link>
-                        </div>
-                    </dl>
-                    <hr style="height: 1px"/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Referenced Extrinsic</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.extrinsicid}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Event Index</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.index}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Event Name</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.meta.name}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Description</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{event.meta.documentation.join(' ')}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
+                    <DetailItem title="Block">
+                        <router-link :to="{name: 'block', params: {number: event.blockNumber}}">
+                            {{event.blockNumber}}
+                        </router-link>
+                    </DetailItem>
+                    <DetailItem title="Referenced Extrinsic">
+                        {{event.extrinsicid}}
+                    </DetailItem>
+                    <DetailItem title="Event Index">
+                        {{event.index}}
+                    </DetailItem>
+                    <DetailItem title="Event Name">
+                        {{event.meta.name}}
+                    </DetailItem>
+                    <DetailItem title="Description">
+                        {{event.meta.docs.join(' ')}}
+                    </DetailItem>
                     <dl class="row m-b-10">
                         <div class="col-sm-2 text-sm-right">
                             <dt>Parameters:</dt>
@@ -70,15 +40,7 @@
                                         <td>{{event.meta.args[i-1]}}</td>
                                         <td>
                                             <div v-if="event.meta.args[i-1] === 'AccountId'">
-                                                <router-link :to="{name: 'view-account',params: { address: event.event.data[i-1] }}">
-                                                    <div class="float-left mr-2">
-                                                        <Blockie :address="event.event.data[i-1]" class="mm-5-0-5-0"/>
-                                                    </div>
-                                                    <div class="float-left adjust-40">
-                                                        <span :title="event.event.data[i-1]"
-                                                              class="align-middle word-break">{{ event.event.data[i-1] }}</span>
-                                                    </div>
-                                                </router-link>
+                                                <AccountLink :address="event.event.data[i-1]"/>
                                             </div>
                                             <div v-else-if="event.meta.args[i-1] === 'GroupId'">
                                                 <router-link :to="{name: 'group', params: {groupid: event.event.data[i-1]}}">
@@ -118,12 +80,14 @@
     import VueJsonPretty from 'vue-json-pretty';
     import NotFound from "../common/NotFound.vue";
     import Blockie from "../common/Blockie.vue";
+    import DetailItem from "../common/DetailItem.vue";
+    import AccountLink from "../common/AccountLink.vue";
 
     export default {
         name: "Lease",
         props: ["eventid"],
 
-        components: {VueJsonPretty, NotFound, Blockie},
+        components: {VueJsonPretty, NotFound, Blockie, DetailItem, AccountLink},
         data() {
             return {
                 event: null,

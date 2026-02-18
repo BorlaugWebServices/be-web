@@ -1,21 +1,17 @@
 <template>
-    <div>
-        <div class="row m-b-20">
-            <div class="col-5 align-self-center">
-                <h3 class="page-title"><i class="fas fa-users"></i> Accounts</h3>
-            </div>
-            <div class="col-7 align-self-center">
-                <div class="d-flex no-block justify-content-end align-items-center">
-                </div>
-            </div>
-        </div>
+    <PageLayout title="Accounts" icon="fas fa-users">
         <router-view></router-view>
-    </div>
+    </PageLayout>
 </template>
 
 <script>
+    import PageLayout from "@/components/common/PageLayout.vue";
+
     export default {
-        name: "AccountLayout"
+        name: "AccountLayout",
+        components: {
+            PageLayout
+        }
     }
 </script>
 

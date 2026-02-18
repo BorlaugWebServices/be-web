@@ -3,134 +3,57 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header row m-b-0 p-b-0">
-                    <div class="col-md-6 card-title adjust-500">
+                    <div class="col card-title adjust-500">
                         <h5 class="">
                             <i class="fas fa fa-check-circle text-success" v-if="success"/>
                             <i class="fas fa fa-exclamation-circle text-danger" v-else/>
                             <span class="ml-2">Transaction <span class="font-weight-normal word-break">{{txhash}}</span></span>
                         </h5>
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-auto text-right">
                         <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
                     </div>
                 </div>
 
                 <div class="card-body m-t-0">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{transaction.blockNumber}}</router-link>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Timestamp</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1" v-if="transaction.timestamp">{{ $filters.timestamp(transaction.timestamp.toString()) }}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Index</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.index}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Hash</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.hash}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Status</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">
-                                <span class="badge rounded-pill bg-success font-bold" v-if="success">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                                <span class="badge rounded-pill bg-danger font-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Module</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.method.section}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Call</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.method.method}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Description</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.method.documentation.join(' ')}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Address</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{name: 'view-account',params: { address: transaction.signer.Id ? transaction.signer.Id : transaction.signer }}">
-                                    <div class="float-left mr-2">
-                                        <Blockie :address="transaction.signer.Id ? transaction.signer.Id : transaction.signer" class="mm-5-0-5-0"/>
-                                    </div>
-                                    <div class="float-left adjust-40">
-                                        <span :title="transaction.signer.Id ? transaction.signer.Id : transaction.signer" class="align-middle word-break">{{ transaction.signer.Id ? transaction.signer.Id : transaction.signer }}</span>
-                                    </div>
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Nonce</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.nonce}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Signature</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.signature}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
+                    <DetailItem title="Block">
+                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{transaction.blockNumber}}</router-link>
+                    </DetailItem>
+                    <DetailItem title="Timestamp">
+                        <span v-if="transaction.timestamp">{{ formatters.timestamp(transaction.timestamp.toString()) }}</span>
+                    </DetailItem>
+                    <DetailItem title="Transaction Index">
+                        {{transaction.index}}
+                    </DetailItem>
+                    <DetailItem title="Transaction Hash">
+                        {{transaction.hash}}
+                    </DetailItem>
+                    <DetailItem title="Status">
+                        <span class="badge rounded-pill bg-success font-bold" v-if="success">
+                            <i class="fa fa-check-circle"/> SUCCESS
+                        </span>
+                        <span class="badge rounded-pill bg-danger font-bold" v-else>
+                            <i class="fas fa-exclamation-circle"></i> FAILED
+                        </span>
+                    </DetailItem>
+                    <DetailItem title="Module">
+                        {{transaction.method.section}}
+                    </DetailItem>
+                    <DetailItem title="Call">
+                        {{transaction.method.method}}
+                    </DetailItem>
+                    <DetailItem title="Description">
+                        {{transaction.method.docs?.join(' ')}}
+                    </DetailItem>
+                    <DetailItem title="Address">
+                        <AccountLink :address="transaction.signer.Id ? transaction.signer.Id : transaction.signer"/>
+                    </DetailItem>
+                    <DetailItem title="Nonce">
+                        {{transaction.nonce}}
+                    </DetailItem>
+                    <DetailItem title="Signature">
+                        {{transaction.signature}}
+                    </DetailItem>
                     <dl class="row m-b-10">
                         <div class="col-sm-2 text-sm-right">
                             <dt>Parameters:</dt>
@@ -232,13 +155,15 @@
     import Identity from "../objects/Identity/Identity.vue";
     import Audit from "../objects/Audit/Audit.vue";
     import Process from "../objects/Provenance/Process.vue";
-    import Blockie from "../common/Blockie.vue";
     import NotFound from "../common/NotFound.vue";
+    import DetailItem from "../common/DetailItem.vue";
+    import AccountLink from "../common/AccountLink.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "TransactionFromChain",
         props: ["blockhashornumber", "txhash"],
-        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process},
+        components: {Audit, Lease, VueJsonPretty, Identity, NotFound, Process, DetailItem, AccountLink},
         watch: {
             "txhash": async function(nv, ov) {
                 await this.getTransaction();
@@ -253,7 +178,8 @@
                 auditid: null,
                 processid: null,
                 flag: 'SEARCHING',
-                success: false
+                success: false,
+                formatters: formatters
             };
         },
         mounted() {
@@ -263,40 +189,31 @@
             async getTransaction() {
                 try {
                     EventBus.emit('show');
-                    let reply         = await this.axios.get(`/transactions/${this.blockhashornumber}/${this.txhash}`);
+                    let reply         = await this.axios.get(`/transactions/${this.txhash}`);
                     this.transaction  = reply.data;
-                    let successEvents = this.transaction.events.filter((event) => {
-                        return event.meta.name === "ExtrinsicSuccess";
-                    });
-                    this.success      = successEvents.length > 0;
+                  this.success      = this.transaction.events.some(event => event.meta.name === "ExtrinsicSuccess");
+
                     if(this.transaction) {
                         this.flag = 'SUCCESS';
-                        if(this.transaction.events.length > 0) {
-                            let events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'LeaseCreated'
-                            });
-                            if(events.length > 0) {
-                                this.leaseid = events[0].event.data[0];
-                            }
-                            events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'Registered'
-                            });
-                            if(events.length > 0) {
-                                this.did = this.$filters.did(events[0].event.data[2].id);
-                            }
-                            events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'AuditCreated'
-                            });
-                            if(events.length > 0) {
-                                this.auditid = events[0].event.data[1];
-                            }
-                            events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'SequenceCreated'
-                            });
-                            if(events.length > 0) {
-                                this.processid = events[0].event.data[2];
-                            }
+                      for (const event of this.transaction.events) {
+                        switch (event.meta.name) {
+                          case 'LeaseCreated':
+                            this.leaseid = event.event.data[0];
+                            break;
+                          case 'Registered':
+                            this.did = formatters.did(event.event.data[3].id);
+                            break;
+                          case 'AuditCreated':
+                            this.auditid = event.event.data[2];
+                            break;
+                          case 'SequenceCreated':
+                            this.processid = event.event.data[5];
+                            break;
+                          default:
+                            // No action needed for other event types
+                            break;
                         }
+                      }
                     } else {
                         this.flag = 'FAILURE';
                     }

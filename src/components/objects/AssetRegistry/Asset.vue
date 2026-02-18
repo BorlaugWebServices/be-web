@@ -81,7 +81,7 @@
                         <dt>Acquired Date</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
-                        <dd class="mb-1">{{ $filters.from_ms_to_date(Number(asset.acquired_date.replace(/,/g, ""))*1000) }}</dd>
+                        <dd class="mb-1">{{ formatters.from_ms_to_date(Number(asset.acquired_date.replace(/,/g, ""))*1000) }}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -132,7 +132,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ $filters.from_ms(asset.timestamp) }}</dd>
+                        <dd class="mb-1">{{ formatters.from_ms(asset.timestamp) }}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -143,14 +143,18 @@
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
                             <table class="table table-bordered">
+                              <thead>
                                 <tr>
                                     <th class="p-2 font-bold">Name</th>
                                     <th class="p-2 font-bold">Fact</th>
                                 </tr>
+                              </thead>
+                              <tbody>
                                 <tr v-for="prop in asset.properties">
                                     <td class="p-2">{{prop.name}}</td>
                                     <td class="p-2">{{prop.fact.Text}}</td>
                                 </tr>
+                              </tbody>
                             </table>
                         </dd>
                     </div>
@@ -198,7 +202,7 @@
                                 <router-link
                                         :title="activity.hash"
                                         :to="{ name: 'transaction-from-chain', params: { blockhashornumber: asset.blockNumber, txhash: activity.hash}}">
-                                    {{ $filters.truncate(activity.hash, 32, '') }}
+                                    {{ formatters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
@@ -209,7 +213,7 @@
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
+                            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -238,6 +242,7 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie.vue";
     import NotFound from "../../common/NotFound.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Asset",
@@ -248,7 +253,8 @@
                 asset: null,
                 activities: [],
                 show: false,
-                flag: 'SEARCHING'
+                flag: 'SEARCHING',
+                formatters: formatters
             }
         },
         mounted() {
@@ -297,7 +303,7 @@
                 return d;
             },
             getDid(did) {
-                return this.$filters.did(did);
+                return formatters.did(did);
             }
         }
     }

@@ -17,12 +17,12 @@
                     </div>
                     <div class="col-sm-9 text-sm-left" v-if="show">
                         <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
-                        <dd class="ml-2 float-left">{{ $filters.did(identity.did) }}</dd>
+                        <dd class="ml-2 float-left">{{ formatters.did(identity.did) }}</dd>
                     </div>
                     <div class="col-sm-9 text-sm-left" v-else>
                         <router-link :to="{name: 'identity', params : { did: did }}">
                             <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{ $filters.did(identity.did) }}</dd>
+                            <dd class="ml-2 float-left">{{ formatters.did(identity.did) }}</dd>
                         </router-link>
                     </div>
                 </dl>
@@ -95,7 +95,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ $filters.from_ms(identity.timestamp) }}</dd>
+                        <dd class="mb-1">{{ formatters.from_ms(identity.timestamp) }}</dd>
                     </div>
                 </dl>
                 <hr/>
@@ -106,14 +106,18 @@
                     <div class="col-sm-9 text-sm-left">
                         <dd class="mb-1">
                             <table class="table table-bordered">
+                              <thead>
                                 <tr>
                                     <th class="p-2 font-bold">Name</th>
                                     <th class="p-2 font-bold">Fact</th>
                                 </tr>
+                              </thead>
+                              <tbody>
                                 <tr v-for="prop in identity.properties">
                                     <td class="p-2">{{prop.name}}</td>
                                     <td class="p-2">{{prop.fact}}</td>
                                 </tr>
+                              </tbody>
                             </table>
                         </dd>
                     </div>
@@ -140,30 +144,34 @@
                                 <dt>Statements :</dt>
                                 <dd>
                                     <table class="table table-bordered">
+                                      <thead>
                                         <tr>
                                             <th class="p-2 font-bold">Name</th>
                                             <th class="p-2 font-bold">Fact</th>
                                         </tr>
+                                      </thead>
+                                      <tbody>
                                         <tr v-for="st    in identity.claims[claimIndex].statements">
                                             <td class="p-2">{{st.name}}</td>
                                             <td class="p-2">{{st.fact}}</td>
                                         </tr>
+                                      </tbody>
                                     </table>
                                 </dd>
 
                                 <dt class="m-b-5">Created By :</dt>
                                 <dd class="mb-3">
-                                    <router-link :to="{name: 'identity', params : { did: $filters.did(identity.claims[claimIndex].created_by) }}">
+                                    <router-link :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].created_by) }}">
                                         <Blockie :address="identity.claims[claimIndex].created_by"/>
-                                        {{ $filters.did(identity.claims[claimIndex].created_by) }}
+                                        {{ formatters.did(identity.claims[claimIndex].created_by) }}
                                     </router-link>
                                 </dd>
 
                                 <dt class="m-b-5">Attested By :</dt>
                                 <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
-                                    <router-link :to="{name: 'identity', params : { did: $filters.did(identity.claims[claimIndex].attestation.attested_by) }}">
+                                    <router-link :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].attestation.attested_by) }}">
                                         <Blockie :address="identity.claims[claimIndex].attestation.attested_by" class=""/>
-                                        {{ $filters.did(identity.claims[claimIndex].attestation.attested_by) }}
+                                        {{ formatters.did(identity.claims[claimIndex].attestation.attested_by) }}
                                     </router-link>
                                 </dd>
                                 <dd class="mb-3" v-else>
@@ -230,7 +238,7 @@
                             <td>
                                 <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
                                              :title="activity.hash">
-                                    {{ $filters.truncate(activity.hash, 32, '') }}
+                                    {{ formatters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
@@ -241,7 +249,7 @@
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
+                            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -271,6 +279,7 @@
     import Blockie from "../../common/Blockie.vue";
     import VueJsonPretty from "vue-json-pretty";
     import NotFound from "../../common/NotFound.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Identity",
@@ -282,7 +291,8 @@
                 activities: [],
                 show: false,
                 flag: 'SEARCHING',
-                claimIndex: 0
+                claimIndex: 0,
+                formatters: formatters
             }
         },
         watch : {

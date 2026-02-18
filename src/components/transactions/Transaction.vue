@@ -16,185 +16,39 @@
                 </div>
 
                 <div class="card-body m-t-0">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{transaction.blockNumber}}</router-link>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Timestamp</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{ $filters.timestamp(transaction.timestamp.toString()) }}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Index</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.index}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Hash</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.hash}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Status</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">
-                                <span class="badge rounded-pill bg-success font-bold" v-if="success">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                                <span class="badge rounded-pill bg-danger font-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Module</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.method.section}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Call</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.method.method}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Description</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.method.documentation.join(' ')}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Address</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{name: 'view-account',params: { address: transaction.signer.Id ? transaction.signer.Id : transaction.signer }}">
-                                    <div class="float-left mr-2">
-                                        <Blockie :address="transaction.signer.Id ? transaction.signer.Id : transaction.signer" class="mm-5-0-5-0"/>
-                                    </div>
-                                    <div class="float-left adjust-40">
-                                        <span :title="transaction.signer.Id ? transaction.signer.Id : transaction.signer" class="align-middle word-break">{{ transaction.signer.Id ? transaction.signer.Id : transaction.signer }}</span>
-                                    </div>
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Nonce</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.nonce}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Signature</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">{{transaction.signature}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row m-b-10">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Parameters:</dt>
-                        </div>
-                        <div class="col-sm-10 text-sm-left">
-                            <dd class="mb-1">
-                                <vue-json-pretty :data="transaction.method.args" :path="'res'">
-                                </vue-json-pretty>
-                            </dd>
-                        </div>
-                    </dl>
+                    <DetailsList :items="transactionDetails">
+                        <template #block="{ item }">
+                            <router-link :to="{name: 'block', params: {number: item.value}}">{{item.value}}</router-link>
+                        </template>
+                        <template #status="{ item }">
+                            <span class="badge rounded-pill bg-success font-bold" v-if="item.value">
+                                <i class="fa fa-check-circle"/> SUCCESS
+                            </span>
+                            <span class="badge rounded-pill bg-danger font-bold" v-else>
+                                <i class="fas fa-exclamation-circle"></i> FAILED
+                            </span>
+                        </template>
+                        <template #address="{ item }">
+                            <router-link :to="{name: 'view-account',params: { address: item.value }}">
+                                <div class="float-left mr-2">
+                                    <Blockie :address="item.value" class="mm-5-0-5-0"/>
+                                </div>
+                                <div class="float-left adjust-40">
+                                    <span :title="item.value" class="align-middle word-break">{{ item.value }}</span>
+                                </div>
+                            </router-link>
+                        </template>
+                        <template #parameters="{ item }">
+                            <vue-json-pretty :data="item.value" :path="'res'">
+                            </vue-json-pretty>
+                        </template>
+                    </DetailsList>
                 </div>
             </div>
         </div>
 
         <div class="col-12">
-            <div class="card">
-                <div class="card-header row m-b-0 p-b-0">
-                    <div class="col-md-6 card-title">
-                        <h5>Triggered Events</h5>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <h3><i class="fas fa-calendar-check card-title text-orange"/></h3>
-                    </div>
-                </div>
-
-                <div class="card-body p-t-0 p-b-0 m-t-0">
-                    <div class="table-responsive blocks p-0 m-b-0" v-if="transaction.events && transaction.events.length > 0">
-                        <table class="table v-middle">
-                            <thead>
-                            <tr class="border-0">
-                                <th class="border-0"></th>
-                                <th class="border-0 font-weight-bold">Event ID</th>
-                                <th class="border-0 font-weight-bold">Event</th>
-                                <th class="border-0"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(ev, index) in transaction.events">
-                                <td>
-                                    <i class="fas fa-file-alt"></i>
-                                </td>
-                                <td class="block">
-                                    <div class="d-flex no-block align-items-center">
-                                        <router-link :to="{ name: 'event', params: {eventid: ev.id}}" class="hash">{{ ev.id }}</router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    {{ev.meta.name}}
-                                </td>
-                                <td class="text-right">
-                                    <router-link :to="{ name: 'event', params: {eventid: ev.id}}" class="btn btn-sm btn-orange text-white">
-                                        Details
-                                    </router-link>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div v-else>
-                        <h4 class="text-center text-muted p-25">No Events</h4>
-                    </div>
-                </div>
-            </div>
+            <EventsTable :events="transaction.events" />
         </div>
 
         <div class="col-12" v-if="transaction && transaction.method.section === 'assetRegistry' && transaction.method.method === 'newLease'">
@@ -234,11 +88,14 @@
     import Process from "../objects/Provenance/Process.vue";
     import Blockie from "../common/Blockie.vue";
     import NotFound from "../common/NotFound.vue";
+    import DetailsList from "../common/DetailsList.vue";
+    import EventsTable from "../common/EventsTable.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Transaction",
         props: ["hash"],
-        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process},
+        components: {Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process, DetailsList, EventsTable},
         watch: {
             "hash": async function(nv, ov) {
                 await this.getTransaction();
@@ -253,8 +110,30 @@
                 auditid: null,
                 processid: null,
                 flag: 'SEARCHING',
-                success: false
+                success: false,
+                formatters: formatters
             };
+        },
+        computed: {
+            transactionDetails() {
+                if (!this.transaction) {
+                    return [];
+                }
+                return [
+                    { label: 'Block', value: this.transaction.blockNumber, slotName: 'block' },
+                    { label: 'Timestamp', value: formatters.timestamp(this.transaction.timestamp.toString()) },
+                    { label: 'Transaction Index', value: this.transaction.index },
+                    { label: 'Transaction Hash', value: this.transaction.hash },
+                    { label: 'Status', value: this.success, slotName: 'status' },
+                    { label: 'Module', value: this.transaction.method.section },
+                    { label: 'Call', value: this.transaction.method.method },
+                    { label: 'Description', value: this.transaction.method.documentation.join(' ') },
+                    { label: 'Address', value: this.transaction.signer.Id ? this.transaction.signer.Id : this.transaction.signer, slotName: 'address' },
+                    { label: 'Nonce', value: this.transaction.nonce },
+                    { label: 'Signature', value: this.transaction.signature },
+                    { label: 'Parameters', value: this.transaction.method.args, slotName: 'parameters' }
+                ];
+            }
         },
         mounted() {
             this.getTransaction();
@@ -265,48 +144,39 @@
                     EventBus.emit('show');
                     let reply         = await this.axios.get(`/transactions/${this.hash}`);
                     this.transaction  = reply.data;
-                    let successEvents = this.transaction.events.filter((event) => {
-                        return event.meta.name === "ExtrinsicSuccess";
-                    });
-                    this.success      = successEvents.length > 0;
-                    if(this.transaction) {
-                        this.flag = 'SUCCESS';
-                        if(this.transaction.events.length > 0) {
-                            let events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'LeaseCreated'
-                            });
-                            if(events.length > 0) {
-                                this.leaseid = events[0].event.data[0];
-                            }
-                            events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'Registered'
-                            });
-                            if(events.length > 0) {
-                                this.did = this.$filters.did(events[0].event.data[2].id);
-                            }
-                            events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'AuditCreated'
-                            });
-                            if(events.length > 0) {
-                                this.auditid = events[0].event.data[1];
-                            }
-                            events = this.transaction.events.filter((ev) => {
-                                return ev.meta.name === 'SequenceCreated'
-                            });
-                            if(events.length > 0) {
-                                this.processid = events[0].event.data[2];
-                            }
-                        }
-                    } else {
-                        this.flag = 'FAILURE';
+                    this.success      = this.transaction.events.some(event => event.meta.name === "ExtrinsicSuccess");
+                  if(this.transaction) {
+                    this.flag = 'SUCCESS';
+                    for (const event of this.transaction.events) {
+                      switch (event.meta.name) {
+                        case 'LeaseCreated':
+                          this.leaseid = event.event.data[0];
+                          break;
+                        case 'Registered':
+                          this.did = formatters.did(event.event.data[3].id);
+                          break;
+                        case 'AuditCreated':
+                          this.auditid = event.event.data[2];
+                          break;
+                        case 'SequenceCreated':
+                          this.processid = event.event.data[5];
+                          break;
+                        default:
+                          // No action needed for other event types
+                          break;
+                      }
                     }
+                  } else {
+                    this.flag = 'FAILURE';
+                  }
                 } catch(e) {
                     console.error(e);
                     this.flag = 'FAILURE';
                 } finally {
                     EventBus.emit('hide');
                 }
-            }
+            },
+
         }
     }
 </script>

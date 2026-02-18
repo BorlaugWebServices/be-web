@@ -12,70 +12,27 @@
                 </div>
 
                 <div class="card-body">
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Timestamp</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{ $filters.timestamp(block.timestamp.toString()) }}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.hash}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Parent Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{name: 'block', params: {number: block.number - 1}}">{{block.parentHash}}</router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>State Root</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.stateRoot}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Extrinsics Root</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.extrinsicsRoot}}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Total Extrinsics</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.transactions.length + block.inherents.length}}</dd>
-                        </div>
-                    </dl>
-                    <hr style="height: 1px"/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Total Signed Extrinsics</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{block.transactions.length}}</dd>
-                        </div>
-                    </dl>
+                    <DetailItem title="Timestamp" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                        {{ formatters.timestamp(block.timestamp.toString()) }}
+                    </DetailItem>
+                    <DetailItem title="Hash" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                        {{block.hash}}
+                    </DetailItem>
+                    <DetailItem title="Parent Hash" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                        <router-link :to="{name: 'block', params: {number: block.number - 1}}">{{block.parentHash}}</router-link>
+                    </DetailItem>
+                    <DetailItem title="State Root" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                        {{block.stateRoot}}
+                    </DetailItem>
+                    <DetailItem title="Extrinsics Root" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                        {{block.extrinsicsRoot}}
+                    </DetailItem>
+                    <DetailItem title="Total Extrinsics" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                        {{block.transactions.length + block.inherents.length}}
+                    </DetailItem>
+                    <DetailItem title="Total Signed Extrinsics" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left" :no-separator="true">
+                        {{block.transactions.length}}
+                    </DetailItem>
                 </div>
             </div>
         </div>
@@ -317,15 +274,18 @@
     import EventBus from "../../event-bus";
     import Blockie from "../common/Blockie.vue";
     import NotFound from "../common/NotFound.vue";
+    import DetailItem from "../common/DetailItem.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "SyncBlock",
         props: ["number"],
-        components: {Blockie, NotFound},
+        components: {Blockie, NotFound, DetailItem},
         data() {
             return {
                 block: {},
-                flag: 'SEARCHING'
+                flag: 'SEARCHING',
+                formatters: formatters
             };
         },
         watch: {

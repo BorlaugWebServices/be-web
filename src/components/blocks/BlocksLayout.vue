@@ -1,21 +1,17 @@
 <template>
-    <div>
-        <div class="row m-b-20">
-            <div class="col-5 align-self-center">
-                <h3 class="page-title"><i class="fas fa-cube"></i> Blocks</h3>
-            </div>
-            <div class="col-7 align-self-center">
-                <div class="d-flex no-block justify-content-end align-items-center">
-                </div>
-            </div>
-        </div>
+    <PageLayout title="Blocks" icon="fas fa-cube">
         <router-view></router-view>
-    </div>
+    </PageLayout>
 </template>
 
 <script>
+    import PageLayout from "@/components/common/PageLayout.vue";
+
     export default {
-        name: "BlocksLayout"
+        name: "BlocksLayout",
+        components: {
+            PageLayout
+        }
     }
 </script>
 

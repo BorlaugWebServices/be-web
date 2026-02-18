@@ -88,7 +88,7 @@
                         <dt>Created at</dt>
                     </div>
                     <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ $filters.from_ms(audit.timestamp) }}</dd>
+                        <dd class="mb-1">{{ formatters.from_ms(audit.timestamp) }}</dd>
                     </div>
                 </dl>
             </div>
@@ -123,7 +123,7 @@
                             <td>
                                 <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: audit.blockNumber, txhash: activity.hash}}"
                                              :title="activity.hash">
-                                    {{ $filters.truncate(activity.hash, 32, '') }}
+                                    {{ formatters.truncate(activity.hash, 32, '') }}
                                 </router-link>
                             </td>
                             <td>
@@ -134,7 +134,7 @@
                                     <i class="fas fa-exclamation-circle"></i> FAILED
                                 </span>
                             </td>
-                            <td>{{ $filters.timestamp(activity.timestamp.toString()) }}</td>
+                            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -163,6 +163,7 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie.vue";
     import NotFound from "../../common/NotFound.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Audit",
@@ -173,7 +174,8 @@
                 audit: null,
                 activities: [],
                 show: false,
-                flag: 'SEARCHING'
+                flag: 'SEARCHING',
+                formatters: formatters
             }
         },
         mounted() {
@@ -222,7 +224,7 @@
                 return d;
             },
             getDid(did) {
-                return this.$filters.did(did);
+                return formatters.did(did);
             }
         }
     }

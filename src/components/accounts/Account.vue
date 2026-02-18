@@ -1,126 +1,106 @@
 <template>
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header row m-b-0 p-b-0">
-                    <div class="col-md-6 card-title">
-                        <h4>Account</h4>
+            <ExplorerCard title="Account" title-tag="h4" icon-class="fas fa-user" body-class="mg-b-20 p-t-0">
+                <dl class="row mb-0">
+                    <div class="col-sm-3 text-sm-right">
+                        <dt>Address</dt>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <h3><i class="fas fa-user card-title text-orange"/></h3>
+                    <div class="col-sm-9 text-sm-left">
+                        <div class="mb-1">
+                            <Blockie :address="address" class="mm-5-0-5-0"/>
+                            <span :title="address" class="m-l-5 align-middle">{{ address }}</span>
+                        </div>
                     </div>
-                </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-3 text-sm-right">
+                        <dt>Available Balance</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <div class="mb-1">
+                            <get-account-balance :address="address" class="text-orange"></get-account-balance>
+                        </div>
+                    </div>
+                </dl>
+                <hr/>
+                <dl class="row mb-0">
+                    <div class="col-sm-3 text-sm-right">
+                        <dt>Spent on Transactions</dt>
+                    </div>
+                    <div class="col-sm-9 text-sm-left">
+                        <div class="mb-1">
+                            <b class="text-orange">{{ formatters.formatGRAM(spent_on_txs) }}</b>
+                        </div>
+                    </div>
+                </dl>
+            </ExplorerCard>
 
-                <div class="card-body mg-b-20 p-t-0">
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Address</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <Blockie :address="address" class="mm-5-0-5-0"/>
-                                <span :title="address" class="m-l-5 align-middle">{{ address }}</span>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Available Balance</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <get-account-balance :address="address" class="text-orange"></get-account-balance>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-3 text-sm-right">
-                            <dt>Spent on Transactions</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <b class="text-orange">{{ $filters.formatGRAM(spent_on_txs) }}</b>
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
-            </div>
+            <ExplorerCard v-if="transactions.length>0" icon-class="fa fa-file-signature" body-class="m-t-0 p-0">
+                <template #title>
+                    <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
+                </template>
 
-            <div class="card" v-if="transactions.length>0">
-                <div class="card-header row m-b-0 p-b-0">
-                    <div class="col-md-6 card-title">
-                        <h5 v-if="show">Showing {{transactions.length}} of {{total}} transactions</h5>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <h3><i class="fa fa-file-signature card-title text-orange"/></h3>
-                    </div>
-                </div>
-
-                <div class="card-body m-t-0 p-0">
-                    <div class="table-responsive blocks">
-                        <table class="table v-middle">
-                            <thead>
-                            <tr class="border-0">
-                                <th class="border-0"></th>
-                                <th class="border-0 font-weight-bold">Hash</th>
-                                <th class="border-0 font-weight-bold">Block</th>
-                                <th class="border-0 font-weight-bold">Age</th>
-                                <th class="border-0 font-weight-bold">Module</th>
-                                <th class="border-0 font-weight-bold">Method</th>
-                                <th class="border-0 text-right font-weight-bold">Transaction Cost</th>
-                                <th class="border-0"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(transaction, index) in transactions">
-                                <td>
-                                    <i class="fas fa-file-signature"></i>
-                                </td>
-                                <td class="block">
-                                    <div :title="transaction.hash" class="d-flex no-block align-items-center">
-                                        <router-link
-                                                :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">
-                                            {{ $filters.truncate(transaction.hash, 16, '...') }}
-                                        </router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex no-block align-items-center">
-                                        <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{
-                                            transaction.blockNumber}}
-                                        </router-link>
-                                    </div>
-                                </td>
-                                <td>
-                                    <age :timestamp="transaction.timestamp" v-if="transaction.timestamp"/>
-                                </td>
-                                <td>
-                                    {{transaction.method.section}}
-                                </td>
-                                <td>
-                                    {{transaction.method.method}}
-                                </td>
-                                <td class="text-right">
-                                    <b>{{ $filters.formatGRAM(transaction.tx_fee) }}</b>
-                                </td>
-                                <!--                                <td>-->
-                                <!--                                    {{block.logs.length}}-->
-                                <!--                                </td>-->
-                                <td class="text-right">
+                <div class="table-responsive blocks">
+                    <table class="table v-middle">
+                        <thead>
+                        <tr class="border-0">
+                            <th class="border-0"></th>
+                            <th class="border-0 font-weight-bold">Hash</th>
+                            <th class="border-0 font-weight-bold">Block</th>
+                            <th class="border-0 font-weight-bold">Age</th>
+                            <th class="border-0 font-weight-bold">Module</th>
+                            <th class="border-0 font-weight-bold">Method</th>
+                            <th class="border-0 text-right font-weight-bold">Transaction Cost</th>
+                            <th class="border-0"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="p-t-0 p-b-0" v-bind:key="index" v-for="(transaction, index) in transactions">
+                            <td>
+                                <i class="fas fa-file-signature"></i>
+                            </td>
+                            <td class="block">
+                                <div :title="transaction.hash" class="d-flex no-block align-items-center">
                                     <router-link
-                                            :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}"
-                                            class="btn btn-sm btn-orange text-white">
-                                        Details
+                                            :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}">
+                                        {{ formatters.truncate(transaction.hash, 16, '...') }}
                                     </router-link>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex no-block align-items-center">
+                                    <router-link :to="{name: 'block', params: {number: transaction.blockNumber}}">{{
+                                        transaction.blockNumber}}
+                                    </router-link>
+                                </div>
+                            </td>
+                            <td>
+                                <age :timestamp="transaction.timestamp" v-if="transaction.timestamp"/>
+                            </td>
+                            <td>
+                                {{transaction.method.section}}
+                            </td>
+                            <td>
+                                {{transaction.method.method}}
+                            </td>
+                            <td class="text-right">
+                                <b>{{ formatters.formatGRAM(transaction.tx_fee) }}</b>
+                            </td>
+                            <td class="text-right">
+                                <router-link
+                                        :to="{name: 'transaction-from-chain', params: {blockhashornumber: transaction.blockNumber, txhash: transaction.hash}}"
+                                        class="btn btn-sm btn-orange text-white">
+                                    Details
+                                </router-link>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </ExplorerCard>
+
             <div class="card" v-else>
                 <div class="card-body">
                     <div class="card-header row m-b-0 p-b-0">
@@ -162,11 +142,13 @@
     import Age from "../common/Age.vue";
     import Blockie from "../common/Blockie.vue";
     import GetAccountBalance from "../common/GetAccountBalance.vue";
+    import ExplorerCard from "../common/ExplorerCard.vue";
+    import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Account",
         props: ['address'],
-        components: {GetAccountBalance, Blockie, Paginate, Age},
+        components: {GetAccountBalance, Blockie, Paginate, Age, ExplorerCard},
         data() {
             return {
                 transactions: [],
@@ -174,7 +156,8 @@
                 pageCount: 1,
                 show: false,
                 perPage: localStorage.getItem("perPage") || 10,
-                spent_on_txs: 0
+                spent_on_txs: 0,
+                formatters: formatters
             };
         },
         mounted() {

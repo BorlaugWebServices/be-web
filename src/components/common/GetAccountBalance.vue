@@ -1,14 +1,17 @@
 <template>
-    <b>{{ $filters.formatGRAM(balance) }}</b>
+    <b>{{ formatters.formatGRAM(balance) }}</b>
 </template>
 
 <script>
+    import { formatters } from "@/utils/formatters";
+
     export default {
         name: "GetAccountBalance",
         props: ['address'],
         data() {
             return {
-                balance: 0
+                balance: 0,
+                formatters: formatters
             }
         },
         mounted() {
