@@ -1,173 +1,85 @@
 <template>
     <div v-if="flag === 'SUCCESS'">
-        <div class="card">
-            <div class="card-header row m-b-0 p-b-0">
-                <div class="col-md-6 card-title">
-                    <h4>Process Definition</h4>
-                </div>
-                <div class="col-md-6 text-right">
-                    <h3><i class="fas fa-list-alt card-title text-orange"/></h3>
-                </div>
-            </div>
+        <ExplorerCard title="Process Definition" icon-class="fas fa-list-alt" cardClass="mb-4">
+            <DetailItem title="Id" v-if="show">
+                {{definition.id}}
+            </DetailItem>
+            <template v-if="show">
+                <DetailItem title="Registry Id">
+                    <router-link :to="{ name : 'registry', params: {registryid: definition.registry_id}}">{{definition.registry_id}}</router-link>
+                </DetailItem>
+                <DetailItem title="Block Number">
+                    <router-link :to="{ name : 'block', params: {number: definition.blockNumber}}">{{definition.blockNumber}}</router-link>
+                </DetailItem>
+                <DetailItem title="Block Hash">
+                    <router-link :to="{ name : 'block', params: {number: definition.blockNumber}}">{{definition.blockHash}}</router-link>
+                </DetailItem>
+                <DetailItem title="Transaction Hash">
+                    <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: definition.blockHash, txhash: definition.extrinsicHash}}">{{definition.extrinsicHash}}</router-link>
+                </DetailItem>
+            </template>
+            <DetailItem title="Process Definition Creator">
+                <Blockie :address="definition.creator" class="mm-5-0-5-0"/>
+                <span :title="definition.creator" class="m-l-5 align-middle">
+                    <router-link :to="{ name : 'view-account' , params: { address: definition.creator }}">
+                        {{ definition.creator }}</router-link>
+                </span>
+            </DetailItem>
+            <DetailItem title="Creator Group Account">
+                <Blockie :address="definition.creator_group" class="mm-5-0-5-0"/>
+                <span :title="definition.creator_group" class="m-l-5 align-middle">
+                    <router-link :to="{ name : 'view-account' , params: { address: definition.creator_group }}">
+                        {{ definition.creator_group }}</router-link>
+                </span>
+            </DetailItem>
+            <DetailItem title="Created at" :noSeparator="true">
+                {{ formatters.from_ms(definition.timestamp) }}
+            </DetailItem>
+        </ExplorerCard>
 
-            <div class="card-body mg-b-20 p-t-0">
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Id</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left" v-if="show">
-                        <dd class="mb-1">{{definition.id}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <template v-if="show">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Registry Id</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'registry', params: {registryid: definition.registry_id}}">{{definition.registry_id}}</router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block Number</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: definition.blockNumber}}">{{definition.blockNumber}}</router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: definition.blockNumber}}">{{definition.blockHash}}</router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'transaction-from-chain', params: {blockhash: definition.blockHash, txhash: definition.extrinsicHash}}">{{definition.extrinsicHash}}</router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                </template>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Process Definition Creator</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            <Blockie :address="definition.creator" class="mm-5-0-5-0"/>
-                            <span :title="definition.creator" class="m-l-5 align-middle">
-                                <router-link :to="{ name : 'view-account' , params: { address: definition.creator }}">
-                                    {{ definition.creator }}</router-link>
-                            </span>
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Creator Group Account</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            <Blockie :address="definition.creator_group" class="mm-5-0-5-0"/>
-                            <span :title="definition.creator_group" class="m-l-5 align-middle">
-                                <router-link :to="{ name : 'view-account' , params: { address: definition.creator_group }}">
-                                    {{ definition.creator_group }}</router-link>
-                            </span>
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Created at</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ formatters.from_ms(definition.timestamp) }}</dd>
-                    </div>
-                </dl>
+        <ExplorerCard title="Process Definition Activities" icon-class="fas fa-list-alt">
+            <div class="table-responsive blocks" v-if="activities.length > 0">
+                <table class="table v-middle">
+                    <thead>
+                    <tr>
+                        <th class="border-top-0 font-weight-bold">#</th>
+                        <th class="border-top-0 font-weight-bold">Activity</th>
+                        <th class="border-top-0 font-weight-bold">Transaction Hash</th>
+                        <th class="border-top-0 font-weight-bold">Status</th>
+                        <th class="border-top-0 font-weight-bold">Timestamp</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(activity,i) in activities">
+                        <td>{{i+1 }}</td>
+                        <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
+                        <td>
+                            <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: definition.blockNumber, txhash: activity.hash}}"
+                                         :title="activity.hash">
+                                {{ formatters.truncate(activity.hash, 32, '') }}
+                            </router-link>
+                        </td>
+                        <td>
+                          <StatusBadge :success="activity.isSuccess" />
+                        </td>
+                        <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header row m-b-0 p-b-0">
-                <div class="col-md-6 card-title">
-                    <h4>Process Definition Activities</h4>
-                </div>
-                <div class="col-md-6 text-right">
-                    <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
-                </div>
+            <div class="p-b-10" v-else>
+                <h4 class="text-muted text-center">No Activities found</h4>
             </div>
-
-            <div class="card-body mg-b-20 p-t-0">
-                <div class="table-responsive blocks" v-if="activities.length > 0">
-                    <table class="table v-middle">
-                        <thead>
-                        <tr>
-                            <th class="border-top-0 font-weight-bold">#</th>
-                            <th class="border-top-0 font-weight-bold">Activity</th>
-                            <th class="border-top-0 font-weight-bold">Transaction Hash</th>
-                            <th class="border-top-0 font-weight-bold">Status</th>
-                            <th class="border-top-0 font-weight-bold">Timestamp</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(activity,i) in activities">
-                            <td>{{i+1 }}</td>
-                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
-                            <td>
-                                <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: definition.blockNumber, txhash: activity.hash}}"
-                                             :title="activity.hash">
-                                    {{ formatters.truncate(activity.hash, 32, '') }}
-                                </router-link>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
-                            </td>
-                            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="p-b-10" v-else>
-                    <h4 class="text-muted text-center">No Activities found</h4>
-                </div>
-            </div>
-        </div>
+        </ExplorerCard>
     </div>
     <div class="row" v-else>
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching definition, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
-                    </h4>
-                    <NotFound module="Process Definition" :module-id="definitionid" v-if="flag === 'FAILURE'"/>
-                </div>
-            </div>
+            <ExplorerCard>
+                <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                    Fetching definition, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                </h4>
+                <NotFound module="Process Definition" :module-id="definitionid" v-if="flag === 'FAILURE'"/>
+            </ExplorerCard>
         </div>
     </div>
 </template>
@@ -176,12 +88,15 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie.vue";
     import NotFound from "../../common/NotFound.vue";
+    import DetailItem from "../../common/DetailItem.vue";
+    import ExplorerCard from "@/components/common/ExplorerCard.vue";
     import { formatters } from "@/utils/formatters";
+    import StatusBadge from "@/components/common/StatusBadge.vue";
 
     export default {
         name: "ProcessDefinition",
         props: ["definitionid", "hideChainDetails"],
-        components: {Blockie, NotFound},
+        components: {StatusBadge, Blockie, NotFound, DetailItem, ExplorerCard},
         data() {
             return {
                 definition: null,

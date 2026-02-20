@@ -98,13 +98,7 @@
                     {{ tx.method.method }}
                   </td>
                   <td class="text-center">
-                    <span class="badge rounded-pill bg-success font-weight-bold"
-                          v-if="isTransactionSuccess(tx)">
-                        <i class="fa fa-check-circle"/> SUCCESS
-                    </span>
-                    <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                        <i class="fas fa-exclamation-circle"></i> FAILED
-                    </span>
+                    <StatusBadge :success="isTransactionSuccess(tx)" />
                   </td>
                   <td class="text-right">
                     <router-link
@@ -281,11 +275,12 @@ import DetailItem from "../common/DetailItem.vue";
 import AccountLink from "../common/AccountLink.vue";
 import {formatters} from "@/utils/formatters";
 import ExplorerCard from "@/components/common/ExplorerCard.vue";
+import StatusBadge from "../common/StatusBadge.vue";
 
 export default {
   name: "Block",
   props: ["number"],
-  components: {NotFound, DetailItem, AccountLink, ExplorerCard},
+  components: {NotFound, DetailItem, AccountLink, ExplorerCard, StatusBadge},
   data() {
     return {
       block: {},

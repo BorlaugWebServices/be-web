@@ -114,12 +114,7 @@
                                 </router-link>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
+                                <StatusBadge :success="activity.isSuccess" />
                             </td>
                             <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
                         </tr>
@@ -151,11 +146,12 @@
     import Blockie from "../../common/Blockie.vue";
     import NotFound from "../../common/NotFound.vue";
     import { formatters } from "@/utils/formatters";
+    import StatusBadge from "@/components/common/StatusBadge.vue";
 
     export default {
         name: "Registry",
         props: ["registryid", "hideChainDetails"],
-        components: {Blockie, NotFound},
+        components: {Blockie, NotFound, StatusBadge},
         data() {
             return {
                 registry: null,

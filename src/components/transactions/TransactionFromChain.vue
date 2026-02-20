@@ -29,12 +29,7 @@
                         {{transaction.hash}}
                     </DetailItem>
                     <DetailItem title="Status">
-                        <span class="badge rounded-pill bg-success font-weight-bold" v-if="success">
-                            <i class="fa fa-check-circle"/> SUCCESS
-                        </span>
-                        <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                            <i class="fas fa-exclamation-circle"></i> FAILED
-                        </span>
+                      <StatusBadge :success="success" />
                     </DetailItem>
                     <DetailItem title="Module">
                         {{transaction.method.section}}
@@ -159,11 +154,12 @@
     import DetailItem from "../common/DetailItem.vue";
     import AccountLink from "../common/AccountLink.vue";
     import { formatters } from "@/utils/formatters";
+    import StatusBadge from "@/components/common/StatusBadge.vue";
 
     export default {
         name: "TransactionFromChain",
         props: ["blockhashornumber", "txhash"],
-        components: {Audit, Lease, VueJsonPretty, Identity, NotFound, Process, DetailItem, AccountLink},
+        components: {StatusBadge, Audit, Lease, VueJsonPretty, Identity, NotFound, Process, DetailItem, AccountLink},
         watch: {
             "txhash": async function(nv, ov) {
                 await this.getTransaction();

@@ -107,12 +107,7 @@
                                             {{tx.method.method}}
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge rounded-pill bg-success font-weight-bold" v-if="isTransactionSuccess(tx)">
-                                                <i class="fa fa-check-circle"/> SUCCESS
-                                            </span>
-                                            <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                                                <i class="fas fa-exclamation-circle"></i> FAILED
-                                            </span>
+                                            <StatusBadge :success="isTransactionSuccess(tx)" />
                                         </td>
                                         <td class="text-right">
                                             <router-link :to="{ name: 'transaction-from-chain', params: { blockhashornumber: block.number, txhash: tx.hash}}" class="btn btn-sm btn-orange text-white">
@@ -276,11 +271,12 @@
     import NotFound from "../common/NotFound.vue";
     import DetailItem from "../common/DetailItem.vue";
     import { formatters } from "@/utils/formatters";
+    import StatusBadge from "../common/StatusBadge.vue";
 
     export default {
         name: "SyncBlock",
         props: ["number"],
-        components: {Blockie, NotFound, DetailItem},
+        components: {Blockie, NotFound, DetailItem, StatusBadge},
         data() {
             return {
                 block: {},

@@ -1,210 +1,114 @@
 <template>
     <div v-if="flag === 'SUCCESS'">
-        <div class="card">
-            <div class="card-header row m-b-0 p-b-0">
-                <div class="col-md-6 card-title">
-                    <h4>Lease</h4>
-                </div>
-                <div class="col-md-6 text-right">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
-                </div>
-            </div>
+        <ExplorerCard title="Lease" icon-class="fas fa-file-signature" cardClass="mb-4">
+            <DetailItem title="Lease Id">
+                {{lease.id}}
+            </DetailItem>
+            <DetailItem title="Contract Number">
+                {{ formatters.hexToString(lease.contract_number) }}
+            </DetailItem>
+            <template v-if="show">
+                <DetailItem title="Block Number">
+                    <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
+                        {{lease.blockNumber}}
+                    </router-link>
+                </DetailItem>
+                <DetailItem title="Block Hash">
+                    <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
+                        {{lease.blockHash}}
+                    </router-link>
+                </DetailItem>
+                <DetailItem title="Transaction Hash">
+                    <router-link
+                            :to="{ name : 'transaction-from-chain', params: {blockhash: lease.blockHash, txhash: lease.extrinsicHash}}">
+                        {{lease.extrinsicHash}}
+                    </router-link>
+                </DetailItem>
+            </template>
+            <DetailItem title="Lessor">
+                <router-link :to="{name: 'identity', params : { did: getDid(lease.lessor) }}">
+                    <Blockie :address="lease.lessor" class="mm-5-0-5-0 float-left"/>
+                    <dd class="ml-2 float-left">{{ formatters.did(lease.lessor) }}</dd>
+                </router-link>
+            </DetailItem>
+            <DetailItem title="Lessee">
+                <router-link :to="{name: 'identity', params : { did: getDid(lease.lessee) }}">
+                    <Blockie :address="lease.lessee" class="mm-5-0-5-0 float-left"/>
+                    <dd class="ml-2 float-left">{{ formatters.did(lease.lessee) }}</dd>
+                </router-link>
+            </DetailItem>
+            <DetailItem title="Effective From">
+                {{ formatters.date(lease.effective_ts) }}
+            </DetailItem>
+            <DetailItem title="Effective To">
+                {{ formatters.date(lease.expiry_ts) }}
+            </DetailItem>
+            <DetailItem title="Allocations" v-if="lease && lease.allocations.length>0" :noSeparator="true">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                        <th class="p-2 font-weight-bold">Asset</th>
+                        <th class="p-2 font-weight-bold">Allocated Shares</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="prop in lease.allocations">
+                        <td class="p-2">
+                            <router-link :to="{name: 'asset',params: { assetid: prop.asset_id }}">
+                                {{prop.asset_id}}
+                            </router-link>
+                        </td>
+                        <td class="p-2">{{prop.allocated_shares}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </DetailItem>
+        </ExplorerCard>
 
-            <div class="card-body mg-b-20 p-t-0">
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Lease Id</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{lease.id}}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Contract Number</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ formatters.hexToString(lease.contract_number) }}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <template v-if="show">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block Number</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
-                                    {{lease.blockNumber}}
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: lease.blockNumber}}">
-                                    {{lease.blockHash}}
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link
-                                        :to="{ name : 'transaction-from-chain', params: {blockhash: lease.blockHash, txhash: lease.extrinsicHash}}">
-                                    {{lease.extrinsicHash}}
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                </template>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Lessor</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessor) }}">
-                            <Blockie :address="lease.lessor" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{ formatters.did(lease.lessor) }}</dd>
-                        </router-link>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Lessee</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <router-link :to="{name: 'identity', params : { did: getDid(lease.lessee) }}">
-                            <Blockie :address="lease.lessee" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{ formatters.did(lease.lessee) }}</dd>
-                        </router-link>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective From</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ formatters.date(lease.effective_ts) }}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Effective To</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">{{ formatters.date(lease.expiry_ts) }}</dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0" v-if="lease && lease.allocations.length>0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Allocations</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                    <th class="p-2 font-weight-bold">Asset</th>
-                                    <th class="p-2 font-weight-bold">Allocated Shares</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr v-for="prop in lease.allocations">
-                                    <td class="p-2">
-                                        <router-link :to="{name: 'asset',params: { assetid: prop.asset_id }}">
-                                            {{prop.asset_id}}
-                                        </router-link>
-                                    </td>
-                                    <td class="p-2">{{prop.allocated_shares}}</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                        </dd>
-                    </div>
-                </dl>
+        <ExplorerCard title="Lease Activities" icon-class="fas fa-file-signature">
+            <div class="table-responsive blocks" v-if="activities.length > 0">
+                <table class="table v-middle">
+                    <thead>
+                    <tr>
+                        <th class="border-top-0 font-weight-bold">#</th>
+                        <th class="border-top-0 font-weight-bold">Activity</th>
+                        <th class="border-top-0 font-weight-bold">Transaction Hash</th>
+                        <th class="border-top-0 font-weight-bold">Status</th>
+                        <th class="border-top-0 font-weight-bold">Timestamp</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(activity,i) in activities">
+                        <td>{{i+1 }}</td>
+                        <td>{{activity.method.method}}</td>
+                        <td>
+                            <router-link
+                                    :title="activity.hash"
+                                    :to="{ name: 'transaction-from-chain', params: { blockhashornumber: lease.blockNumber, txhash: activity.hash }}">
+                                {{ formatters.truncate(activity.hash, 32, '') }}
+                            </router-link>
+                        </td>
+                        <td>
+                            <StatusBadge :success="activity.isSuccess" />
+                        </td>
+                        <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header row m-b-0 p-b-0">
-                <div class="col-md-6 card-title">
-                    <h4>Lease Activities</h4>
-                </div>
-                <div class="col-md-6 text-right">
-                    <h3><i class="fas fa-file-signature card-title text-orange"/></h3>
-                </div>
+            <div class="p-b-10" v-else>
+                <h4 class="text-muted text-center">No Activities found</h4>
             </div>
-
-            <div class="card-body mg-b-20 p-t-0">
-                <div class="table-responsive blocks" v-if="activities.length > 0">
-                    <table class="table v-middle">
-                        <thead>
-                        <tr>
-                            <th class="border-top-0 font-weight-bold">#</th>
-                            <th class="border-top-0 font-weight-bold">Activity</th>
-                            <th class="border-top-0 font-weight-bold">Transaction Hash</th>
-                            <th class="border-top-0 font-weight-bold">Status</th>
-                            <th class="border-top-0 font-weight-bold">Timestamp</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(activity,i) in activities">
-                            <td>{{i+1 }}</td>
-                            <td>{{activity.method.method}}</td>
-                            <td>
-                                <router-link
-                                        :title="activity.hash"
-                                        :to="{ name: 'transaction-from-chain', params: { blockhashornumber: lease.blockNumber, txhash: activity.hash }}">
-                                    {{ formatters.truncate(activity.hash, 32, '') }}
-                                </router-link>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
-                            </td>
-                            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="p-b-10" v-else>
-                    <h4 class="text-muted text-center">No Activities found</h4>
-                </div>
-            </div>
-        </div>
+        </ExplorerCard>
     </div>
     <div class="row" v-else>
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
-                    </h4>
-                    <NotFound :module-id="leaseid" module="Lease" v-if="flag === 'FAILURE'"/>
-                </div>
-            </div>
+            <ExplorerCard>
+                <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                    Fetching lease, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                </h4>
+                <NotFound :module-id="leaseid" module="Lease" v-if="flag === 'FAILURE'"/>
+            </ExplorerCard>
         </div>
     </div>
 </template>
@@ -213,12 +117,15 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie.vue";
     import NotFound from "../../common/NotFound.vue";
+    import DetailItem from "../../common/DetailItem.vue";
+    import ExplorerCard from "@/components/common/ExplorerCard.vue";
     import { formatters } from "@/utils/formatters";
+    import StatusBadge from "@/components/common/StatusBadge.vue";
 
     export default {
         name: "Lease",
         props: ["leaseid", "hideChainDetails"],
-        components: {Blockie, NotFound},
+        components: {Blockie, NotFound, DetailItem, ExplorerCard, StatusBadge},
         data() {
             return {
                 lease: null,

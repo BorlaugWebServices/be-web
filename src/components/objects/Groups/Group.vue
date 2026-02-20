@@ -1,215 +1,112 @@
 <template>
     <div v-if="flag === 'SUCCESS'">
-        <div class="card">
-            <div class="card-header row m-b-0 p-b-0">
-                <div class="col-md-6 card-title">
-                    <h4>Group</h4>
-                </div>
-                <div class="col-md-6 text-right">
-                    <h3><i class="fas fa-id-card card-title text-orange"/></h3>
-                </div>
-            </div>
+        <ExplorerCard title="Group" icon-class="fas fa-id-card" cardClass="mb-4">
+            <DetailItem title="ID" v-if="show">
+                <router-link :to="{name: 'group', params: {groupid: groupid}}">{{groupid}}</router-link>
+            </DetailItem>
+            <DetailItem title="Name">
+                {{group.name}}
+            </DetailItem>
+            <DetailItem title="Address" v-if="show">
+                <router-link :to="{name: 'view-account',params: { address: group.anonymous_account }}">
+                    <Blockie :address="group.anonymous_account" class="mm-5-0-5-0 float-left"/>
+                    <dd class="ml-2 float-left">{{group.anonymous_account}}</dd>
+                </router-link>
+            </DetailItem>
+            <DetailItem title="Total Vote Weight">
+                {{group.total_vote_weight}}
+            </DetailItem>
+            <DetailItem title="Threshold">
+                {{group.threshold}}
+            </DetailItem>
+            <template v-if="show">
+                <DetailItem title="Block Number">
+                    <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">
+                        {{group.blockNumber}}
+                    </router-link>
+                </DetailItem>
+                <DetailItem title="Block Hash">
+                    <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">
+                        {{group.blockHash}}
+                    </router-link>
+                </DetailItem>
+                <DetailItem title="Transaction Hash">
+                    <router-link
+                            :to="{ name : 'transaction-from-chain', params: {blockhash: group.blockHash, txhash: group.extrinsicHash}}">
+                        {{group.extrinsicHash}}
+                    </router-link>
+                </DetailItem>
+                <DetailItem title="Created at">
+                    {{ formatters.from_ms(group.timestamp) }}
+                </DetailItem>
+            </template>
+            <DetailItem title="Members" v-if="group && group.members" :noSeparator="true">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                        <th class="p-2 font-weight-bold">Account</th>
+                        <th class="p-2 font-weight-bold">Weight</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="prop in group.members">
+                        <td class="p-2">
+                            <router-link :to="{name: 'view-account',params: { address: prop.account }}">
+                                <Blockie :address="prop.account" class="mm-5-0-5-0 float-left mr-2"/>
+                                {{prop.account}}
+                            </router-link>
+                        </td>
+                        <td class="p-2">{{prop.weight}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </DetailItem>
+        </ExplorerCard>
 
-            <div class="card-body mg-b-20 p-t-0">
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>ID</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left" v-if="show">
-                        <dd class="mb-1">
-                            <router-link :to="{name: 'group', params: {groupid: groupid}}">{{groupid}}</router-link>
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Name</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            {{group.name}}
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Address</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left" v-if="show">
-                        <router-link :to="{name: 'view-account',params: { address: group.anonymous_account }}">
-                            <Blockie :address="group.anonymous_account" class="mm-5-0-5-0 float-left"/>
-                            <dd class="ml-2 float-left">{{group.anonymous_account}}</dd>
-                        </router-link>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Total Vote Weight</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            {{group.total_vote_weight}}
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Threshold</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            {{group.threshold}}
-                        </dd>
-                    </div>
-                </dl>
-                <hr/>
-                <template v-if="show">
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block Number</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">
-                                    {{group.blockNumber}}
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Block Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link :to="{ name : 'block', params: {number: group.blockNumber}}">
-                                    {{group.blockHash}}
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Transaction Hash</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">
-                                <router-link
-                                        :to="{ name : 'transaction-from-chain', params: {blockhash: group.blockHash, txhash: group.extrinsicHash}}">
-                                    {{group.extrinsicHash}}
-                                </router-link>
-                            </dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                    <dl class="row mb-0">
-                        <div class="col-sm-2 text-sm-right">
-                            <dt>Created at</dt>
-                        </div>
-                        <div class="col-sm-9 text-sm-left">
-                            <dd class="mb-1">{{ formatters.from_ms(group.timestamp) }}</dd>
-                        </div>
-                    </dl>
-                    <hr/>
-                </template>
-                <dl class="row mb-0" v-if="group && group.members">
-                    <div class="col-sm-2 text-sm-right">
-                        <dt>Members</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <dd class="mb-1">
-                            <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                    <th class="p-2 font-weight-bold">Account</th>
-                                    <th class="p-2 font-weight-bold">Weight</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr v-for="prop in group.members">
-                                    <td class="p-2">
-                                        <router-link :to="{name: 'view-account',params: { address: prop.account }}">
-                                            <Blockie :address="prop.account" class="mm-5-0-5-0 float-left mr-2"/>
-                                            {{prop.account}}
-                                        </router-link>
-                                    </td>
-                                    <td class="p-2">{{prop.weight}}</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                        </dd>
-                    </div>
-                </dl>
+        <ExplorerCard title="Group Activities" icon-class="fas fa-list-alt">
+            <div class="table-responsive blocks" v-if="activities.length > 0">
+                <table class="table v-middle">
+                    <thead>
+                    <tr>
+                        <th class="border-top-0 font-weight-bold">#</th>
+                        <th class="border-top-0 font-weight-bold">Activity</th>
+                        <th class="border-top-0 font-weight-bold">Transaction Hash</th>
+                        <th class="border-top-0 font-weight-bold">Status</th>
+                        <th class="border-top-0 font-weight-bold">Timestamp</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(activity,i) in activities">
+                        <td>{{i+1 }}</td>
+                        <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
+                        <td>
+                            <router-link
+                                    :title="activity.hash"
+                                    :to="{ name: 'transaction-from-chain', params: { blockhashornumber: group.blockNumber, txhash: activity.hash}}">
+                                {{ formatters.truncate(activity.hash, 32, '') }}
+                            </router-link>
+                        </td>
+                        <td>
+                            <StatusBadge :success="activity.isSuccess" />
+                        </td>
+                        <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-header row m-b-0 p-b-0">
-                <div class="col-md-6 card-title">
-                    <h4>Group Activities</h4>
-                </div>
-                <div class="col-md-6 text-right">
-                    <h3><i class="fas fa-list-altcard-title text-orange"/></h3>
-                </div>
+            <div class="p-b-10" v-else>
+                <h4 class="text-muted text-center">No Activities found</h4>
             </div>
-
-            <div class="card-body mg-b-20 p-t-0">
-                <div class="table-responsive blocks" v-if="activities.length > 0">
-                    <table class="table v-middle">
-                        <thead>
-                        <tr>
-                            <th class="border-top-0 font-weight-bold">#</th>
-                            <th class="border-top-0 font-weight-bold">Activity</th>
-                            <th class="border-top-0 font-weight-bold">Transaction Hash</th>
-                            <th class="border-top-0 font-weight-bold">Status</th>
-                            <th class="border-top-0 font-weight-bold">Timestamp</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(activity,i) in activities">
-                            <td>{{i+1 }}</td>
-                            <td>{{activity.method.args[1].method ? activity.method.args[1].method : activity.method.method}}</td>
-                            <td>
-                                <router-link
-                                        :title="activity.hash"
-                                        :to="{ name: 'transaction-from-chain', params: { blockhashornumber: group.blockNumber, txhash: activity.hash}}">
-                                    {{ formatters.truncate(activity.hash, 32, '') }}
-                                </router-link>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
-                            </td>
-                            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="p-b-10" v-else>
-                    <h4 class="text-muted text-center">No Activities found</h4>
-                </div>
-            </div>
-        </div>
+        </ExplorerCard>
     </div>
     <div class="row" v-else>
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-                        Fetching group, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
-                    </h4>
-                    <NotFound :module-id="groupid" module="Group" v-if="flag === 'FAILURE'"/>
-                </div>
-            </div>
+            <ExplorerCard>
+                <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+                    Fetching group, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+                </h4>
+                <NotFound :module-id="groupid" module="Group" v-if="flag === 'FAILURE'"/>
+            </ExplorerCard>
         </div>
     </div>
 </template>
@@ -218,12 +115,15 @@
     import EventBus from "../../../event-bus";
     import Blockie from "../../common/Blockie.vue";
     import NotFound from "../../common/NotFound.vue";
+    import DetailItem from "../../common/DetailItem.vue";
+    import ExplorerCard from "@/components/common/ExplorerCard.vue";
     import { formatters } from "@/utils/formatters";
+    import StatusBadge from "@/components/common/StatusBadge.vue";
 
     export default {
         name: "Groups",
         props: ["groupid", "hideChainDetails"],
-        components: {Blockie, NotFound},
+        components: {Blockie, NotFound, DetailItem, ExplorerCard, StatusBadge},
         data() {
             return {
                 group: null,

@@ -1,288 +1,193 @@
 <template>
   <div v-if="flag === 'SUCCESS'">
-    <div class="card">
-      <div class="card-header row m-b-0 p-b-0">
-        <div class="col-md-6 card-title">
-          <h4>Identity</h4>
+    <ExplorerCard title="Identity" icon-class="fas fa-id-card" cardClass="mb-4">
+      <DetailItem title="DID">
+        <div v-if="show">
+          <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
+          <dd class="ml-2 float-left">{{ formatters.did(identity.did) }}</dd>
         </div>
-        <div class="col-md-6 text-right">
-          <h3><i class="fas fa-id-card card-title text-orange"/></h3>
-        </div>
-      </div>
-
-      <div class="card-body mg-b-20 p-t-0">
-        <dl class="row mb-0">
-          <div class="col-sm-2 text-sm-right">
-            <dt>DID</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left" v-if="show">
+        <div v-else>
+          <router-link :to="{name: 'identity', params : { did: did }}">
             <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
             <dd class="ml-2 float-left">{{ formatters.did(identity.did) }}</dd>
-          </div>
-          <div class="col-sm-9 text-sm-left" v-else>
-            <router-link :to="{name: 'identity', params : { did: did }}">
-              <Blockie :address="identity.did" class="mm-5-0-5-0 float-left"/>
-              <dd class="ml-2 float-left">{{ formatters.did(identity.did) }}</dd>
-            </router-link>
-          </div>
-        </dl>
-        <hr/>
-        <template v-if="show">
-          <dl class="row mb-0">
-            <div class="col-sm-2 text-sm-right">
-              <dt>Block Number</dt>
-            </div>
-            <div class="col-sm-9 text-sm-left">
-              <dd class="mb-1">
-                <router-link :to="{ name : 'block', params: {number: identity.blockNumber}}">
-                  {{ identity.blockNumber }}
-                </router-link>
-              </dd>
-            </div>
-          </dl>
-          <hr/>
-          <dl class="row mb-0">
-            <div class="col-sm-2 text-sm-right">
-              <dt>Block Hash</dt>
-            </div>
-            <div class="col-sm-9 text-sm-left">
-              <dd class="mb-1">
-                <router-link :to="{ name : 'block', params: {number: identity.blockNumber}}">{{ identity.blockHash }}
-                </router-link>
-              </dd>
-            </div>
-          </dl>
-          <hr/>
-          <dl class="row mb-0">
-            <div class="col-sm-2 text-sm-right">
-              <dt>Transaction Hash</dt>
-            </div>
-            <div class="col-sm-9 text-sm-left">
-              <dd class="mb-1">
-                <router-link
-                    :to="{ name : 'transaction-from-chain', params: {blockhash: identity.blockHash, txhash: identity.extrinsicHash}}">
-                  {{ identity.extrinsicHash }}
-                </router-link>
-              </dd>
-            </div>
-          </dl>
-          <hr/>
-        </template>
-        <dl class="row mb-0">
-          <div class="col-sm-2 text-sm-right">
-            <dt>Subject</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left">
-            <router-link :to="{name: 'view-account',params: { address: identity.subject }}">
-              <Blockie :address="identity.subject" class="mm-5-0-5-0 float-left"/>
-              <dd class="mb-1 ml-2 float-left">
-                {{ identity.subject }}
-              </dd>
-            </router-link>
-          </div>
-        </dl>
-        <hr/>
-        <dl class="row mb-0">
-          <div class="col-sm-2 text-sm-right">
-            <dt>Controller</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left">
-            <router-link :to="{name: 'view-account',params: { address: identity.controller }}">
-              <Blockie :address="identity.controller" class="mm-5-0-5-0 float-left"/>
-              <dd class="mb-1 ml-2 float-left">
-                {{ identity.controller }}
-              </dd>
-            </router-link>
-          </div>
-        </dl>
-        <hr/>
-        <dl class="row mb-0">
-          <div class="col-sm-2 text-sm-right">
-            <dt>Created at</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left">
-            <dd class="mb-1">{{ formatters.from_ms(identity.timestamp) }}</dd>
-          </div>
-        </dl>
-        <hr/>
-        <dl class="row mb-0" v-if="identity && identity.properties.length>0">
-          <div class="col-sm-2 text-sm-right">
-            <dt>Properties</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left">
-            <dd class="mb-1">
-              <table class="table table-bordered">
-                <thead>
-                <tr>
-                  <th class="p-2 font-weight-bold">Name</th>
-                  <th class="p-2 font-weight-bold">Fact</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="prop in identity.properties">
-                  <td class="p-2">{{ prop.name }}</td>
-                  <td class="p-2">{{ prop.fact }}</td>
-                </tr>
-                </tbody>
-              </table>
-            </dd>
-          </div>
-        </dl>
-        <dl class="row mb-0" v-else>
-          <div class="col-sm-2 text-sm-right">
-            <dt>Properties</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left">
-            <h5 class="text-muted">No records found</h5>
-          </div>
-        </dl>
-        <hr/>
-        <dl class="row mb-0" v-if="identity && identity.claims.length>0">
-          <div class="col-sm-2 text-sm-right">
-            <dt>Claims</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left" v-if="identity.claims.length>0">
-            <div class="card border mb-2">
-              <div class="card-body p-2">
-                <dt>Description :</dt>
-                <dd>{{ identity.claims[claimIndex].description }}</dd>
-
-                <dt>Statements :</dt>
-                <dd>
-                  <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                      <th class="p-2 font-weight-bold">Name</th>
-                      <th class="p-2 font-weight-bold">Fact</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="st    in identity.claims[claimIndex].statements">
-                      <td class="p-2">{{ st.name }}</td>
-                      <td class="p-2">{{ st.fact }}</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </dd>
-
-                <dt class="m-b-5">Created By :</dt>
-                <dd class="mb-3">
-                  <router-link
-                      :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].created_by) }}">
-                    <Blockie :address="identity.claims[claimIndex].created_by"/>
-                    {{ formatters.did(identity.claims[claimIndex].created_by) }}
-                  </router-link>
-                </dd>
-
-                <dt class="m-b-5">Attested By :</dt>
-                <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
-                  <router-link
-                      :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].attestation.attested_by) }}">
-                    <Blockie :address="identity.claims[claimIndex].attestation.attested_by" class=""/>
-                    {{ formatters.did(identity.claims[claimIndex].attestation.attested_by) }}
-                  </router-link>
-                </dd>
-                <dd class="mb-3" v-else>
-                  N/A
-                </dd>
-                <dt class="m-t-20 m-b-5">Valid Until :</dt>
-                <dd v-if="identity.claims[claimIndex].attestation">
-                  {{ identity.claims[claimIndex].attestation.valid_until }}
-                </dd>
-                <dd v-else>
-                  N/A
-                </dd>
-              </div>
-            </div>
-
-            <div class="w-25 float-left">
-              <button class="btn btn-orange text-white float-left " @click="prev" :disabled="claimIndex === 0">
-                Previous
-              </button>
-            </div>
-            <div class="w-50 float-left text-center pt-2">
-              <p>Showing <strong>#{{ claimIndex + 1 }}</strong> of <strong>{{ identity.claims.length }}</strong> claims
-              </p>
-            </div>
-            <div class="w-25 float-left">
-              <button class="btn btn-orange text-white float-right" @click="next"
-                      :disabled="claimIndex === (identity.claims.length-1)">Next
-              </button>
-            </div>
-          </div>
-        </dl>
-        <dl class="row mb-0" v-else>
-          <div class="col-sm-2 text-sm-right">
-            <dt>Claims</dt>
-          </div>
-          <div class="col-sm-9 text-sm-left">
-            <h5 class="text-muted">No records found</h5>
-          </div>
-        </dl>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header row m-b-0 p-b-0">
-        <div class="col-md-6 card-title">
-          <h4>Identity Activities</h4>
+          </router-link>
         </div>
-        <div class="col-md-6 text-right">
-          <h3><i class="fas fa-id-card card-title text-orange"/></h3>
-        </div>
-      </div>
-
-      <div class="card-body mg-b-20 p-t-0">
-        <div class="table-responsive blocks" v-if="activities.length > 0">
-          <table class="table v-middle">
+      </DetailItem>
+      <template v-if="show">
+        <DetailItem title="Block Number">
+          <router-link :to="{ name : 'block', params: {number: identity.blockNumber}}">
+            {{ identity.blockNumber }}
+          </router-link>
+        </DetailItem>
+        <DetailItem title="Block Hash">
+          <router-link :to="{ name : 'block', params: {number: identity.blockNumber}}">{{ identity.blockHash }}
+          </router-link>
+        </DetailItem>
+        <DetailItem title="Transaction Hash">
+          <router-link
+              :to="{ name : 'transaction-from-chain', params: {blockhash: identity.blockHash, txhash: identity.extrinsicHash}}">
+            {{ identity.extrinsicHash }}
+          </router-link>
+        </DetailItem>
+      </template>
+      <DetailItem title="Subject">
+        <router-link :to="{name: 'view-account',params: { address: identity.subject }}">
+          <Blockie :address="identity.subject" class="mm-5-0-5-0 float-left"/>
+          <dd class="mb-1 ml-2 float-left">
+            {{ identity.subject }}
+          </dd>
+        </router-link>
+      </DetailItem>
+      <DetailItem title="Controller">
+        <router-link :to="{name: 'view-account',params: { address: identity.controller }}">
+          <Blockie :address="identity.controller" class="mm-5-0-5-0 float-left"/>
+          <dd class="mb-1 ml-2 float-left">
+            {{ identity.controller }}
+          </dd>
+        </router-link>
+      </DetailItem>
+      <DetailItem title="Created at">
+        {{ formatters.from_ms(identity.timestamp) }}
+      </DetailItem>
+      <DetailItem title="Properties">
+        <div v-if="identity && identity.properties.length>0">
+          <table class="table table-bordered">
             <thead>
             <tr>
-              <th class="border-top-0 font-weight-bold">#</th>
-              <th class="border-top-0 font-weight-bold">Activity</th>
-              <th class="border-top-0 font-weight-bold">Transaction Hash</th>
-              <th class="border-top-0 font-weight-bold">Status</th>
-              <th class="border-top-0 font-weight-bold">Timestamp</th>
+              <th class="p-2 font-weight-bold">Name</th>
+              <th class="p-2 font-weight-bold">Fact</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(activity,i) in activities">
-              <td>{{ i + 1 }}</td>
-              <td>{{ activity.method.args[1].method ? activity.method.args[1].method : activity.method.method }}</td>
-              <td>
-                <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
-                             :title="activity.hash">
-                  {{ formatters.truncate(activity.hash, 32, '') }}
-                </router-link>
-              </td>
-              <td>
-                                <span class="badge rounded-pill bg-success font-weight-bold" v-if="activity.isSuccess">
-                                    <i class="fa fa-check-circle"/> SUCCESS
-                                </span>
-                <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                                    <i class="fas fa-exclamation-circle"></i> FAILED
-                                </span>
-              </td>
-              <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
+            <tr v-for="prop in identity.properties">
+              <td class="p-2">{{ prop.name }}</td>
+              <td class="p-2">{{ prop.fact }}</td>
             </tr>
             </tbody>
           </table>
         </div>
-        <div class="p-b-10" v-else>
-          <h4 class="text-muted text-center">No Activities found</h4>
+        <div v-else>
+          <h5 class="text-muted">No records found</h5>
         </div>
+      </DetailItem>
+      <DetailItem title="Claims" :noSeparator="true">
+        <div v-if="identity && identity.claims.length>0">
+          <div class="card border mb-2">
+            <div class="card-body p-2">
+              <dt>Description :</dt>
+              <dd>{{ identity.claims[claimIndex].description }}</dd>
+              <dt>Statements :</dt>
+              <dd>
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th class="p-2 font-weight-bold">Name</th>
+                    <th class="p-2 font-weight-bold">Fact</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="st    in identity.claims[claimIndex].statements">
+                    <td class="p-2">{{ st.name }}</td>
+                    <td class="p-2">{{ st.fact }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </dd>
+
+              <dt class="m-b-5">Created By :</dt>
+              <dd class="mb-3">
+                <router-link
+                    :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].created_by) }}">
+                  <Blockie :address="identity.claims[claimIndex].created_by"/>
+                  {{ formatters.did(identity.claims[claimIndex].created_by) }}
+                </router-link>
+              </dd>
+
+              <dt class="m-b-5">Attested By :</dt>
+              <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
+                <router-link
+                    :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].attestation.attested_by) }}">
+                  <Blockie :address="identity.claims[claimIndex].attestation.attested_by" class=""/>
+                  {{ formatters.did(identity.claims[claimIndex].attestation.attested_by) }}
+                </router-link>
+              </dd>
+              <dd class="mb-3" v-else>
+                N/A
+              </dd>
+              <dt class="m-t-20 m-b-5">Valid Until :</dt>
+              <dd v-if="identity.claims[claimIndex].attestation">
+                {{ identity.claims[claimIndex].attestation.valid_until }}
+              </dd>
+              <dd v-else>
+                N/A
+              </dd>
+            </div>
+          </div>
+
+          <div class="w-25 float-left">
+            <button class="btn btn-orange text-white float-left " @click="prev" :disabled="claimIndex === 0">
+              Previous
+            </button>
+          </div>
+          <div class="w-50 float-left text-center pt-2">
+            <p>Showing <strong>#{{ claimIndex + 1 }}</strong> of <strong>{{ identity.claims.length }}</strong> claims
+            </p>
+          </div>
+          <div class="w-25 float-left">
+            <button class="btn btn-orange text-white float-right" @click="next"
+                    :disabled="claimIndex === (identity.claims.length-1)">Next
+            </button>
+          </div>
+        </div>
+        <div v-else>
+          <h5 class="text-muted">No records found</h5>
+        </div>
+      </DetailItem>
+    </ExplorerCard>
+
+    <ExplorerCard title="Identity Activities" icon-class="fas fa-id-card">
+      <div class="table-responsive blocks" v-if="activities.length > 0">
+        <table class="table v-middle">
+          <thead>
+          <tr>
+            <th class="border-top-0 font-weight-bold">#</th>
+            <th class="border-top-0 font-weight-bold">Activity</th>
+            <th class="border-top-0 font-weight-bold">Transaction Hash</th>
+            <th class="border-top-0 font-weight-bold">Status</th>
+            <th class="border-top-0 font-weight-bold">Timestamp</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(activity,i) in activities">
+            <td>{{ i + 1 }}</td>
+            <td>{{ activity.method.args[1].method ? activity.method.args[1].method : activity.method.method }}</td>
+            <td>
+              <router-link :to="{ name: 'transaction', params: { hash: activity.hash }}"
+                           :title="activity.hash">
+                {{ formatters.truncate(activity.hash, 32, '') }}
+              </router-link>
+            </td>
+            <td>
+              <StatusBadge :success="activity.isSuccess"/>
+            </td>
+            <td>{{ formatters.timestamp(activity.timestamp.toString()) }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+      <div class="p-b-10" v-else>
+        <h4 class="text-muted text-center">No Activities found</h4>
+      </div>
+    </ExplorerCard>
   </div>
   <div class="row" v-else>
     <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
-            Fetching identity, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
-          </h4>
-          <NotFound module="Identity" :module-id="did" v-if="flag === 'FAILURE'"/>
-        </div>
-      </div>
+      <ExplorerCard>
+        <h4 class="card-title text-muted" v-if="flag === 'SEARCHING'">
+          Fetching identity, please wait <img class="ml-2" src="../../../assets/images/ajax-loader.gif">
+        </h4>
+        <NotFound module="Identity" :module-id="did" v-if="flag === 'FAILURE'"/>
+      </ExplorerCard>
     </div>
   </div>
 </template>
@@ -292,12 +197,15 @@ import EventBus from "../../../event-bus";
 import Blockie from "../../common/Blockie.vue";
 import VueJsonPretty from "vue-json-pretty";
 import NotFound from "../../common/NotFound.vue";
+import DetailItem from "../../common/DetailItem.vue";
+import ExplorerCard from "@/components/common/ExplorerCard.vue";
 import {formatters} from "@/utils/formatters";
+import StatusBadge from "@/components/common/StatusBadge.vue";
 
 export default {
   name: "Identity",
   props: ["did", "hideChainDetails"],
-  components: {Blockie, VueJsonPretty, NotFound},
+  components: {StatusBadge, Blockie, VueJsonPretty, NotFound, DetailItem, ExplorerCard},
   data() {
     return {
       identity: null,

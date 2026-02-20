@@ -15,12 +15,7 @@
             <router-link :to="{name: 'block', params: {number: item.value}}">{{item.value}}</router-link>
           </template>
           <template #status="{ item }">
-                        <span class="badge rounded-pill bg-success font-weight-bold" v-if="item.value">
-                            <i class="fa fa-check-circle"/> SUCCESS
-                        </span>
-            <span class="badge rounded-pill bg-danger font-weight-bold" v-else>
-                            <i class="fas fa-exclamation-circle"></i> FAILED
-                        </span>
+            <StatusBadge :success="item.value" />
           </template>
           <template #address="{ item }">
             <router-link :to="{name: 'view-account',params: { address: item.value }}">
@@ -82,12 +77,13 @@ import NotFound from "../common/NotFound.vue";
 import DetailsList from "../common/DetailsList.vue";
 import EventsTable from "../common/EventsTable.vue";
 import ExplorerCard from "../common/ExplorerCard.vue";
+import StatusBadge from "../common/StatusBadge.vue";
 import { formatters } from "@/utils/formatters";
 
 export default {
   name: "Transaction",
   props: ["hash"],
-  components: {ExplorerCard, Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process, DetailsList, EventsTable},
+  components: {ExplorerCard, Audit, Lease, VueJsonPretty, Blockie, Identity, NotFound, Process, DetailsList, EventsTable, StatusBadge},
   watch: {
     "hash": async function(nv, ov) {
       await this.getTransaction();

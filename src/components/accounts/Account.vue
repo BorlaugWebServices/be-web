@@ -1,40 +1,23 @@
 <template>
-    <ExplorerCard title="account.name" iconClass="fa fa-user" cardClass="mb-4" bodyClass="p-3"><div class="row">
+    <div class="row">
         <div class="col-12">
-            <ExplorerCard title="Account" title-tag="h4" icon-class="fas fa-user" body-class="mg-b-20 p-t-0">
-                <dl class="row mb-0">
-                    <div class="col-sm-3 text-sm-right">
-                        <dt>Address</dt>
+            <ExplorerCard title="Account" title-tag="h4" icon-class="fas fa-user" cardClass="mb-4" body-class="mg-b-20 p-t-0">
+                <DetailItem title="Address" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                    <div class="mb-1">
+                        <Blockie :address="address" class="mm-5-0-5-0"/>
+                        <span :title="address" class="m-l-5 align-middle">{{ address }}</span>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <div class="mb-1">
-                            <Blockie :address="address" class="mm-5-0-5-0"/>
-                            <span :title="address" class="m-l-5 align-middle">{{ address }}</span>
-                        </div>
+                </DetailItem>
+                <DetailItem title="Available Balance" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
+                    <div class="mb-1">
+                        <get-account-balance :address="address" class="text-orange"></get-account-balance>
                     </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-3 text-sm-right">
-                        <dt>Available Balance</dt>
+                </DetailItem>
+                <DetailItem title="Spent on Transactions" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left" :noSeparator="true">
+                    <div class="mb-1">
+                        <b class="text-orange">{{ formatters.formatGRAM(spent_on_txs) }}</b>
                     </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <div class="mb-1">
-                            <get-account-balance :address="address" class="text-orange"></get-account-balance>
-                        </div>
-                    </div>
-                </dl>
-                <hr/>
-                <dl class="row mb-0">
-                    <div class="col-sm-3 text-sm-right">
-                        <dt>Spent on Transactions</dt>
-                    </div>
-                    <div class="col-sm-9 text-sm-left">
-                        <div class="mb-1">
-                            <b class="text-orange">{{ formatters.formatGRAM(spent_on_txs) }}</b>
-                        </div>
-                    </div>
-                </dl>
+                </DetailItem>
             </ExplorerCard>
 
             <ExplorerCard v-if="transactions.length>0" icon-class="fa fa-file-signature" body-class="m-t-0 p-0">
@@ -101,14 +84,9 @@
                 </div>
             </ExplorerCard>
 
-            <div class="card" v-else>
-                <div class="card-body">
-                    <div class="card-header row m-b-0 p-b-0">
-                        <h4>Transactions</h4>
-                    </div>
-                    <h4 class="text-muted text-center">No records found</h4>
-                </div>
-            </div>
+            <ExplorerCard title="Transactions" v-else>
+                <h4 class="text-muted text-center">No records found</h4>
+            </ExplorerCard>
         </div>
         <div class="col-lg-12" v-if="transactions.length>0">
             <div class="text-right">
@@ -134,7 +112,6 @@
             </div>
         </div>
     </div>
-</ExplorerCard>
 </template>
 
 <script>
@@ -144,12 +121,13 @@
     import Blockie from "../common/Blockie.vue";
     import GetAccountBalance from "../common/GetAccountBalance.vue";
     import ExplorerCard from '@/components/common/ExplorerCard.vue';
+    import DetailItem from "../common/DetailItem.vue";
     import { formatters } from "@/utils/formatters";
 
     export default {
         name: "Account",
         props: ['address'],
-        components: {GetAccountBalance, Blockie, Paginate, Age, ExplorerCard},
+        components: {GetAccountBalance, Blockie, Paginate, Age, ExplorerCard, DetailItem},
         data() {
             return {
                 transactions: [],
