@@ -13,7 +13,7 @@
 
                 <div class="card-body">
                     <DetailItem title="Timestamp" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
-                        {{ formatters.timestamp(block.timestamp.toString()) }}
+                        {{ formatters.timestamp(block.timestamp?.toString()) }}
                     </DetailItem>
                     <DetailItem title="Hash" labelClass="col-sm-3 text-sm-right" valueClass="col-sm-9 text-sm-left">
                         {{block.hash}}

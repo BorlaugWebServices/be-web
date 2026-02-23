@@ -108,7 +108,7 @@
 
         <div class="row" v-else>
             <div class="col-md-12">
-                <SearchResults :searchResult="searchResult" @clear-search="clear" />
+                <SearchResults v-if="searchResult" :searchResult="searchResult" @clear-search="clear" />
             </div>
         </div>
     </div>
@@ -263,13 +263,13 @@
             },
             async getLatestBlocks() {
                 this.socket.on('block updated', (data) => {
-                    console.log("New Block Number : ", data.block.number);
+                    console.log("New Block Number : ", data.hash);
                     this.lastSyncedBlock = data;
                 })
             },
             getLatestTxns() {
                 this.socket.on('txn updated', (data) => {
-                    console.log("New Block Number : ", data.block.number);
+                    console.log("Txn Updated : ", data);
                     this.lastSyncedTxn = data;
                 })
             },

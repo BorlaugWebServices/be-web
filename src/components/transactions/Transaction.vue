@@ -141,7 +141,7 @@ export default {
                 this.leaseid = event.event.data[0];
                 break;
               case 'Registered':
-                this.did = formatters.did(event.event.data[3].id);
+                this.did = formatters.did(event.event.data[3]?.id);
                 break;
               case 'AuditCreated':
                 this.auditid = event.event.data[2];

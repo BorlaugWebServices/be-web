@@ -6,7 +6,7 @@
                     <router-link :to="{name: 'block', params: {number: extrinsic.blockNumber}}">{{extrinsic.blockNumber}}</router-link>
                 </DetailItem>
                 <DetailItem title="Timestamp">
-                    {{ formatters.timestamp(extrinsic.timestamp.toString()) }}
+                    {{ formatters.timestamp(extrinsic.timestamp?.toString()) }}
                 </DetailItem>
                 <DetailItem title="Extrinsic Index">
                     {{extrinsic.index}}

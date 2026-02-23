@@ -66,7 +66,7 @@
                     </table>
                 </div>
                 <div v-else>
-                    <h5 class="text-muted">No records found</h5>
+                    <h5 class="text-muted">None</h5>
                 </div>
             </DetailItem>
         </ExplorerCard>

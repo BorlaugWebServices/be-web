@@ -85,7 +85,7 @@
             </ExplorerCard>
 
             <ExplorerCard title="Transactions" v-else>
-                <h4 class="text-muted text-center">No records found</h4>
+                <h4 class="text-muted text-center">None</h4>
             </ExplorerCard>
         </div>
         <div class="col-lg-12" v-if="transactions.length>0">

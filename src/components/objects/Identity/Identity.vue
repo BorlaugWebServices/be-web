@@ -50,7 +50,7 @@
         {{ formatters.from_ms(identity.timestamp) }}
       </DetailItem>
       <DetailItem title="Properties">
-        <div v-if="identity && identity.properties.length>0">
+        <div v-if="identity && identity.properties?.length>0">
           <table class="table table-bordered">
             <thead>
             <tr>
@@ -67,15 +67,15 @@
           </table>
         </div>
         <div v-else>
-          <h5 class="text-muted">No records found</h5>
+          <h5 class="text-muted">None</h5>
         </div>
       </DetailItem>
       <DetailItem title="Claims" :noSeparator="true">
-        <div v-if="identity && identity.claims.length>0">
+        <div v-if="identity && identity.claims?.length>0">
           <div class="card border mb-2">
             <div class="card-body p-2">
               <dt>Description :</dt>
-              <dd>{{ identity.claims[claimIndex].description }}</dd>
+              <dd>{{ identity.claims[claimIndex]?.description }}</dd>
               <dt>Statements :</dt>
               <dd>
                 <table class="table table-bordered">
@@ -86,7 +86,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr v-for="st    in identity.claims[claimIndex].statements">
+                  <tr v-for="st    in identity.claims[claimIndex]?.statements">
                     <td class="p-2">{{ st.name }}</td>
                     <td class="p-2">{{ st.fact }}</td>
                   </tr>
@@ -97,26 +97,26 @@
               <dt class="m-b-5">Created By :</dt>
               <dd class="mb-3">
                 <router-link
-                    :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].created_by) }}">
-                  <Blockie :address="identity.claims[claimIndex].created_by"/>
-                  {{ formatters.did(identity.claims[claimIndex].created_by) }}
+                    :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex]?.created_by) }}">
+                  <Blockie :address="identity.claims[claimIndex]?.created_by"/>
+                  {{ formatters.did(identity.claims[claimIndex]?.created_by) }}
                 </router-link>
               </dd>
 
               <dt class="m-b-5">Attested By :</dt>
               <dd class="mb-3" v-if="identity.claims[claimIndex].attestation">
                 <router-link
-                    :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex].attestation.attested_by) }}">
-                  <Blockie :address="identity.claims[claimIndex].attestation.attested_by" class=""/>
-                  {{ formatters.did(identity.claims[claimIndex].attestation.attested_by) }}
+                    :to="{name: 'identity', params : { did: formatters.did(identity.claims[claimIndex]?.attestation.attested_by) }}">
+                  <Blockie :address="identity.claims[claimIndex]?.attestation.attested_by" class=""/>
+                  {{ formatters.did(identity.claims[claimIndex]?.attestation.attested_by) }}
                 </router-link>
               </dd>
               <dd class="mb-3" v-else>
                 N/A
               </dd>
               <dt class="m-t-20 m-b-5">Valid Until :</dt>
-              <dd v-if="identity.claims[claimIndex].attestation">
-                {{ identity.claims[claimIndex].attestation.valid_until }}
+              <dd v-if="identity.claims[claimIndex]?.attestation">
+                {{ identity.claims[claimIndex]?.attestation.valid_until }}
               </dd>
               <dd v-else>
                 N/A
@@ -130,17 +130,17 @@
             </button>
           </div>
           <div class="w-50 float-left text-center pt-2">
-            <p>Showing <strong>#{{ claimIndex + 1 }}</strong> of <strong>{{ identity.claims.length }}</strong> claims
+            <p>Showing <strong>#{{ claimIndex + 1 }}</strong> of <strong>{{ identity.claims?.length }}</strong> claims
             </p>
           </div>
           <div class="w-25 float-left">
             <button class="btn btn-orange text-white float-right" @click="next"
-                    :disabled="claimIndex === (identity.claims.length-1)">Next
+                    :disabled="claimIndex === (identity.claims?.length-1)">Next
             </button>
           </div>
         </div>
         <div v-else>
-          <h5 class="text-muted">No records found</h5>
+          <h5 class="text-muted">None</h5>
         </div>
       </DetailItem>
     </ExplorerCard>
@@ -243,6 +243,7 @@ export default {
             this.flag = 'FAILURE';
           }
         } catch (e) {
+          console.error(e)
           this.flag = 'FAILURE';
         } finally {
           EventBus.emit('hide');
