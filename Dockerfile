@@ -1,4 +1,4 @@
-FROM node:11.6.0
+FROM node:20.17.0
 
 COPY . /home/be-web
 
